@@ -1,0 +1,9 @@
+
+
+
+/* You must specify at least height or width for maps to be rendered */
+#map_1_id {
+    height: 480px;
+    background-color: antiquewhite;
+  }
+  
