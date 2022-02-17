@@ -76,9 +76,9 @@ practice_list_size_public <- latest_gp_practice_numbers %>%
   mutate(Total = Male + Female)
 
 # Combine this population data with the PCN_data table ####
-
-
-PCN_data
+PCN_data %>% 
+  toJSON() %>%
+  write_lines(paste0(output_directory, '/PCN_data.json'))
 
 
 # PCN boundaries ####
