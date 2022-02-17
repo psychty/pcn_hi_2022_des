@@ -1,9 +1,96 @@
 
+/* global style */
+* {
+  font-family: "Open Sans", sans-serif; 
+}
 
+body {
+  -webkit-text-size-adjust: none;
+  width: 80%;
+  margin: auto;
+}
+
+p {
+  font-size: 0.9rem;
+  text-align: justify;
+  color: #4c4c4e;
+}
+
+b {
+  color: #1e4b7a;
+}
+
+li {
+  font-size: 0.9rem;
+  color: #4c4c4e;
+  text-align: justify;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-right: 20px;
+}
+
+a {
+  font-size: 0.9rem;
+  color: #cc0052;
+}
+
+h1 {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1e4b7a;
+}
+
+.tooltips {
+  font-size: 0.8rem;
+  margin-left: 20px;
+}
+
+header {
+  position: sticky;
+  top: 0px;
+  max-height: 10vh;
+  /* width: 100%; */
+  background: #fff;
+  z-index: 999;
+}
 
 /* You must specify at least height or width for maps to be rendered */
 #map_1_id {
-    height: 480px;
+    height: 50vh;
     background-color: antiquewhite;
   }
   
+#map_2_id {
+    height: 50vh;
+    background-color: antiquewhite;
+  }
+  
+#map_3_id {
+    height: 50vh;
+    background-color: antiquewhite;
+  }
+  
+
+/* For our legends/keys */
+.key_list {
+  display: block;
+  padding: 5px;
+  border-radius: 4px;
+  color: #000000;
+  background: #ffffff;
+  text-align: left;
+  font-size: 0.8rem;
+  font-family: inherit;
+  margin: 0 0 1px;
+  border-left: 13px solid #ccc;
+  opacity: 0.8;
+  position: relative;
+  z-index: 1;
+}
+
+#pcn_key {
+  margin: 5px;
+  columns: 3;
+  -webkit-columns: 3;
+  -moz-columns: 3;
+}

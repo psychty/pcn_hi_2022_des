@@ -15,11 +15,83 @@
 </head>
 <body>
     
-<h1>This page is in development.</h1>
+<h2>This page is in development.</h1>
 
+<section id = 'introduction'><h1>Introduction - The West Sussex Health and Care Partnership Plan 2021/22</h1>
+  <p>Key documents and strategies to tackle health inequalities.</p>
+<h1>The Core20PLUS5 approach</h1>
+<p>The ‘Core20PLUS5’ initiative is to drive targeted health inequalities improvements in the following areas:</p>
+<ul>
+  <li><b>Core 20</b> – Most deprived 20% of our population</li>
+  <li><b>PLUS</b> – Other population groups as identified by local population health data such as ethnic minority communities</li>
+ <li><b>5</b> – Targeting five key clinical areas of health inequalities:</li>
+ <ul><li><b>Early Cancer diagnosis (screening & early referral)</b> 75% of cases diagnosed at stage 1 or 2 by 2028</li>
+  <li><b>Hypertension case finding</b> allowing for interventions to optimise blood pressure and minimise risk of myocardial infarction and stroke</li>
+  <li><b>Chronic Respiratory disease (driving Covid & Flu vaccination uptake)</b> a clear focus on Chronic Obstructive Pulmonary Disease driving up uptake of vaccines to reduce infective exacerbations and emergency hospital admissions resulting from these exacerbations</li>
+  <li><b>Annual health checks for people with Serious Mental Illness</b> 60% of those living with Severe Mental Illness (SMI) receiving annual health checks</li>
+  <li><b>Continuity of maternity carer plan</b> ensure continuity of care for 75% of women from Black, Asian and minority ethnic communities and from the most deprived groups.</li>
+ </ul></ul>
+</section>
 
-<div id="map_1_id"></div>
+<section id = 'population'>
+  <h1>Primary Care Networks</h1>
+  <p>Primary Care Networks (PCNs) are</p>
+  <p>Each PCN is made up a group of a number of GP practices forming a network that covers approximately 30,000 to 50,000 patients.</p>
 
+  <p>The map below shows the geographical footprint of West Sussex PCNs.</p>
+<p>Each PCN boundary is made by aggregating Lower-layer Super Output Areas (LSOAs) together. However, it should be noted that GP practices do not have geographical boundaries and more than one GP practice can operate in the same local area. Whilst the map is useful to understand roughly the local areas that each PCN may cover, for planning purposes, in reality these boundaries are not mutually exclusive (e.g. there is some crossover as patients may use GP services outside of their local areas).</p>
+<p>We have assigned every LSOA in West Sussex to one PCN based on data from the number of residents in the LSOA registered to each GP practice and some GP practices operate in areas assigned to other PCNs (e.g. Horsham Collaborative practices in Horsham Central areas). PCN boundaries can transcend district and borough boundaries and some even cross into neighbouring counties.</p>
+  <h3>Primary Care Network locally derived boundaries</h3>
+<div id = "map_1_id"></div>
+<div id = 'pcn_key'></div>
+<h3>Age structure of PCN registered populations</h3>
+<p>Use the drop down menu here to choose a PCN to find out more information about its age and sex population structure.</p>
+
+<select id="select_pcn_pyramid_button"></select>
+<h4 id = 'selected_pcn_pyramid_title'></h4>
+<p>Population pyramid</p>
+
+</section>
+
+<section id = 'deprivation'>
+  <h1>Core 20 - Deprivation in West Sussex</h1>
+  <p>West Sussex overall is relative less deprived, and is in the top 20% of least deprived local authorities in the country. However, a small number of neighbourhoods along the coast in Arun and in Crawley are among the most deprived neighbourhoods in England.</p>
+
+  <h3>The indices of deprivation</h3>
+  <p>The Indices of Deprivation are an area-based measure of relative levels of deprivation in small areas, (Lower Super Output Areas (LSOAs), which contain approximately 1,500 people). It can be used to compare the deprivation across different areas, identify the most deprived areas within a larger geography (for example in the CCG), and to examine which domains of deprivation are more or less prominent in an area. The Indices cannot be used to quantify how deprived an area is (nor can it say by how much one area is more deprived than another), and there are different indices of deprivation for Wales, Scotland and Northern Ireland (so comparisons cannot be made across countries).</p>
+  <p>The indices are published by the Department for Communities and Local Government every 3-4 years and are widely used, notably in funding allocations and targeting. The most recent update is the ID2019, released in October 2019. ID2019 is made up of seven domains of deprivation, although each domain is not given equal weighting. From these, an overall score of small area deprivation is calculated; these are then ranked from most deprived (1) to least deprived (32,844). It is important to note that the indices measure deprivation and not affluence (the least deprived area may not necessarily be the most affluent).</p>
+  <p>Domains contributing to the overall Index of multiple deprivation:</p>
+  <ul><li><b>Income</b> (22.5%)</li>
+    <li><b>Employment</b> (22.5%)</li>
+    <li><b>Health Deprivation and Disability</b> (13.5%)</li>
+    <li><b>Education, Skills and Training</b> (13.5%)</li>
+    <li><b>Crime</b> (9.3%)</li>
+    <li><b>Barriers to Housing and Services</b> (9.3%)</li>
+    <li><b>Living Environment</b> (9.3%)</li></ul>
+
+    <h3>Neighbourhood level (LSOA) deprivation across the county</h3>
+    <div id="map_2_id"></div>
+
+   <h3>Deprivation at the GP and PCN level</h3> 
+   <p>GP practices within each PCN in West Sussex by their national decile group. Practices in dark blue are estimated to have the most deprived populations in England whereas those in orange are the least deprived.</p>
+
+</section>
+
+<section id = 'osci_local_insight'>
+  <h1>OSCI Local Insight</h1>
+<p>This might not be public data</p>
+</section>
+
+<section id = 'disease_inequalities'>
+  <h1>Inequalities in disease prevalence and burden</h1>
+<h3>Neighbourhood level (MSOA) life expectancy and disease prevalence variation across the county</h3>
+<div id="map_3_id"></div>
+</section>
+
+<section id = 'cancer'>
+  <h1>A closer look at cancer</h1>
+<p>A look at screening and outcomes at PCN level</p>
+</section>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>

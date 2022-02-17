@@ -1,0 +1,508 @@
+LSOA11NM,LSOA11CD,PCN_Code,PCN_Name
+Arun 002A ,E01031386,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 002B ,E01031387,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 004A ,E01031427,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 004B ,E01031429,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 004C ,E01031430,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 004D ,E01031467,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 004E ,E01031468,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 005A ,E01031388,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 005B ,E01031389,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 009F ,E01031469,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 010C ,E01031457,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 011B ,E01031428,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 011C ,E01031454,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 011D ,E01031456,U04748,Angmering Coppice Fitzalan (ACF) PCN
+Arun 005C ,E01031414,U21339,Arun Integrated Care (AIC) PCN
+Arun 005D ,E01031415,U21339,Arun Integrated Care (AIC) PCN
+Arun 005E ,E01031459,U21339,Arun Integrated Care (AIC) PCN
+Arun 007A ,E01031407,U21339,Arun Integrated Care (AIC) PCN
+Arun 007B ,E01031408,U21339,Arun Integrated Care (AIC) PCN
+Arun 007C ,E01031410,U21339,Arun Integrated Care (AIC) PCN
+Arun 007D ,E01031462,U21339,Arun Integrated Care (AIC) PCN
+Arun 007E ,E01031463,U21339,Arun Integrated Care (AIC) PCN
+Arun 007F ,E01031464,U21339,Arun Integrated Care (AIC) PCN
+Arun 008A ,E01031412,U21339,Arun Integrated Care (AIC) PCN
+Arun 009A ,E01031398,U21339,Arun Integrated Care (AIC) PCN
+Arun 009B ,E01031399,U21339,Arun Integrated Care (AIC) PCN
+Arun 009C ,E01031409,U21339,Arun Integrated Care (AIC) PCN
+Arun 009D ,E01031455,U21339,Arun Integrated Care (AIC) PCN
+Arun 009E ,E01031461,U21339,Arun Integrated Care (AIC) PCN
+Arun 010A ,E01031411,U21339,Arun Integrated Care (AIC) PCN
+Arun 010B ,E01031413,U21339,Arun Integrated Care (AIC) PCN
+Arun 010D ,E01031458,U21339,Arun Integrated Care (AIC) PCN
+Arun 010E ,E01031460,U21339,Arun Integrated Care (AIC) PCN
+Arun 011A ,E01031400,U21339,Arun Integrated Care (AIC) PCN
+Lewes 002B ,E01021026,U06871,Burgess Hill & Villages PCN
+Mid Sussex 012A ,E01031699,U06871,Burgess Hill & Villages PCN
+Mid Sussex 012B ,E01031700,U06871,Burgess Hill & Villages PCN
+Mid Sussex 012C ,E01031701,U06871,Burgess Hill & Villages PCN
+Mid Sussex 012D ,E01031714,U06871,Burgess Hill & Villages PCN
+Mid Sussex 013A ,E01031704,U06871,Burgess Hill & Villages PCN
+Mid Sussex 013B ,E01031706,U06871,Burgess Hill & Villages PCN
+Mid Sussex 013C ,E01031711,U06871,Burgess Hill & Villages PCN
+Mid Sussex 013D ,E01031712,U06871,Burgess Hill & Villages PCN
+Mid Sussex 013E ,E01031713,U06871,Burgess Hill & Villages PCN
+Mid Sussex 014A ,E01031705,U06871,Burgess Hill & Villages PCN
+Mid Sussex 014B ,E01031707,U06871,Burgess Hill & Villages PCN
+Mid Sussex 014C ,E01031708,U06871,Burgess Hill & Villages PCN
+Mid Sussex 014D ,E01031709,U06871,Burgess Hill & Villages PCN
+Mid Sussex 014E ,E01031716,U06871,Burgess Hill & Villages PCN
+Mid Sussex 014F ,E01031717,U06871,Burgess Hill & Villages PCN
+Mid Sussex 015A ,E01031702,U06871,Burgess Hill & Villages PCN
+Mid Sussex 015B ,E01031703,U06871,Burgess Hill & Villages PCN
+Mid Sussex 015C ,E01031710,U06871,Burgess Hill & Villages PCN
+Mid Sussex 015D ,E01031715,U06871,Burgess Hill & Villages PCN
+Mid Sussex 016A ,E01031698,U06871,Burgess Hill & Villages PCN
+Mid Sussex 016B ,E01031767,U06871,Burgess Hill & Villages PCN
+Mid Sussex 016C ,E01031769,U06871,Burgess Hill & Villages PCN
+Mid Sussex 016D ,E01031770,U06871,Burgess Hill & Villages PCN
+Mid Sussex 016E ,E01031771,U06871,Burgess Hill & Villages PCN
+Mid Sussex 017A ,E01031744,U06871,Burgess Hill & Villages PCN
+Mid Sussex 017B ,E01031745,U06871,Burgess Hill & Villages PCN
+Mid Sussex 017C ,E01031746,U06871,Burgess Hill & Villages PCN
+Mid Sussex 017D ,E01031747,U06871,Burgess Hill & Villages PCN
+Mid Sussex 017E ,E01031748,U06871,Burgess Hill & Villages PCN
+Mid Sussex 017F ,E01031768,U06871,Burgess Hill & Villages PCN
+Worthing 002A ,E01031822,U13952,Central Worthing Practices PCN
+Worthing 002C ,E01031826,U13952,Central Worthing Practices PCN
+Worthing 002D ,E01031827,U13952,Central Worthing Practices PCN
+Worthing 002E ,E01031839,U13952,Central Worthing Practices PCN
+Worthing 004A ,E01031778,U13952,Central Worthing Practices PCN
+Worthing 004B ,E01031797,U13952,Central Worthing Practices PCN
+Worthing 004C ,E01031800,U13952,Central Worthing Practices PCN
+Worthing 004D ,E01031823,U13952,Central Worthing Practices PCN
+Worthing 004E ,E01031824,U13952,Central Worthing Practices PCN
+Worthing 005A ,E01031776,U13952,Central Worthing Practices PCN
+Worthing 005B ,E01031777,U13952,Central Worthing Practices PCN
+Worthing 005C ,E01031780,U13952,Central Worthing Practices PCN
+Worthing 005D ,E01031781,U13952,Central Worthing Practices PCN
+Worthing 005E ,E01031798,U13952,Central Worthing Practices PCN
+Worthing 007C ,E01031836,U13952,Central Worthing Practices PCN
+Worthing 007D ,E01031838,U13952,Central Worthing Practices PCN
+Worthing 007E ,E01031840,U13952,Central Worthing Practices PCN
+Worthing 008B ,E01031796,U13952,Central Worthing Practices PCN
+Worthing 008C ,E01031799,U13952,Central Worthing Practices PCN
+Worthing 008D ,E01031801,U13952,Central Worthing Practices PCN
+Worthing 008E ,E01031837,U13952,Central Worthing Practices PCN
+Worthing 009A ,E01031779,U13952,Central Worthing Practices PCN
+Chichester 006A ,E01031477,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 006B ,E01031485,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 006C ,E01031487,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 006D ,E01031509,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 007A ,E01031506,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 007B ,E01031507,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 007C ,E01031531,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 007D ,E01031533,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 007E ,E01031543,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 008A ,E01031482,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 008B ,E01031483,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 008C ,E01031486,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 008D ,E01031488,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 008E ,E01031494,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 008F ,E01031495,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 009A ,E01031475,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 009B ,E01031476,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 009C ,E01031532,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 009D ,E01031534,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 009E ,E01031535,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 010A ,E01031480,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 010B ,E01031481,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 010C ,E01031484,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 010D ,E01031490,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 010E ,E01031491,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 011A ,E01031474,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 011B ,E01031493,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 011C ,E01031496,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 011D ,E01031505,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 012A ,E01031489,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 012B ,E01031492,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 012C ,E01031513,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 012D ,E01031530,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 012E ,E01031538,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 012F ,E01031539,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 013A ,E01031499,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 013B ,E01031500,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 013C ,E01031501,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 013D ,E01031529,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 013E ,E01031540,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 013F ,E01031541,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 013G ,E01031542,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 014A ,E01031522,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 014B ,E01031523,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 014C ,E01031524,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 014D ,E01031525,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 014E ,E01031526,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 014F ,E01031527,U24558,Chichester Alliance of Medical Practices PCN
+Chichester 014G ,E01031528,U24558,Chichester Alliance of Medical Practices PCN
+Horsham 005A ,E01031657,U57981,Chanctonbury PCN
+Horsham 005B ,E01031659,U57981,Chanctonbury PCN
+Horsham 010A ,E01031611,U57981,Chanctonbury PCN
+Horsham 010B ,E01031612,U57981,Chanctonbury PCN
+Horsham 010C ,E01031613,U57981,Chanctonbury PCN
+Horsham 010D ,E01031614,U57981,Chanctonbury PCN
+Horsham 010E ,E01031615,U57981,Chanctonbury PCN
+Horsham 011D ,E01031635,U57981,Chanctonbury PCN
+Horsham 012C ,E01031627,U57981,Chanctonbury PCN
+Horsham 013A ,E01031626,U57981,Chanctonbury PCN
+Horsham 013B ,E01031630,U57981,Chanctonbury PCN
+Horsham 013C ,E01031631,U57981,Chanctonbury PCN
+Horsham 014A ,E01031618,U57981,Chanctonbury PCN
+Horsham 014B ,E01031641,U57981,Chanctonbury PCN
+Horsham 014C ,E01031642,U57981,Chanctonbury PCN
+Horsham 014D ,E01031643,U57981,Chanctonbury PCN
+Horsham 014E ,E01031687,U57981,Chanctonbury PCN
+Horsham 015A ,E01031622,U57981,Chanctonbury PCN
+Horsham 015B ,E01031624,U57981,Chanctonbury PCN
+Horsham 015C ,E01031625,U57981,Chanctonbury PCN
+Horsham 015D ,E01031628,U57981,Chanctonbury PCN
+Horsham 015E ,E01031629,U57981,Chanctonbury PCN
+Horsham 016A ,E01031616,U57981,Chanctonbury PCN
+Horsham 016B ,E01031617,U57981,Chanctonbury PCN
+Horsham 016C ,E01031684,U57981,Chanctonbury PCN
+Horsham 016D ,E01031685,U57981,Chanctonbury PCN
+Horsham 016E ,E01031686,U57981,Chanctonbury PCN
+Worthing 006A ,E01031783,U01092,Cissbury Integrated Care PCN
+Worthing 006B ,E01031785,U01092,Cissbury Integrated Care PCN
+Worthing 006C ,E01031786,U01092,Cissbury Integrated Care PCN
+Worthing 007A ,E01031782,U01092,Cissbury Integrated Care PCN
+Worthing 007B ,E01031784,U01092,Cissbury Integrated Care PCN
+Worthing 008A ,E01031791,U01092,Cissbury Integrated Care PCN
+Worthing 009B ,E01031831,U01092,Cissbury Integrated Care PCN
+Worthing 009C ,E01031832,U01092,Cissbury Integrated Care PCN
+Worthing 009D ,E01031833,U01092,Cissbury Integrated Care PCN
+Worthing 009E ,E01031834,U01092,Cissbury Integrated Care PCN
+Worthing 010A ,E01031790,U01092,Cissbury Integrated Care PCN
+Worthing 010B ,E01031807,U01092,Cissbury Integrated Care PCN
+Worthing 010C ,E01031809,U01092,Cissbury Integrated Care PCN
+Worthing 010D ,E01031810,U01092,Cissbury Integrated Care PCN
+Worthing 010E ,E01031811,U01092,Cissbury Integrated Care PCN
+Worthing 011A ,E01031787,U01092,Cissbury Integrated Care PCN
+Worthing 011B ,E01031788,U01092,Cissbury Integrated Care PCN
+Worthing 011C ,E01031789,U01092,Cissbury Integrated Care PCN
+Worthing 011D ,E01031808,U01092,Cissbury Integrated Care PCN
+Worthing 011E ,E01031835,U01092,Cissbury Integrated Care PCN
+Worthing 012A ,E01031812,U01092,Cissbury Integrated Care PCN
+Worthing 012B ,E01031813,U01092,Cissbury Integrated Care PCN
+Worthing 012C ,E01031814,U01092,Cissbury Integrated Care PCN
+Worthing 012D ,E01031815,U01092,Cissbury Integrated Care PCN
+Worthing 012E ,E01031816,U01092,Cissbury Integrated Care PCN
+Worthing 013C ,E01031804,U01092,Cissbury Integrated Care PCN
+Worthing 013E ,E01031806,U01092,Cissbury Integrated Care PCN
+Arun 002C ,E01031425,U49536,Coastal and South Downs PCN
+Arun 002D ,E01031426,U49536,Coastal and South Downs PCN
+Arun 008B ,E01031422,U49536,Coastal and South Downs PCN
+Arun 008C ,E01031423,U49536,Coastal and South Downs PCN
+Arun 008D ,E01031424,U49536,Coastal and South Downs PCN
+Worthing 001A ,E01031793,U49536,Coastal and South Downs PCN
+Worthing 001B ,E01031820,U49536,Coastal and South Downs PCN
+Worthing 001C ,E01031821,U49536,Coastal and South Downs PCN
+Worthing 001D ,E01031828,U49536,Coastal and South Downs PCN
+Worthing 001E ,E01031829,U49536,Coastal and South Downs PCN
+Worthing 002B ,E01031825,U49536,Coastal and South Downs PCN
+Worthing 003A ,E01031792,U49536,Coastal and South Downs PCN
+Worthing 003B ,E01031794,U49536,Coastal and South Downs PCN
+Worthing 003C ,E01031795,U49536,Coastal and South Downs PCN
+Worthing 003D ,E01031818,U49536,Coastal and South Downs PCN
+Worthing 003E ,E01031830,U49536,Coastal and South Downs PCN
+Worthing 006D ,E01031817,U49536,Coastal and South Downs PCN
+Worthing 006E ,E01031819,U49536,Coastal and South Downs PCN
+Worthing 013A ,E01031802,U49536,Coastal and South Downs PCN
+Worthing 013B ,E01031803,U49536,Coastal and South Downs PCN
+Worthing 013D ,E01031805,U49536,Coastal and South Downs PCN
+Crawley 001A ,E01031573,U52694,Crawley Care Collaborative PCN
+Crawley 001B ,E01031574,U52694,Crawley Care Collaborative PCN
+Crawley 001C ,E01031575,U52694,Crawley Care Collaborative PCN
+Crawley 001D ,E01031576,U52694,Crawley Care Collaborative PCN
+Crawley 001E ,E01031577,U52694,Crawley Care Collaborative PCN
+Crawley 002B ,E01031587,U52694,Crawley Care Collaborative PCN
+Crawley 003A ,E01031570,U52694,Crawley Care Collaborative PCN
+Crawley 003D ,E01031609,U52694,Crawley Care Collaborative PCN
+Crawley 003E ,E01031610,U52694,Crawley Care Collaborative PCN
+Crawley 004A ,E01031583,U52694,Crawley Care Collaborative PCN
+Crawley 004D ,E01031601,U52694,Crawley Care Collaborative PCN
+Crawley 004F ,E01032835,U52694,Crawley Care Collaborative PCN
+Crawley 004G ,E01032836,U52694,Crawley Care Collaborative PCN
+Crawley 005D ,E01031600,U52694,Crawley Care Collaborative PCN
+Crawley 005E ,E01031603,U52694,Crawley Care Collaborative PCN
+Crawley 006D ,E01031567,U52694,Crawley Care Collaborative PCN
+Crawley 007A ,E01031596,U52694,Crawley Care Collaborative PCN
+Crawley 007B ,E01031597,U52694,Crawley Care Collaborative PCN
+Crawley 007C ,E01031598,U52694,Crawley Care Collaborative PCN
+Crawley 007D ,E01031599,U52694,Crawley Care Collaborative PCN
+Crawley 007E ,E01031608,U52694,Crawley Care Collaborative PCN
+Crawley 011A ,E01031595,U52694,Crawley Care Collaborative PCN
+Mid Sussex 001A ,E01031731,U80779,East Grinstead PCN
+Mid Sussex 001B ,E01031732,U80779,East Grinstead PCN
+Mid Sussex 001C ,E01031733,U80779,East Grinstead PCN
+Mid Sussex 001D ,E01031734,U80779,East Grinstead PCN
+Mid Sussex 001E ,E01031741,U80779,East Grinstead PCN
+Mid Sussex 001F ,E01031742,U80779,East Grinstead PCN
+Mid Sussex 001G ,E01031743,U80779,East Grinstead PCN
+Mid Sussex 002D ,E01031722,U80779,East Grinstead PCN
+Mid Sussex 003A ,E01031695,U80779,East Grinstead PCN
+Mid Sussex 003B ,E01031696,U80779,East Grinstead PCN
+Mid Sussex 003C ,E01031729,U80779,East Grinstead PCN
+Mid Sussex 003D ,E01031730,U80779,East Grinstead PCN
+Mid Sussex 003E ,E01031735,U80779,East Grinstead PCN
+Mid Sussex 004A ,E01031736,U80779,East Grinstead PCN
+Mid Sussex 004B ,E01031737,U80779,East Grinstead PCN
+Mid Sussex 004C ,E01031738,U80779,East Grinstead PCN
+Mid Sussex 004D ,E01031739,U80779,East Grinstead PCN
+Mid Sussex 004E ,E01031740,U80779,East Grinstead PCN
+Mid Sussex 005A ,E01031721,U80779,East Grinstead PCN
+Mid Sussex 005B ,E01031723,U80779,East Grinstead PCN
+Mid Sussex 005C ,E01031724,U80779,East Grinstead PCN
+Mid Sussex 005D ,E01031725,U80779,East Grinstead PCN
+Mid Sussex 006D ,E01031766,U80779,East Grinstead PCN
+Lewes 002A ,E01021023,U04725,Haywards Heath Central PCN
+Mid Sussex 006C ,E01031765,U04725,Haywards Heath Central PCN
+Mid Sussex 008A ,E01031758,U04725,Haywards Heath Central PCN
+Mid Sussex 008B ,E01031760,U04725,Haywards Heath Central PCN
+Mid Sussex 009A ,E01031751,U04725,Haywards Heath Central PCN
+Mid Sussex 009B ,E01031759,U04725,Haywards Heath Central PCN
+Mid Sussex 009C ,E01031761,U04725,Haywards Heath Central PCN
+Mid Sussex 009E ,E01032837,U04725,Haywards Heath Central PCN
+Mid Sussex 009F ,E01032838,U04725,Haywards Heath Central PCN
+Mid Sussex 009G ,E01032839,U04725,Haywards Heath Central PCN
+Mid Sussex 010A ,E01031752,U04725,Haywards Heath Central PCN
+Mid Sussex 010B ,E01031753,U04725,Haywards Heath Central PCN
+Mid Sussex 010C ,E01031754,U04725,Haywards Heath Central PCN
+Mid Sussex 010D ,E01031755,U04725,Haywards Heath Central PCN
+Mid Sussex 010E ,E01031757,U04725,Haywards Heath Central PCN
+Mid Sussex 011C ,E01031749,U04725,Haywards Heath Central PCN
+Mid Sussex 011E ,E01031756,U04725,Haywards Heath Central PCN
+Mid Sussex 011F ,E01031763,U04725,Haywards Heath Central PCN
+Horsham 008D ,E01031661,U03364,Haywards Heath Villages PCN
+Mid Sussex 006A ,E01031694,U03364,Haywards Heath Villages PCN
+Mid Sussex 006B ,E01031764,U03364,Haywards Heath Villages PCN
+Mid Sussex 007A ,E01031692,U03364,Haywards Heath Villages PCN
+Mid Sussex 007B ,E01031693,U03364,Haywards Heath Villages PCN
+Mid Sussex 007C ,E01031697,U03364,Haywards Heath Villages PCN
+Mid Sussex 007D ,E01031727,U03364,Haywards Heath Villages PCN
+Mid Sussex 008C ,E01031772,U03364,Haywards Heath Villages PCN
+Mid Sussex 008D ,E01031773,U03364,Haywards Heath Villages PCN
+Mid Sussex 008E ,E01031774,U03364,Haywards Heath Villages PCN
+Mid Sussex 008F ,E01031775,U03364,Haywards Heath Villages PCN
+Mid Sussex 011A ,E01031726,U03364,Haywards Heath Villages PCN
+Mid Sussex 011B ,E01031728,U03364,Haywards Heath Villages PCN
+Mid Sussex 011D ,E01031750,U03364,Haywards Heath Villages PCN
+Crawley 002A ,E01031586,U14816,Healthy Crawley PCN
+Crawley 002C ,E01031588,U14816,Healthy Crawley PCN
+Crawley 002D ,E01031590,U14816,Healthy Crawley PCN
+Crawley 002E ,E01031593,U14816,Healthy Crawley PCN
+Crawley 003B ,E01031571,U14816,Healthy Crawley PCN
+Crawley 003C ,E01031572,U14816,Healthy Crawley PCN
+Crawley 005A ,E01031589,U14816,Healthy Crawley PCN
+Crawley 005B ,E01031591,U14816,Healthy Crawley PCN
+Crawley 005C ,E01031594,U14816,Healthy Crawley PCN
+Crawley 006E ,E01031568,U14816,Healthy Crawley PCN
+Crawley 008D ,E01031592,U14816,Healthy Crawley PCN
+Crawley 009A ,E01031560,U14816,Healthy Crawley PCN
+Crawley 009B ,E01031561,U14816,Healthy Crawley PCN
+Crawley 009C ,E01031562,U14816,Healthy Crawley PCN
+Crawley 009D ,E01031563,U14816,Healthy Crawley PCN
+Crawley 010E ,E01031569,U14816,Healthy Crawley PCN
+Crawley 011B ,E01031604,U14816,Healthy Crawley PCN
+Crawley 011C ,E01031605,U14816,Healthy Crawley PCN
+Crawley 011D ,E01031606,U14816,Healthy Crawley PCN
+Crawley 011E ,E01031607,U14816,Healthy Crawley PCN
+Mid Sussex 002A ,E01031718,U14816,Healthy Crawley PCN
+Mid Sussex 002B ,E01031719,U14816,Healthy Crawley PCN
+Mid Sussex 002C ,E01031720,U14816,Healthy Crawley PCN
+Horsham 001A ,E01031670,U26939,Horsham Central PCN
+Horsham 001B ,E01031671,U26939,Horsham Central PCN
+Horsham 001C ,E01031673,U26939,Horsham Central PCN
+Horsham 001D ,E01031676,U26939,Horsham Central PCN
+Horsham 002A ,E01031644,U26939,Horsham Central PCN
+Horsham 002B ,E01031645,U26939,Horsham Central PCN
+Horsham 002C ,E01031646,U26939,Horsham Central PCN
+Horsham 002D ,E01031647,U26939,Horsham Central PCN
+Horsham 002E ,E01031649,U26939,Horsham Central PCN
+Horsham 002F ,E01031650,U26939,Horsham Central PCN
+Horsham 002G ,E01031666,U26939,Horsham Central PCN
+Horsham 002H ,E01031668,U26939,Horsham Central PCN
+Horsham 003A ,E01031620,U26939,Horsham Central PCN
+Horsham 003B ,E01031648,U26939,Horsham Central PCN
+Horsham 003C ,E01031651,U26939,Horsham Central PCN
+Horsham 003D ,E01031658,U26939,Horsham Central PCN
+Horsham 003E ,E01031689,U26939,Horsham Central PCN
+Horsham 004A ,E01031654,U26939,Horsham Central PCN
+Horsham 004B ,E01031655,U26939,Horsham Central PCN
+Horsham 004C ,E01031667,U26939,Horsham Central PCN
+Horsham 004D ,E01031669,U26939,Horsham Central PCN
+Horsham 004E ,E01031672,U26939,Horsham Central PCN
+Horsham 006A ,E01031636,U26939,Horsham Central PCN
+Horsham 006B ,E01031652,U26939,Horsham Central PCN
+Horsham 006C ,E01031653,U26939,Horsham Central PCN
+Horsham 006D ,E01031656,U26939,Horsham Central PCN
+Horsham 006E ,E01031688,U26939,Horsham Central PCN
+Horsham 006F ,E01031691,U26939,Horsham Central PCN
+Horsham 007A ,E01031619,U26939,Horsham Central PCN
+Horsham 007B ,E01031637,U26939,Horsham Central PCN
+Horsham 007C ,E01031638,U26939,Horsham Central PCN
+Horsham 007D ,E01031690,U26939,Horsham Central PCN
+Horsham 008A ,E01031639,U26939,Horsham Central PCN
+Horsham 008B ,E01031640,U26939,Horsham Central PCN
+Horsham 005C ,E01031674,U96386,Horsham Collaborative PCN
+Horsham 005D ,E01031675,U96386,Horsham Collaborative PCN
+Horsham 008C ,E01031660,U96386,Horsham Collaborative PCN
+Horsham 008E ,E01031679,U96386,Horsham Collaborative PCN
+Horsham 009A ,E01031677,U96386,Horsham Collaborative PCN
+Horsham 009B ,E01031678,U96386,Horsham Collaborative PCN
+Horsham 009C ,E01031680,U96386,Horsham Collaborative PCN
+Horsham 009D ,E01031681,U96386,Horsham Collaborative PCN
+Horsham 009E ,E01031682,U96386,Horsham Collaborative PCN
+Horsham 009F ,E01031683,U96386,Horsham Collaborative PCN
+Horsham 011A ,E01031632,U96386,Horsham Collaborative PCN
+Horsham 011B ,E01031633,U96386,Horsham Collaborative PCN
+Horsham 011C ,E01031634,U96386,Horsham Collaborative PCN
+Adur 003A ,E01031345,U87478,Lancing and Sompting PCN
+Adur 003B ,E01031353,U87478,Lancing and Sompting PCN
+Adur 003C ,E01031354,U87478,Lancing and Sompting PCN
+Adur 003D ,E01031355,U87478,Lancing and Sompting PCN
+Adur 003E ,E01031359,U87478,Lancing and Sompting PCN
+Adur 006A ,E01031344,U87478,Lancing and Sompting PCN
+Adur 006B ,E01031346,U87478,Lancing and Sompting PCN
+Adur 006C ,E01031361,U87478,Lancing and Sompting PCN
+Adur 006D ,E01031362,U87478,Lancing and Sompting PCN
+Adur 006E ,E01031363,U87478,Lancing and Sompting PCN
+Adur 007A ,E01031358,U87478,Lancing and Sompting PCN
+Adur 007B ,E01031360,U87478,Lancing and Sompting PCN
+Adur 007C ,E01031376,U87478,Lancing and Sompting PCN
+Adur 007D ,E01031378,U87478,Lancing and Sompting PCN
+Adur 008A ,E01031341,U87478,Lancing and Sompting PCN
+Adur 008B ,E01031342,U87478,Lancing and Sompting PCN
+Adur 008C ,E01031343,U87478,Lancing and Sompting PCN
+Adur 008D ,E01031377,U87478,Lancing and Sompting PCN
+Adur 008E ,E01031379,U87478,Lancing and Sompting PCN
+Arun 001A ,E01031390,U08235,Regis Healthcare PCN
+Arun 001B ,E01031391,U08235,Regis Healthcare PCN
+Arun 001C ,E01031392,U08235,Regis Healthcare PCN
+Arun 001D ,E01031465,U08235,Regis Healthcare PCN
+Arun 003A ,E01031393,U08235,Regis Healthcare PCN
+Arun 003B ,E01031394,U08235,Regis Healthcare PCN
+Arun 003C ,E01031395,U08235,Regis Healthcare PCN
+Arun 003D ,E01031396,U08235,Regis Healthcare PCN
+Arun 003E ,E01031397,U08235,Regis Healthcare PCN
+Arun 003F ,E01031466,U08235,Regis Healthcare PCN
+Arun 006A ,E01031470,U08235,Regis Healthcare PCN
+Arun 006B ,E01031471,U08235,Regis Healthcare PCN
+Arun 006C ,E01031472,U08235,Regis Healthcare PCN
+Arun 006D ,E01031473,U08235,Regis Healthcare PCN
+Arun 012A ,E01031401,U08235,Regis Healthcare PCN
+Arun 012B ,E01031402,U08235,Regis Healthcare PCN
+Arun 012C ,E01031403,U08235,Regis Healthcare PCN
+Arun 012D ,E01031405,U08235,Regis Healthcare PCN
+Arun 012E ,E01031406,U08235,Regis Healthcare PCN
+Arun 013A ,E01031417,U08235,Regis Healthcare PCN
+Arun 013B ,E01031438,U08235,Regis Healthcare PCN
+Arun 013C ,E01031439,U08235,Regis Healthcare PCN
+Arun 013D ,E01031440,U08235,Regis Healthcare PCN
+Arun 014A ,E01031404,U08235,Regis Healthcare PCN
+Arun 014B ,E01031433,U08235,Regis Healthcare PCN
+Arun 014C ,E01031434,U08235,Regis Healthcare PCN
+Arun 014D ,E01031441,U08235,Regis Healthcare PCN
+Arun 014E ,E01031442,U08235,Regis Healthcare PCN
+Arun 015A ,E01031416,U08235,Regis Healthcare PCN
+Arun 015B ,E01031418,U08235,Regis Healthcare PCN
+Arun 015C ,E01031419,U08235,Regis Healthcare PCN
+Arun 015D ,E01031420,U08235,Regis Healthcare PCN
+Arun 015E ,E01031421,U08235,Regis Healthcare PCN
+Arun 016A ,E01031443,U08235,Regis Healthcare PCN
+Arun 016B ,E01031444,U08235,Regis Healthcare PCN
+Arun 016C ,E01031450,U08235,Regis Healthcare PCN
+Arun 016D ,E01031451,U08235,Regis Healthcare PCN
+Arun 016E ,E01031452,U08235,Regis Healthcare PCN
+Arun 017A ,E01031431,U08235,Regis Healthcare PCN
+Arun 017B ,E01031432,U08235,Regis Healthcare PCN
+Arun 017C ,E01031435,U08235,Regis Healthcare PCN
+Arun 017D ,E01031436,U08235,Regis Healthcare PCN
+Arun 017E ,E01031437,U08235,Regis Healthcare PCN
+Arun 017F ,E01031453,U08235,Regis Healthcare PCN
+Arun 018A ,E01031380,U08235,Regis Healthcare PCN
+Arun 018B ,E01031381,U08235,Regis Healthcare PCN
+Arun 018C ,E01031382,U08235,Regis Healthcare PCN
+Arun 018D ,E01031383,U08235,Regis Healthcare PCN
+Arun 018E ,E01031384,U08235,Regis Healthcare PCN
+Arun 019A ,E01031385,U08235,Regis Healthcare PCN
+Arun 019B ,E01031445,U08235,Regis Healthcare PCN
+Arun 019C ,E01031446,U08235,Regis Healthcare PCN
+Arun 019D ,E01031447,U08235,Regis Healthcare PCN
+Arun 019E ,E01031448,U08235,Regis Healthcare PCN
+Arun 019F ,E01031449,U08235,Regis Healthcare PCN
+Chichester 001A ,E01031502,U33593,Rural North Chichester PCN
+Chichester 001B ,E01031503,U33593,Rural North Chichester PCN
+Chichester 001C ,E01031504,U33593,Rural North Chichester PCN
+Chichester 001D ,E01031519,U33593,Rural North Chichester PCN
+Chichester 002A ,E01031517,U33593,Rural North Chichester PCN
+Chichester 002B ,E01031518,U33593,Rural North Chichester PCN
+Chichester 002C ,E01031544,U33593,Rural North Chichester PCN
+Chichester 002D ,E01031545,U33593,Rural North Chichester PCN
+Chichester 003A ,E01031508,U33593,Rural North Chichester PCN
+Chichester 003B ,E01031520,U33593,Rural North Chichester PCN
+Chichester 003C ,E01031521,U33593,Rural North Chichester PCN
+Chichester 003D ,E01031536,U33593,Rural North Chichester PCN
+Chichester 004A ,E01031497,U33593,Rural North Chichester PCN
+Chichester 004C ,E01031511,U33593,Rural North Chichester PCN
+Chichester 004D ,E01031512,U33593,Rural North Chichester PCN
+Chichester 004F ,E01032717,U33593,Rural North Chichester PCN
+Chichester 005A ,E01031478,U33593,Rural North Chichester PCN
+Chichester 005B ,E01031479,U33593,Rural North Chichester PCN
+Chichester 005C ,E01031498,U33593,Rural North Chichester PCN
+Chichester 005D ,E01031514,U33593,Rural North Chichester PCN
+Chichester 005E ,E01031515,U33593,Rural North Chichester PCN
+Chichester 005F ,E01031516,U33593,Rural North Chichester PCN
+Horsham 012A ,E01031621,U33593,Rural North Chichester PCN
+Horsham 012B ,E01031623,U33593,Rural North Chichester PCN
+Horsham 012D ,E01031664,U33593,Rural North Chichester PCN
+Horsham 013D ,E01031662,U33593,Rural North Chichester PCN
+Horsham 013E ,E01031663,U33593,Rural North Chichester PCN
+Horsham 013F ,E01031665,U33593,Rural North Chichester PCN
+Adur 001A ,E01031349,U37037,Shoreham and Southwick PCN
+Adur 001B ,E01031350,U37037,Shoreham and Southwick PCN
+Adur 001C ,E01031351,U37037,Shoreham and Southwick PCN
+Adur 001D ,E01031352,U37037,Shoreham and Southwick PCN
+Adur 001E ,E01031370,U37037,Shoreham and Southwick PCN
+Adur 001F ,E01031374,U37037,Shoreham and Southwick PCN
+Adur 002A ,E01031338,U37037,Shoreham and Southwick PCN
+Adur 002B ,E01031339,U37037,Shoreham and Southwick PCN
+Adur 002C ,E01031340,U37037,Shoreham and Southwick PCN
+Adur 002D ,E01031365,U37037,Shoreham and Southwick PCN
+Adur 002E ,E01031367,U37037,Shoreham and Southwick PCN
+Adur 004A ,E01031347,U37037,Shoreham and Southwick PCN
+Adur 004B ,E01031348,U37037,Shoreham and Southwick PCN
+Adur 004C ,E01031366,U37037,Shoreham and Southwick PCN
+Adur 004D ,E01031371,U37037,Shoreham and Southwick PCN
+Adur 004E ,E01031372,U37037,Shoreham and Southwick PCN
+Adur 004F ,E01031373,U37037,Shoreham and Southwick PCN
+Adur 004G ,E01031375,U37037,Shoreham and Southwick PCN
+Adur 005A ,E01031356,U37037,Shoreham and Southwick PCN
+Adur 005B ,E01031357,U37037,Shoreham and Southwick PCN
+Adur 005C ,E01031364,U37037,Shoreham and Southwick PCN
+Adur 005D ,E01031368,U37037,Shoreham and Southwick PCN
+Adur 005E ,E01031369,U37037,Shoreham and Southwick PCN
+Crawley 004B ,E01031584,U33451,South Crawley PCN
+Crawley 004C ,E01031585,U33451,South Crawley PCN
+Crawley 006A ,E01031564,U33451,South Crawley PCN
+Crawley 006B ,E01031565,U33451,South Crawley PCN
+Crawley 006C ,E01031566,U33451,South Crawley PCN
+Crawley 008A ,E01031578,U33451,South Crawley PCN
+Crawley 008B ,E01031580,U33451,South Crawley PCN
+Crawley 008C ,E01031581,U33451,South Crawley PCN
+Crawley 009E ,E01031579,U33451,South Crawley PCN
+Crawley 009F ,E01031582,U33451,South Crawley PCN
+Crawley 010A ,E01031547,U33451,South Crawley PCN
+Crawley 010B ,E01031548,U33451,South Crawley PCN
+Crawley 010C ,E01031549,U33451,South Crawley PCN
+Crawley 010D ,E01031550,U33451,South Crawley PCN
+Crawley 012A ,E01031546,U33451,South Crawley PCN
+Crawley 012B ,E01031551,U33451,South Crawley PCN
+Crawley 012C ,E01031553,U33451,South Crawley PCN
+Crawley 012D ,E01031554,U33451,South Crawley PCN
+Crawley 012E ,E01031555,U33451,South Crawley PCN
+Crawley 013A ,E01031552,U33451,South Crawley PCN
+Crawley 013B ,E01031556,U33451,South Crawley PCN
+Crawley 013C ,E01031557,U33451,South Crawley PCN
+Crawley 013D ,E01031558,U33451,South Crawley PCN
+Crawley 013E ,E01031559,U33451,South Crawley PCN

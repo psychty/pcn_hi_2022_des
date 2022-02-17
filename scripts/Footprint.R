@@ -1,19 +1,43 @@
 library(easypackages)
 
-libraries(c("readxl", "readr", "plyr", "dplyr", "ggplot2", "png", "tidyverse", "reshape2", "scales", "rgdal", 'rgeos', "tmaptools", 'sp', 'sf', 'maptools', 'leaflet', 'leaflet.extras', 'spdplyr', 'geojsonio', 'rmapshaper', 'jsonlite', 'httr', 'rvest'))
-
-capwords = function(s, strict = FALSE) {
-  cap = function(s) paste(toupper(substring(s, 1, 1)),
-                          {s = substring(s, 2); if(strict) tolower(s) else s},sep = "", collapse = " " )
-  sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))}
+libraries(c("readxl", "readr", "plyr", "dplyr", "ggplot2", "png", "tidyverse", "reshape2", "scales", "rgdal", 'rgeos', "tmaptools", 'sp', 'sf', 'maptools', 'leaflet', 'leaflet.extras', 'spdplyr', 'geojsonio', 'rmapshaper', 'jsonlite', 'httr', 'rvest', 'stringr'))
 
 options(scipen = 999)
 
 github_repo_dir <- "./GitHub/pcn_hi_2022_des"
 
 source_directory <- paste0(github_repo_dir, '/data')
-output_directory_x <- paste0(github_repo_dir, '/outputs')
+output_directory <- paste0(github_repo_dir, '/outputs')
 areas_to_loop <- c('West Sussex', 'Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing')
+
+# PCN organisation data ####
+
+download.file('https://nhs-prod.global.ssl.fastly.net/binaries/content/assets/website-assets/services/ods/data-downloads-other-nhs-organisations/epcn.zip', paste0(source_directory, '/epcn.zip'), mode = 'wb')
+unzip(paste0(source_directory, '/epcn.zip'), exdir = source_directory)
+
+PCN_data <- read_excel(paste0(source_directory, "/ePCN.xlsx"),
+                       sheet = 'PCNDetails') %>% 
+  rename(PCN_code = 'PCN Code',
+         PCN_name = 'PCN Name',
+         Current_CCG_code = 'Current Clinical \r\nCommissioning \r\nGroup Code',
+         Current_CCG_name = 'Clinical\r\nCommissioning\r\nGroup Name',
+         Open_date = 'Open Date',
+         Close_date = 'Close Date') %>% 
+  mutate(Open_date = paste(substr(Open_date, 1,4), substr(Open_date, 5,6), substr(Open_date, 7,8), sep = '-')) %>% 
+  mutate(Open_date = as.Date(Open_date)) %>% 
+  mutate(Address_label = gsub(', NA','', paste(str_to_title(`Address Line 1`), str_to_title(`Address Line 2`),str_to_title(`Address Line 3`),str_to_title(`Address Line 4`), Postcode, sep = ', '))) %>% 
+  filter(Current_CCG_name == 'NHS WEST SUSSEX CCG') %>% 
+  mutate(PCN_name = gsub('\\(Aic\\)', '\\(AIC\\)', gsub('\\(Acf\\)', '\\(ACF\\)', gsub('Pcn', 'PCN', gsub('And', 'and',  gsub(' Of ', ' of ',  str_to_title(PCN_name))))))) %>% 
+  select(PCN_code, PCN_name, Postcode, Address_label)
+                       
+Practice_to_PCN_lookup <- read_excel("GitHub/pcn_hi_2022_des/data/ePCN.xlsx", 
+           sheet = "PCN Core Partner Details") %>%
+  rename(Partner_name = 'Partner\r\nName',
+         ODS_code = 'Partner\r\nOrganisation\r\nCode',
+         Partner_CCG_name = 'Practice\r\nParent\r\nCCG Name',
+         PCN_CCG_name = 'PCN Parent\r\nCCG Name') %>% 
+  mutate(Partner_name = gsub('\\(Aic\\)', '\\(AIC\\)', gsub('\\(Acf\\)', '\\(ACF\\)', gsub('Pcn', 'PCN', gsub('And', 'and',  gsub(' Of ', ' of ',  str_to_title(Partner_name))))))) %>% 
+  filter(Partner_CCG_name == 'NHS WEST SUSSEX CCG' | PCN_CCG_name == 'NHS WEST SUSSEX CCG')
 
 # GP Practice and PCN populations ####
 calls_patient_numbers_webpage <- read_html('https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice') %>%
@@ -51,119 +75,89 @@ practice_list_size_public <- latest_gp_practice_numbers %>%
               values_from = 'Patients') %>% 
   mutate(Total = Male + Female)
 
-# PCN data ####
+# Combine this population data with the PCN_data table ####
 
-download.file('https://nhs-prod.global.ssl.fastly.net/binaries/content/assets/website-assets/services/ods/data-downloads-other-nhs-organisations/epcn.zip', paste0(source_directory, '/epcn.zip'), mode = 'wb')
-unzip(paste0(source_directory, '/epcn.zip'), exdir = source_directory)
 
-PCN_data <- read_excel(paste0(source_directory, "/ePCN.xlsx"),
-                       sheet = 'PCNDetails') %>% 
-  rename(PCN_code = 'PCN Code',
-         PCN_name = 'PCN Name',
-         Current_CCG_code = 'Current Clinical \r\nCommissioning \r\nGroup Code',
-         Current_CCG_name = 'Clinical\r\nCommissioning\r\nGroup Name',
-         Open_date = 'Open Date') %>% 
-  mutate(Address_label = paste0(`Address Line 1`, `Address Line 2`, Postcode)) %>% 
-  filter(Current_CCG_name == 'NHS WEST SUSSEX CCG')
-                       
-names(PCN_data)
-                       
+PCN_data
 
-LSOA_PCN_data <- read_excel(paste0(github_repo_dir, "/LSOA mapping for CI 11.11.2019 (002).xlsx")) %>% 
-  filter(PCN %in% PCN_data$PCN)
-# 
-# first_string <- paste0("LSOA11CD%20like%20'%25", LSOA_PCN_data$`LSOA code in CI`[1],"%25'%20OR%20")
-# last_string <- paste0("LSOA11CD%20like%20'%25", LSOA_PCN_data$`LSOA code in CI`[nrow(LSOA_PCN_data)],"%25'")
-# 
-# x <- 1;
-# z <- NULL; 
-# while (x <= nrow(LSOA_PCN_data)-2)  {  
-#   x <- x+1  
-#   z <- c(z,paste(paste0("LSOA11CD%20like%20'%25", LSOA_PCN_data$`LSOA code in CI`[x],"%25'%20OR%20"), collapse = "," ))
-# }
-# 
-# lsoa_string_for_api <- str_c(c(first_string, z, last_string), collapse = '')
 
-# rm(first_string, last_string,x,z)
+# PCN boundaries ####
 
-Overview <- PCN_data %>% 
-  group_by(PCN, CCG) %>% 
-  summarise(`Number of practices` = n()) %>% 
-  ungroup() %>% 
-  mutate_all(as.character) 
+lsoa_pcn_lookup <- read_csv(paste0(source_directory, '/lsoa_pcn_lookup_Feb_22.csv')) %>% 
+  arrange(PCN_Code)
 
-Overview <- Overview %>% 
-  add_column(Colours = c("#a04866","#d74356","#c4705e","#ca572a","#d49445","#526dd6","#37835c","#a2b068","#498a36","#a678e4","#8944b3","#57c39b","#4ab8d2","#658dce","#776e29","#60bf52","#7e5b9e","#afb136","#ce5cc6","#d58ec6","#d44b92"))
+lsoa_clipped_spdf <- geojson_read('https://opendata.arcgis.com/datasets/e9d10c36ebed4ff3865c4389c2c98827_0.geojson',  what = "sp") %>%
+  filter(LSOA11CD %in% lsoa_pcn_lookup$LSOA11CD) %>% 
+  arrange(LSOA11CD) %>% 
+  left_join(lsoa_pcn_lookup, by = c('LSOA11CD', 'LSOA11NM')) %>% 
+  arrange(PCN_Code)
 
 PCN_data <- PCN_data %>% 
-  left_join(Overview[c('PCN', 'Colours')], by = 'PCN')
+  arrange(PCN_code)
 
-Overview_2 <- Overview %>% 
-  group_by(CCG) %>% 
-  summarise(`Number of Primary Care Networks` = n())
+PCN_boundary <- gUnaryUnion(lsoa_clipped_spdf, id = lsoa_clipped_spdf@data$PCN_Code)
 
-GP_mapping <- read_csv('https://files.digital.nhs.uk/BA/206EF1/gp-reg-pat-prac-map.csv') %>% 
-  select(PRACTICE_CODE, PRACTICE_NAME, CCG_NAME) %>% 
-  rename(Code = PRACTICE_CODE,
-         Name = PRACTICE_NAME,
-         CCG_Name = CCG_NAME) %>% 
-  mutate(Name = capwords(Name, strict = T)) %>% 
-  mutate(Name = gsub(' And ', ' and ', Name))
+df <- data.frame(ID = character())
 
-GP_num_f_syoa_dec_2019 <- read_csv('https://files.digital.nhs.uk/D9/0CDBB0/gp-reg-pat-prac-sing-age-female.csv') %>% 
-  filter(ORG_CODE %in% PCN_data$`GP code`) %>% 
-  rename(Code = ORG_CODE,
-         Patients = NUMBER_OF_PATIENTS,
-         Age = AGE) %>% 
-  left_join(GP_mapping, by = 'Code') %>%
-  mutate(Sex = 'Female') %>% 
-  select(Code, Name, CCG_Name, Sex, Age, Patients)
+# Get the IDs of spatial polygon
+for (i in PCN_boundary@polygons ) { df <- rbind(df, data.frame(ID = i@ID, stringsAsFactors = FALSE))  }
 
-GP_num_m_syoa_dec_2019 <- read_csv('https://files.digital.nhs.uk/BE/82A15A/gp-reg-pat-prac-sing-age-male.csv') %>% 
-  filter(ORG_CODE %in% PCN_data$`GP code`) %>% 
-  rename(Code = ORG_CODE,
-         Patients = NUMBER_OF_PATIENTS,
-         Age = AGE) %>% 
-  left_join(GP_mapping, by = 'Code') %>%
-  mutate(Sex = 'Male') %>% 
-  select(Code, Name, CCG_Name, Sex, Age, Patients)
+# and set rowname = ID
+row.names(PCN_data) <- df$ID
 
-GP_num_dec_2019_ages <- GP_num_f_syoa_dec_2019 %>% 
-  bind_rows(GP_num_m_syoa_dec_2019) %>% 
-  filter(Age != 'ALL') %>%
-  mutate(Age = gsub("95\\+", "95", Age)) %>% 
-  mutate(Age = as.numeric(Age)) %>% 
-  mutate(Age_group = ifelse(Age <= 4, "0-4 years", ifelse(Age <= 9, "5-9 years", ifelse(Age <= 14, "10-14 years", ifelse(Age <= 19, "15-19 years", ifelse(Age <= 24, "20-24 years", ifelse(Age <= 29, "25-29 years",ifelse(Age <= 34, "30-34 years", ifelse(Age <= 39, "35-39 years",ifelse(Age <= 44, "40-44 years", ifelse(Age <= 49, "45-49 years",ifelse(Age <= 54, "50-54 years", ifelse(Age <= 59, "55-59 years",ifelse(Age <= 64, "60-64 years", ifelse(Age <= 69, "65-69 years",ifelse(Age <= 74, "70-74 years", ifelse(Age <= 79, "75-79 years",ifelse(Age <= 84, "80-84 years", ifelse(Age <= 89, "85-89 years", "90+ years")))))))))))))))))))
+# Then use df as the second argument to the spatial dataframe conversion function:
+pcn_spdf <- SpatialPolygonsDataFrame(PCN_boundary, PCN_data)  
 
-GP_num_65 <- GP_num_dec_2019_ages %>% 
-  filter(Age_group %in% c('65-69 years', '70-74 years','75-79 years', '80-84 years', '85-89 years', '90+ years')) %>% 
-  group_by(Code) %>% 
-  summarise(`Patients aged 65+` = sum(Patients, na.rm = TRUE))
+geojson_write(geojson_json(pcn_spdf), file = paste0(output_directory, '/pcn_boundary_simple.geojson'))
 
-GP_num_dec_2019 <- GP_num_f_syoa_dec_2019 %>% 
-  bind_rows(GP_num_m_syoa_dec_2019) %>% 
-  filter(Age == 'ALL') %>% 
-  group_by(Code, Name) %>% 
-  summarise(Patients = sum(Patients, na.rm = TRUE)) %>% 
-  left_join(GP_num_65, by = 'Code') %>% 
-  mutate(`Proportion aged 65+` = `Patients aged 65+` / Patients) %>% 
-  left_join(PCN_data[c('GP code', 'PCN')], by = c('Code' = 'GP code'))
+# Deprivation lsoa ####
+IMD_2019 <- read_csv('https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/845345/File_7_-_All_IoD2019_Scores__Ranks__Deciles_and_Population_Denominators_3.csv') %>% 
+  select("LSOA code (2011)",  "Local Authority District name (2019)", "Index of Multiple Deprivation (IMD) Score", "Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)", "Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOAs)") %>% 
+  rename(lsoa_code = 'LSOA code (2011)',
+         LTLA = 'Local Authority District name (2019)',
+         IMD_2019_score = 'Index of Multiple Deprivation (IMD) Score',
+         IMD_2019_rank = "Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)", 
+         IMD_2019_decile = "Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOAs)") %>% 
+  mutate(IMD_2019_decile = factor(ifelse(IMD_2019_decile == 1, '10% most deprived',  ifelse(IMD_2019_decile == 2, 'Decile 2',  ifelse(IMD_2019_decile == 3, 'Decile 3',  ifelse(IMD_2019_decile == 4, 'Decile 4',  ifelse(IMD_2019_decile == 5, 'Decile 5',  ifelse(IMD_2019_decile == 6, 'Decile 6',  ifelse(IMD_2019_decile == 7, 'Decile 7',  ifelse(IMD_2019_decile == 8, 'Decile 8',  ifelse(IMD_2019_decile == 9, 'Decile 9',  ifelse(IMD_2019_decile == 10, '10% least deprived', NA)))))))))), levels = c('10% most deprived', 'Decile 2', 'Decile 3', 'Decile 4', 'Decile 5', 'Decile 6', 'Decile 7', 'Decile 8', 'Decile 9', '10% least deprived'))) %>% 
+  filter(LTLA %in% c('Brighton and Hove', 'Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing', 'Eastbourne', 'Hastings', 'Lewes', 'Rother', 'Wealden')) %>% 
+  arrange(desc(IMD_2019_score)) %>% 
+  mutate(Rank_in_Sussex = rank(desc(IMD_2019_score))) %>% 
+  mutate(Decile_in_Sussex = abs(ntile(IMD_2019_score, 10) - 11)) %>% 
+  mutate(Decile_in_Sussex = factor(ifelse(Decile_in_Sussex == 1, '10% most deprived',  ifelse(Decile_in_Sussex == 2, 'Decile 2',  ifelse(Decile_in_Sussex == 3, 'Decile 3',  ifelse(Decile_in_Sussex == 4, 'Decile 4',  ifelse(Decile_in_Sussex == 5, 'Decile 5',  ifelse(Decile_in_Sussex == 6, 'Decile 6',  ifelse(Decile_in_Sussex == 7, 'Decile 7',  ifelse(Decile_in_Sussex == 8, 'Decile 8',  ifelse(Decile_in_Sussex == 9, 'Decile 9',  ifelse(Decile_in_Sussex == 10, '10% least deprived', NA)))))))))), levels = c('10% most deprived', 'Decile 2', 'Decile 3', 'Decile 4', 'Decile 5', 'Decile 6', 'Decile 7', 'Decile 8', 'Decile 9', '10% least deprived'))) %>%   mutate(UTLA = ifelse(LTLA %in% c('Brighton and Hove'),'Brighton and Hove', ifelse(LTLA %in% c('Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing'), 'West Sussex', ifelse(LTLA %in% c('Eastbourne', 'Hastings', 'Lewes', 'Rother', 'Wealden'), 'East Sussex', NA)))) %>% 
+  group_by(UTLA) %>% 
+  arrange(UTLA, desc(IMD_2019_score)) %>% 
+  mutate(Rank_in_UTLA = rank(desc(IMD_2019_score))) %>% 
+  mutate(Decile_in_UTLA = abs(ntile(IMD_2019_score, 10) - 11)) %>% 
+  mutate(Decile_in_UTLA = factor(ifelse(Decile_in_UTLA == 1, '10% most deprived',  ifelse(Decile_in_UTLA == 2, 'Decile 2',  ifelse(Decile_in_UTLA == 3, 'Decile 3',  ifelse(Decile_in_UTLA == 4, 'Decile 4',  ifelse(Decile_in_UTLA == 5, 'Decile 5',  ifelse(Decile_in_UTLA == 6, 'Decile 6',  ifelse(Decile_in_UTLA == 7, 'Decile 7',  ifelse(Decile_in_UTLA == 8, 'Decile 8',  ifelse(Decile_in_UTLA == 9, 'Decile 9',  ifelse(Decile_in_UTLA == 10, '10% least deprived', NA)))))))))), levels = c('10% most deprived', 'Decile 2', 'Decile 3', 'Decile 4', 'Decile 5', 'Decile 6', 'Decile 7', 'Decile 8', 'Decile 9', '10% least deprived'))) %>% 
+  mutate(UTLA = ifelse(LTLA %in% c('Brighton and Hove'),'Brighton and Hove', ifelse(LTLA %in% c('Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing'), 'West Sussex', ifelse(LTLA %in% c('Eastbourne', 'Hastings', 'Lewes', 'Rother', 'Wealden'), 'East Sussex', NA)))) %>% 
+  rename(LSOA11CD = lsoa_code) %>% 
+  arrange(LSOA11CD)
 
-PCN_patients = GP_num_dec_2019 %>% 
-  group_by(PCN) %>% 
-  summarise(Patients = sum(Patients, na.rm = TRUE),
-            `Patients aged 65+` = sum(`Patients aged 65+`, na.rm = TRUE)) %>% 
-  mutate(`Proportion aged 65+` = `Patients aged 65+` / Patients)
+if(file.exists(paste0(output_directory, '/lsoa_deprivation_2019_sussex.geojson')) == FALSE){
+  
+  # Read in the lsoa geojson boundaries for our lsoas (actually this downloads all 30,000+ and then we filter)
+  lsoa_spdf <- geojson_read('https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.geojson',  what = "sp") %>%
+    filter(LSOA11CD %in% IMD_2019$LSOA11CD) %>% 
+    arrange(LSOA11CD)
+  
+  df <- data.frame(ID = character())
+  
+  # Get the IDs of spatial polygon
+  for (i in lsoa_spdf@polygons ) { df <- rbind(df, data.frame(ID = i@ID, stringsAsFactors = FALSE))  }
+  
+  # and set rowname = ID
+  row.names(IMD_2019) <- df$ID
+  
+  # Then use df as the second argument to the spatial dataframe conversion function:
+  lsoa_spdf_json <- SpatialPolygonsDataFrame(lsoa_spdf, IMD_2019)  
+  
+  geojson_write(geojson_json(lsoa_spdf), file = paste0(output_directory, '/lsoa_deprivation_2019_sussex.geojson'))
+  
+}
 
-Overview <- Overview %>% 
-  left_join(PCN_patients, by = 'PCN')
 
-Overview %>% 
-  mutate(PCN = gsub('West Sussex - ', '', PCN)) %>% 
-  toJSON() %>% 
-  write_lines(paste0(github_repo_dir, '/pcn_overview.json'))
 
-#gp locations
+# gp locations
 
 # Download the EPRACCUR file 
 download.file('https://files.digital.nhs.uk/assets/ods/current/epraccur.zip', paste0(github_repo_dir,'/epraccur.zip'), mode = 'wb') 
