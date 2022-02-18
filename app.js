@@ -23,17 +23,40 @@ var PCN_geojson = $.ajax({
   },
 });
 
+// Load PCN pyramid data
+$.ajax({
+  url: "./outputs/PCN_pyramid_data.json",
+  dataType: "json",
+  async: false,
+  success: function(data) {
+    PCN_pyramid_data = data;
+   console.log('PCN pyramid data successfully loaded.')},
+  error: function (xhr) {
+    alert('PCN pyramid data not loaded - ' + xhr.statusText);
+  },
+});
+
+var width = window.innerWidth * 0.8 - 20;
+// var width = document.getElementById("daily_case_bars").offsetWidth;
+if (width > 900) {
+  var width = 900;
+}
+var width_margin = width * 0.15;
+
+var height = window.innerHeight * .5;
+
+
 // Get a list of unique PCN_codes from the data using d3.map
 var pcn_codes = d3
   .map(PCN_data, function (d) {
-    return d.PCN_code;
+    return d.PCN_Code;
   })
   .keys();
 
 // Get a list of unique PCN_names from the data using d3.map
 var pcn_names = d3
   .map(PCN_data, function (d) {
-    return d.PCN_name;
+    return d.PCN_Name;
   })
   .keys();
 
@@ -104,7 +127,16 @@ var pcn_boundary = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_col
 });
 
 
-// ! Population pyramid 
+// ! Population pyramid
+
+// append the svg object to the body of the page
+var svg_pcn_pyramid = d3.select("#pyramid_pcn_datavis")
+.append("svg")
+.attr("width", height)
+.attr("height", height + 25)
+.append("g")
+// .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 
 // We need to create a dropdown button for the user to choose which area to be displayed on the figure.
 d3.select("#select_pcn_pyramid_button")
@@ -132,7 +164,140 @@ d3.select("#selected_pcn_pyramid_title").html(function (d) {
     "; registered population"   
    );
  });
-  
+
+ var age_levels = ["0-4 years", "5-9 years", "10-14 years", "15-19 years", "20-24 years", "25-29 years", "30-34 years", "35-39 years", "40-44 years", "45-49 years", "50-54 years", "55-59 years", "60-64 years", "65-69 years", "70-74 years", "75-79 years", "80-84 years", "85-89 years", "90-94 years", '95+ years']
+
+PCN_pyramid_data.sort(function(a,b) {
+  return age_levels.indexOf(a.Age_group) > age_levels.indexOf(b.Age_group)});
+
+wsx_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
+  return d.Area_name === 'NHS West Sussex CCG' })
+
+// Filter to get out chosen dataset
+chosen_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
+  return d.Area_name === chosen_pcn_pyramid_area })
+
+chosen_pcn_pyramid_summary_data = PCN_data.filter(function(d,i){
+    return d.PCN_Name === chosen_pcn_pyramid_area }) 
+ 
+d3.select("#pcn_age_structure_text_1").html(function (d) {
+  return (
+   "There are estimated to be <b>" +
+   d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['Total']) +
+   ' </b>patients regisered to ' +
+   chosen_pcn_pyramid_summary_data[0]['Practices'] +
+   ' partnering practices in ' +
+   chosen_pcn_pyramid_area + 
+  ' as at January 2022.'   
+  );
+});
+
+d3.select("#pcn_age_structure_text_2").html(function (d) {
+  return (
+  '<b>' +
+  d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['65+ years']) +
+  ' </b>patients are aged 65+ and over, this is ' +
+  d3.format('.1%')(chosen_pcn_pyramid_summary_data[0]['65+ years'] / chosen_pcn_pyramid_summary_data[0]['Total'])
+  );
+});
+
+d3.select("#pcn_age_structure_text_3").html(function (d) {
+ return (
+  '<b>' +
+  d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['0-15 years']) +
+  '</b> are aged 0-15 and <b>'+
+  d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['16-64 years']) +
+  '</b> are aged 16-64.'
+ );
+ });
+
+// ! pyramid 
+// find the maximum data value on either side
+ var maxPopulation_static_pyr = Math.max(
+  d3.max(chosen_pcn_pyramid_data, function(d) { return d['Proportion']; }),
+  d3.max(wsx_pcn_pyramid_data, function(d) { return d['Proportion']; })
+);
+
+var margin_middle = 80,
+    pyramid_plot_width = (height/2) - (margin_middle/2),
+    male_zero = pyramid_plot_width,
+    female_zero = height - pyramid_plot_width;
+
+// the scale goes from 0 to the width of the pyramid plotting region. We will invert this for the left x-axis
+var x_static_pyramid_scale_male = d3.scaleLinear()
+ .domain([0, maxPopulation_static_pyr])
+ .range([male_zero, 0]);
+
+ // TODO fix scale
+// var xAxis_static_pyramid = svg_pcn_pyramid
+//  .append("g")
+//  .attr("transform", "translate(0," + height + ")")
+//  .call(d3.axisBottom(x_static_pyramid_scale_male));
+
+var x_static_pyramid_scale_female = d3.scaleLinear()
+ .domain([0, maxPopulation_static_pyr])
+ .range([female_zero, width]);
+
+ // TODO fix scale
+// var xAxis_static_pyramid_2 = svg_pcn_pyramid
+//  .append("g")
+//  .attr("transform", "translate(0," + height + ")")
+//  .call(d3.axisBottom(x_static_pyramid_scale_female));
+
+var wsx_pyramid_scale_bars = d3.scaleLinear()
+ .domain([0,maxPopulation_static_pyr])
+ .range([0, pyramid_plot_width]);
+
+var y_pyramid_wsx = d3.scaleBand()
+ .domain(age_levels)
+ .range([height, 0])
+ .padding([0.2]);
+
+ var yaxis_pos = female_zero - (margin_middle / 2)
+ 
+ var yAxis_static_pyramid = svg_pcn_pyramid
+ .append("g")
+ .attr("transform", "translate(0" + yaxis_pos + ",0)")
+ .call(d3.axisLeft(y_pyramid_wsx).tickSize(0))
+ .style('text-anchor', 'middle')
+ .select(".domain").remove()
+ 
+svg_pcn_pyramid
+   .selectAll("myRect")
+   .data(chosen_pcn_pyramid_data)
+   .enter()
+   .append("rect")
+   .attr("class", "pyramid_1")
+   .attr("x", female_zero)
+   .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
+   .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+   .attr("height", y_pyramid_wsx.bandwidth())
+   .attr("fill", "#0099ff")
+ 
+svg_pcn_pyramid
+  .selectAll("myRect")
+  .data(chosen_pcn_pyramid_data)
+  .enter()
+  .append("rect")
+  .attr("class", "pyramid_1")
+  .attr("x", function(d) { return male_zero - wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
+  .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("height", y_pyramid_wsx.bandwidth())
+  .attr("fill", "#ff6600")
+   
+ // TODO fix lines 
+// svg_pcn_pyramid
+// .append('g')
+// .append("path")
+// .datum(wsx_pcn_pyramid_data)
+// .attr("d", d3.line()
+// .x(function (d) { return wsx_pyramid_scale_bars(d['Proportion']) + female_zero })
+// .y(function(d) { return y_pyramid_wsx(d.Age_group) + 10; }))
+// .attr("stroke", '#005b99')
+// .style("stroke-width", 3)
+// .style("fill", "none");
+
 // The .on('change) part says when the drop down menu (select element) changes then retrieve the new selected area name and then use it to update the selected_pcn_pyramid_title element 
 d3.select("#select_pcn_pyramid_button").on("change", function (d) {
   var chosen_pcn_pyramid_area = d3
@@ -146,5 +311,84 @@ d3.select("#select_pcn_pyramid_button").on("change", function (d) {
         "; registered population"   
       );
     });
+
+    chosen_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
+      return d.Area_name === chosen_pcn_pyramid_area })
+    
+    chosen_pcn_pyramid_summary_data = PCN_data.filter(function(d,i){
+        return d.PCN_Name === chosen_pcn_pyramid_area }) 
+    
+    d3.select("#pcn_age_structure_text_1").html(function (d) {
+      return (
+       "There are estimated to be <b>" +
+        d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['Total']) +
+        ' </b>patients regisered to ' +
+        chosen_pcn_pyramid_summary_data[0]['Practices'] +
+         ' partnering practices in ' +
+        chosen_pcn_pyramid_area + 
+        ' as at January 2022.'   
+       );
+     });
+    
+    d3.select("#pcn_age_structure_text_2").html(function (d) {
+     return (
+       '<b>' +
+      d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['65+ years']) +
+      ' </b>patients are aged 65+ and over, this is ' +
+      d3.format('.1%')(chosen_pcn_pyramid_summary_data[0]['65+ years'] / chosen_pcn_pyramid_summary_data[0]['Total'])
+      );
+    });
+    
+    d3.select("#pcn_age_structure_text_3").html(function (d) {
+      return (
+        '<b>' +
+       d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['0-15 years']) +
+       '</b> are aged 0-15 and <b>'+
+       d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['16-64 years']) +
+       '</b> are aged 16-64.'
+       );
+      });
+
+  svg_pcn_pyramid.selectAll(".pyramid_1").remove();
+
+  var maxPopulation_static_pyr = Math.max(
+    d3.max(chosen_pcn_pyramid_data, function(d) { return d['Proportion']; }),
+    d3.max(wsx_pcn_pyramid_data, function(d) { return d['Proportion']; })
+  );
   
+x_static_pyramid_scale_male
+  .domain([0, maxPopulation_static_pyr])
+  
+x_static_pyramid_scale_female 
+  .domain([0, maxPopulation_static_pyr])
+  
+wsx_pyramid_scale_bars 
+  .domain([0,maxPopulation_static_pyr])
+
+  svg_pcn_pyramid
+   .selectAll("myRect")
+   .data(chosen_pcn_pyramid_data)
+   .enter()
+   .append("rect")
+   .attr("class", "pyramid_1")
+   .attr("x", female_zero)
+   .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
+   .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+   .attr("height", y_pyramid_wsx.bandwidth())
+   .attr("fill", "#0099ff")
+ 
+svg_pcn_pyramid
+  .selectAll("myRect")
+  .data(chosen_pcn_pyramid_data)
+  .enter()
+  .append("rect")
+  .attr("class", "pyramid_1")
+  .attr("x", function(d) { return male_zero - wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
+  .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("height", y_pyramid_wsx.bandwidth())
+  .attr("fill", "#ff6600")
+
 });
+
+

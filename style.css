@@ -94,3 +94,17 @@ header {
   -webkit-columns: 3;
   -moz-columns: 3;
 }
+
+#pyramid_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+  flex: auto;
+}
+
+.good_to_know {
+  border: 2px solid #cc0052;
+  border-radius: 5px;
+  padding: 10px;
+  padding-top: 5px;
+}

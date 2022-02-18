@@ -11,14 +11,13 @@ output_directory <- paste0(github_repo_dir, '/outputs')
 areas_to_loop <- c('West Sussex', 'Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing')
 
 # PCN organisation data ####
-
 download.file('https://nhs-prod.global.ssl.fastly.net/binaries/content/assets/website-assets/services/ods/data-downloads-other-nhs-organisations/epcn.zip', paste0(source_directory, '/epcn.zip'), mode = 'wb')
 unzip(paste0(source_directory, '/epcn.zip'), exdir = source_directory)
 
 PCN_data <- read_excel(paste0(source_directory, "/ePCN.xlsx"),
                        sheet = 'PCNDetails') %>% 
-  rename(PCN_code = 'PCN Code',
-         PCN_name = 'PCN Name',
+  rename(PCN_Code = 'PCN Code',
+         PCN_Name = 'PCN Name',
          Current_CCG_code = 'Current Clinical \r\nCommissioning \r\nGroup Code',
          Current_CCG_name = 'Clinical\r\nCommissioning\r\nGroup Name',
          Open_date = 'Open Date',
@@ -27,8 +26,8 @@ PCN_data <- read_excel(paste0(source_directory, "/ePCN.xlsx"),
   mutate(Open_date = as.Date(Open_date)) %>% 
   mutate(Address_label = gsub(', NA','', paste(str_to_title(`Address Line 1`), str_to_title(`Address Line 2`),str_to_title(`Address Line 3`),str_to_title(`Address Line 4`), Postcode, sep = ', '))) %>% 
   filter(Current_CCG_name == 'NHS WEST SUSSEX CCG') %>% 
-  mutate(PCN_name = gsub('\\(Aic\\)', '\\(AIC\\)', gsub('\\(Acf\\)', '\\(ACF\\)', gsub('Pcn', 'PCN', gsub('And', 'and',  gsub(' Of ', ' of ',  str_to_title(PCN_name))))))) %>% 
-  select(PCN_code, PCN_name, Postcode, Address_label)
+  mutate(PCN_Name = gsub('\\(Aic\\)', '\\(AIC\\)', gsub('\\(Acf\\)', '\\(ACF\\)', gsub('Pcn', 'PCN', gsub('And', 'and',  gsub(' Of ', ' of ',  str_to_title(PCN_Name))))))) %>% 
+  select(PCN_Code, PCN_Name, Postcode, Address_label)
                        
 Practice_to_PCN_lookup <- read_excel("GitHub/pcn_hi_2022_des/data/ePCN.xlsx", 
            sheet = "PCN Core Partner Details") %>%
@@ -40,43 +39,133 @@ Practice_to_PCN_lookup <- read_excel("GitHub/pcn_hi_2022_des/data/ePCN.xlsx",
   filter(Partner_CCG_name == 'NHS WEST SUSSEX CCG' | PCN_CCG_name == 'NHS WEST SUSSEX CCG')
 
 # GP Practice and PCN populations ####
-calls_patient_numbers_webpage <- read_html('https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice') %>%
+
+# Ordinarily we'd like to use the most recently available release of patients, and could use the following code to extract the latest.
+# calls_patient_numbers_webpage <- read_html('https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice') %>%
+#   html_nodes("a") %>%
+#   html_attr("href")
+# 
+# # we know the actual page we want has a url which starts with the following string, so reduce the scraped list above to those which include it
+# calls_patient_numbers_webpage <- unique(grep('/data-and-information/publications/statistical/patients-registered-at-a-gp-practice', calls_patient_numbers_webpage, value = T))
+# 
+# # We also know that the top result will be the latest version (even though the second result is the next upcoming version)
+# calls_patient_numbers_webpage <- read_html(paste0('https://digital.nhs.uk/',calls_patient_numbers_webpage[1])) %>%
+#   html_nodes("a") %>%
+#   html_attr("href")
+# 
+# # Now we know that the file we want contains the string 'gp-reg-pat-prac-quin-age.csv' we can use that in the read_csv call.
+# # I have also tidied it a little bit by renaming the Sex field and giving R some meta data about the order in which the age groups should be
+# latest_gp_practice_numbers <- read_csv(unique(grep('gp-reg-pat-prac-quin-age.csv', calls_patient_numbers_webpage, value = T))) %>% 
+#   mutate(Sex = factor(ifelse(SEX == 'FEMALE', 'Female', ifelse(SEX == 'MALE', 'Male', ifelse(SEX == 'ALL', 'Persons', NA))), levels = c('Female', 'Male'))) %>%
+#   mutate(Age_group = factor(paste0(gsub('_', '-', AGE_GROUP_5), ' years'), levels = c('0-4 years', '5-9 years', '10-14 years', '15-19 years', '20-24 years', '25-29 years', '30-34 years', '35-39 years', '40-44 years', '45-49 years', '50-54 years', '55-59 years', '60-64 years', '65-69 years', '70-74 years', '75-79 years', '80-84 years', '85-89 years', '90-94 years', '95+ years'))) %>% 
+#   filter(AGE_GROUP_5 != 'ALL') %>% 
+#   filter(Sex != 'Persons') %>% 
+#   rename(ODS_Code = ORG_CODE,
+#          Patients = NUMBER_OF_PATIENTS) %>% 
+#   select(EXTRACT_DATE, ODS_Code, Sex, Age_group, Patients) %>% 
+#   mutate(EXTRACT_DATE = paste0(ordinal(as.numeric(substr(EXTRACT_DATE,1,2))), ' ', substr(EXTRACT_DATE, 3,5), ' ', substr(EXTRACT_DATE, 6,10))) %>% 
+#   group_by(ODS_Code) %>% 
+#   mutate(Proportion = Patients / sum(Patients)) %>%  # We may also want to standardise the pyramid to compare bigger and smaller practices by their age structure
+#   ungroup()
+# 
+# gp_numbers_mapping_wsx <-  read_csv(unique(grep('gp-reg-pat-prac-map.csv', calls_patient_numbers_webpage, value = T))) %>% 
+#   filter(PCN_CODE %in% PCN_data$PCN_code)
+
+# HOWEVER, not every release has the LSOA level numbers we need to identify which decile people are in. As such, we need to specify the January 2022 release.
+calls_patient_numbers_webpage <- read_html('https://digital.nhs.uk/data-and-information/publications/statistical/patients-registered-at-a-gp-practice/january-2022') %>%
   html_nodes("a") %>%
   html_attr("href")
 
-# we know the actual page we want has a url which starts with the following string, so reduce the scraped list above to those which include it
-calls_patient_numbers_webpage <- unique(grep('/data-and-information/publications/statistical/patients-registered-at-a-gp-practice', calls_patient_numbers_webpage, value = T))
-
-# We also know that the top result will be the latest version (even though the second result is the next upcoming version)
-calls_patient_numbers_webpage <- read_html(paste0('https://digital.nhs.uk/',calls_patient_numbers_webpage[1])) %>%
-  html_nodes("a") %>%
-  html_attr("href")
+gp_numbers_mapping_wsx <-  read_csv(unique(grep('gp-reg-pat-prac-map.csv', calls_patient_numbers_webpage, value = T))) %>%
+  filter(PCN_CODE %in% PCN_data$PCN_Code) %>% 
+  rename(ODS_Code = PRACTICE_CODE,
+         PCN_Code = PCN_CODE,
+         ODS_Name = PRACTICE_NAME) %>%
+  mutate(ODS_Name = gsub('Woodlands&Clerklands', 'Woodlands & Clerklands', gsub('\\(Aic\\)', '\\(AIC\\)', gsub('\\(Acf\\)', '\\(ACF\\)', gsub('Pcn', 'PCN', gsub('And', 'and',  gsub(' Of ', ' of ',  str_to_title(ODS_Name)))))))) %>%   select(ODS_Code, ODS_Name, PCN_Code) %>% 
+  left_join(PCN_data[c('PCN_Code', 'PCN_Name')], by = 'PCN_Code')
 
 # Now we know that the file we want contains the string 'gp-reg-pat-prac-quin-age.csv' we can use that in the read_csv call.
 # I have also tidied it a little bit by renaming the Sex field and giving R some meta data about the order in which the age groups should be
-latest_gp_practice_numbers <- read_csv(unique(grep('gp-reg-pat-prac-quin-age.csv', calls_patient_numbers_webpage, value = T))) %>% 
+latest_gp_practice_numbers <- read_csv(unique(grep('gp-reg-pat-prac-quin-age.csv', calls_patient_numbers_webpage, value = T))) %>%
   mutate(Sex = factor(ifelse(SEX == 'FEMALE', 'Female', ifelse(SEX == 'MALE', 'Male', ifelse(SEX == 'ALL', 'Persons', NA))), levels = c('Female', 'Male'))) %>%
-  mutate(Age_group = factor(paste0(gsub('_', '-', AGE_GROUP_5), ' years'), levels = c('0-4 years', '5-9 years', '10-14 years', '15-19 years', '20-24 years', '25-29 years', '30-34 years', '35-39 years', '40-44 years', '45-49 years', '50-54 years', '55-59 years', '60-64 years', '65-69 years', '70-74 years', '75-79 years', '80-84 years', '85-89 years', '90-94 years', '95+ years'))) %>% 
-  filter(AGE_GROUP_5 != 'ALL') %>% 
-  filter(Sex != 'Persons') %>% 
+  mutate(Age_group = factor(paste0(gsub('_', '-', AGE_GROUP_5), ' years'), levels = c('0-4 years', '5-9 years', '10-14 years', '15-19 years', '20-24 years', '25-29 years', '30-34 years', '35-39 years', '40-44 years', '45-49 years', '50-54 years', '55-59 years', '60-64 years', '65-69 years', '70-74 years', '75-79 years', '80-84 years', '85-89 years', '90-94 years', '95+ years'))) %>%
+  filter(AGE_GROUP_5 != 'ALL') %>%
+  filter(Sex != 'Persons') %>%
   rename(ODS_Code = ORG_CODE,
-         Patients = NUMBER_OF_PATIENTS) %>% 
-  select(EXTRACT_DATE, ODS_Code, Sex, Age_group, Patients) %>% 
-  mutate(EXTRACT_DATE = paste0(ordinal(as.numeric(substr(EXTRACT_DATE,1,2))), ' ', substr(EXTRACT_DATE, 3,5), ' ', substr(EXTRACT_DATE, 6,10))) %>% 
-  group_by(ODS_Code) %>% 
+         Patients = NUMBER_OF_PATIENTS) %>%
+  select(EXTRACT_DATE, ODS_Code, Sex, Age_group, Patients) %>%
+  mutate(EXTRACT_DATE = paste0(ordinal(as.numeric(substr(EXTRACT_DATE,1,2))), ' ', substr(EXTRACT_DATE, 3,5), ' ', substr(EXTRACT_DATE, 6,10))) %>%
+  group_by(ODS_Code) %>%
   mutate(Proportion = Patients / sum(Patients)) %>%  # We may also want to standardise the pyramid to compare bigger and smaller practices by their age structure
-  ungroup()
+  ungroup() 
 
-practice_list_size_public <- latest_gp_practice_numbers %>% 
-  group_by(ODS_Code, Sex) %>% 
+wsx_ccg_population <- latest_gp_practice_numbers %>% 
+  filter(ODS_Code == '70F') %>% 
+  mutate(ODS_Name = 'NHS West Sussex CCG') %>% 
+  mutate(Area_name = 'NHS West Sussex CCG') %>% 
+  select(Area_name, Sex, Age_group, Patients, Proportion)
+
+sum(wsx_ccg_population$Patients)
+
+latest_gp_practice_numbers <- latest_gp_practice_numbers %>% 
+  filter(ODS_Code %in% gp_numbers_mapping_wsx$ODS_Code) %>% # 70F is the ods code for NHS West Sussex CCG
+  left_join(gp_numbers_mapping_wsx, by = 'ODS_Code') 
+
+sum(latest_gp_practice_numbers$Patients)
+
+pyramid_dataset <- latest_gp_practice_numbers %>% 
+  group_by(PCN_Name, Sex, Age_group) %>% 
+  summarise(Patients = sum(Patients, na.rm = TRUE)) %>% 
+  rename(Area_name = PCN_Name) %>% 
+  group_by(Area_name) %>%
+  mutate(Proportion = Patients / sum(Patients)) %>%  # We may also want to standardise the pyramid to compare bigger and smaller practices by their age structure
+  ungroup() 
+
+sum(pyramid_dataset$Patients)
+
+pyramid_dataset %>% 
+  bind_rows(wsx_ccg_population) %>% 
+  toJSON() %>%
+  write_lines(paste0(output_directory, '/PCN_pyramid_data.json'))
+
+# Combine population data with the PCN_data table ####
+library(xfun)
+
+n_practice_in_pcn <- latest_gp_practice_numbers %>% 
+  select(ODS_Code, PCN_Code) %>% 
+  unique() %>% 
+  group_by(PCN_Code) %>% 
+  summarise(Practices = n()) %>% 
+  mutate(Practices = numbers_to_words(Practices))
+
+practice_total_list_size_public <- latest_gp_practice_numbers %>% 
+  group_by(PCN_Code, Sex) %>% 
   summarise(Patients = sum(Patients, na.rm = TRUE)) %>% 
   ungroup() %>% 
   pivot_wider(names_from = 'Sex',
               values_from = 'Patients') %>% 
   mutate(Total = Male + Female)
 
-# Combine this population data with the PCN_data table ####
+latest_age_pcn_numbers <- read_csv(unique(grep('gp-reg-pat-prac-sing-age-regions.csv', calls_patient_numbers_webpage, value = T))) %>%
+  filter(ORG_CODE %in% PCN_data$PCN_Code) %>% 
+  filter(AGE != 'ALL') %>% 
+  rename(PCN_Code = ORG_CODE,
+         Patients = NUMBER_OF_PATIENTS,
+         Sex = SEX,
+         Age = AGE) %>%
+  mutate(Sex = factor(ifelse(Sex == 'FEMALE', 'Female', ifelse(Sex == 'MALE', 'Male', NA)), levels = c('Female', 'Male'))) %>%
+  mutate(Age = as.numeric(gsub('95\\+', '95', Age))) %>% 
+  mutate(Age_group = factor(ifelse(Age < 16, '0-15 years', ifelse(Age < 65, '16-64 years', '65+ years')), levels = c('0-15 years', '16-64 years', '65+ years'))) %>% 
+  select(PCN_Code, Sex, Age_group, Patients) %>%
+  group_by(PCN_Code, Age_group) %>%
+  summarise(Patients = sum(Patients, na.rm = TRUE)) %>% 
+  pivot_wider(names_from = 'Age_group',
+              values_from = 'Patients')
+  
 PCN_data %>% 
+  left_join(practice_total_list_size_public, by = 'PCN_Code') %>% 
+  left_join(latest_age_pcn_numbers, by = 'PCN_Code') %>% 
+  left_join(n_practice_in_pcn, by = 'PCN_Code') %>% 
   toJSON() %>%
   write_lines(paste0(output_directory, '/PCN_data.json'))
 

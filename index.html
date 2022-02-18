@@ -17,8 +17,17 @@
     
 <h2>This page is in development.</h1>
 
-<section id = 'introduction'><h1>Introduction - The West Sussex Health and Care Partnership Plan 2021/22</h1>
-  <p>Key documents and strategies to tackle health inequalities.</p>
+<section id = 'introduction'>
+  <h1>Introduction</h1>
+
+  <p>Life expectancy, nationally and in West Sussex, has increased in the last 20 years overall (Global Burden of Disease, 2019) but there is a gap of almost four years between males and females. Healthy life expectancy (the number of years an average person might expect to live in good, disease free, life) has also increased but the gain in healthy life expectancy has not been as high compared to gains in overall life expectancy. Similar to overall life expectancy, male healthy life expectancy trails behind females although the gap is much smaller at just over one years difference. Whilst females may live longer lives than males, in West Sussex and nationally, females tend to spend more of their lives living with disability or in 'sub-optimal' health, compared to males.</p>
+
+  <p>Health inequalities are unfair and often avoidable differences in health across the population, and between different groups within society based on their sex (such as with life expectancy) but it can also arise from factors such as our age, race, sexual orientation, where we are born, work, and where we live. Indeed, the gap in life expectancy at birth between the most and least deprived areas in England overall is around nine years for males and almost eight years for females (Office for National Statistics, 2021). This means that <b>those living in the most deprived parts of the country could expect to die around eight or nine years earlier than those in the least deprived areas of England</b>. The gap in healthy life expectancy is doubled at around 19 years for males and females living in the least deprived areas compared to their counterparts in the most deprived areas.</p>
+
+  <p>The extra years in sub-optimal health place even further pressure on health services as well as having an impact on employment and productivity. The additional costs to the NHS of health inequalities have been estimated at almost £5 billion per year from the greater use of hospital services by people in deprived areas alone (Asaria, Doran, & Cookson, 2016).</p> 
+    
+  <p>The approach to acting on health inequalities was established in the NHS Long Term Plan (NHS England 2019), prior to the COVID-19 global pandemic and the rationale and urgency for this work has only increased in response to the burden resulting from the pandemic and as services recover. There has never been a more important moment to coordinate an effort to reduce the gap in health inequalities.</p>
+  <p>High quality services on their own can reduce unwarranted variation in outcomes. However, they will not reduce inequalities at a population level unless they also identify (with partners) and give graduated and targetted support to populations in greatest need, who may not be using those services to the best effect.</p>
 <h1>The Core20PLUS5 approach</h1>
 <p>The ‘Core20PLUS5’ initiative is to drive targeted health inequalities improvements in the following areas:</p>
 <ul>
@@ -49,7 +58,16 @@
 
 <select id="select_pcn_pyramid_button"></select>
 <h4 id = 'selected_pcn_pyramid_title'></h4>
-<p>Population pyramid</p>
+
+<div id = 'pyramid_container'>
+<div id = 'pyramid_pcn_datavis'></div>
+<div>
+<p id = 'pcn_age_structure_text_1'></p>
+<p id = 'pcn_age_structure_text_2'></p>
+<p id = 'pcn_age_structure_text_3'></p>
+<p>The shape of the pyramid gives an indication of the age structure of a population, if the shape is wider at the top, this is indicative of an ageing population and a pyramid which is wider at the bottom indicates a relatively younger population overall.</p>
+</div>
+</div>
 
 </section>
 
@@ -74,7 +92,6 @@
 
    <h3>Deprivation at the GP and PCN level</h3> 
    <p>GP practices within each PCN in West Sussex by their national decile group. Practices in dark blue are estimated to have the most deprived populations in England whereas those in orange are the least deprived.</p>
-
 </section>
 
 <section id = 'osci_local_insight'>
@@ -83,7 +100,11 @@
 </section>
 
 <section id = 'disease_inequalities'>
-  <h1>Inequalities in disease prevalence and burden</h1>
+<h1>Inequalities in disease prevalence and burden</h1>
+
+<p>At a national level, it is also clear to see that those</p>
+
+<p class = 'good_to_know'>It should be noted that at small area level such as neighbourhoods (and even at county level for some conditions), the number of deaths or people with conditions can be relatively small and as such, any variation can have a big impact. We often group or pool the number of deaths over a longer time period (such as five years for MSOA based life expectancy estimates) and also look at confidence intervals of estimates when deciding if one areas is bigger/smaller or better/worse than another.</p>
 <h3>Neighbourhood level (MSOA) life expectancy and disease prevalence variation across the county</h3>
 <div id="map_3_id"></div>
 </section>
@@ -91,6 +112,14 @@
 <section id = 'cancer'>
   <h1>A closer look at cancer</h1>
 <p>A look at screening and outcomes at PCN level</p>
+</section>
+
+<section>
+  <h1>References</h1>
+  <p>Asaria M, Doran T, Cookson R. The costs of inequality: whole-population modelling study of lifetime inpatient hospital costs in the English National Health Service by level of neighbourhood deprivation. Journal of Epidemiology and Community Health. 2016;70(10):990</p>
+  <p>GBD online results tool; Institute for Health Metrics and Evaluation (IHME). Findings from the Global Burden of Disease Study 2017. Seattle, WA: IHME, 2018'.</p>
+  <p>NHS England. NHS Long Term Plan. 2019</p>
+  <p>Office for National Statistics, 2021. Health state life expectancies by national deprivation deciles, England: 2017 to 2019. https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/healthinequalities/bulletins/healthstatelifeexpectanciesbyindexofmultipledeprivationimd/2017to2019</p>
 </section>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
