@@ -129,14 +129,20 @@ var pcn_boundary = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_col
 
 // ! Population pyramid
 
+var formatPercent = d3.format(".0%"),
+    margin_middle = 80,
+    pyramid_plot_width = (height/2) - (margin_middle/2),
+    male_zero = pyramid_plot_width,
+    female_zero = pyramid_plot_width + margin_middle;
+
+console.log(pyramid_plot_width, height, height + (margin_middle/2))
+
 // append the svg object to the body of the page
 var svg_pcn_pyramid = d3.select("#pyramid_pcn_datavis")
 .append("svg")
-.attr("width", height)
-.attr("height", height + 25)
+.attr("width", height + (margin_middle/2))
+.attr("height", height + (margin_middle/2))
 .append("g")
-// .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
 
 // We need to create a dropdown button for the user to choose which area to be displayed on the figure.
 d3.select("#select_pcn_pyramid_button")
@@ -211,49 +217,43 @@ d3.select("#pcn_age_structure_text_3").html(function (d) {
  );
  });
 
-// ! pyramid 
 // find the maximum data value on either side
  var maxPopulation_static_pyr = Math.max(
   d3.max(chosen_pcn_pyramid_data, function(d) { return d['Proportion']; }),
   d3.max(wsx_pcn_pyramid_data, function(d) { return d['Proportion']; })
 );
 
-var margin_middle = 80,
-    pyramid_plot_width = (height/2) - (margin_middle/2),
-    male_zero = pyramid_plot_width,
-    female_zero = height - pyramid_plot_width;
-
 // the scale goes from 0 to the width of the pyramid plotting region. We will invert this for the left x-axis
 var x_static_pyramid_scale_male = d3.scaleLinear()
  .domain([0, maxPopulation_static_pyr])
- .range([male_zero, 0]);
+ .range([male_zero, (0 + margin_middle/4)])
+//  .nice();
 
- // TODO fix scale
-// var xAxis_static_pyramid = svg_pcn_pyramid
-//  .append("g")
-//  .attr("transform", "translate(0," + height + ")")
-//  .call(d3.axisBottom(x_static_pyramid_scale_male));
+var xAxis_static_pyramid = svg_pcn_pyramid
+ .append("g")
+ .attr("transform", "translate(0," + height + ")")
+ .call(d3.axisBottom(x_static_pyramid_scale_male).tickFormat(formatPercent));
 
 var x_static_pyramid_scale_female = d3.scaleLinear()
  .domain([0, maxPopulation_static_pyr])
- .range([female_zero, width]);
+ .range([female_zero, (height - margin_middle/4)])
+//  .nice();
 
- // TODO fix scale
-// var xAxis_static_pyramid_2 = svg_pcn_pyramid
-//  .append("g")
-//  .attr("transform", "translate(0," + height + ")")
-//  .call(d3.axisBottom(x_static_pyramid_scale_female));
+var xAxis_static_pyramid_2 = svg_pcn_pyramid
+ .append("g")
+ .attr("transform", "translate(0," + height + ")")
+ .call(d3.axisBottom(x_static_pyramid_scale_female).tickFormat(formatPercent));
 
-var wsx_pyramid_scale_bars = d3.scaleLinear()
- .domain([0,maxPopulation_static_pyr])
- .range([0, pyramid_plot_width]);
+ var wsx_pyramid_scale_bars = d3.scaleLinear()
+ .domain([0, maxPopulation_static_pyr])
+ .range([0, (pyramid_plot_width - margin_middle/4)]);
 
 var y_pyramid_wsx = d3.scaleBand()
  .domain(age_levels)
  .range([height, 0])
  .padding([0.2]);
 
- var yaxis_pos = female_zero - (margin_middle / 2)
+ var yaxis_pos = height/2
  
  var yAxis_static_pyramid = svg_pcn_pyramid
  .append("g")
