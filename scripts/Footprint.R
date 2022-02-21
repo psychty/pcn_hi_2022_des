@@ -161,14 +161,13 @@ latest_age_pcn_numbers <- read_csv(unique(grep('gp-reg-pat-prac-sing-age-regions
   summarise(Patients = sum(Patients, na.rm = TRUE)) %>% 
   pivot_wider(names_from = 'Age_group',
               values_from = 'Patients')
-  
+
 PCN_data %>% 
   left_join(practice_total_list_size_public, by = 'PCN_Code') %>% 
   left_join(latest_age_pcn_numbers, by = 'PCN_Code') %>% 
-  left_join(n_practice_in_pcn, by = 'PCN_Code') %>% 
+  left_join(n_practice_in_pcn, by = 'PCN_Code') %>%
   toJSON() %>%
   write_lines(paste0(output_directory, '/PCN_data.json'))
-
 
 # PCN boundaries ####
 
@@ -220,9 +219,12 @@ IMD_2019 <- read_csv('https://assets.publishing.service.gov.uk/government/upload
   mutate(Decile_in_UTLA = factor(ifelse(Decile_in_UTLA == 1, '10% most deprived',  ifelse(Decile_in_UTLA == 2, 'Decile 2',  ifelse(Decile_in_UTLA == 3, 'Decile 3',  ifelse(Decile_in_UTLA == 4, 'Decile 4',  ifelse(Decile_in_UTLA == 5, 'Decile 5',  ifelse(Decile_in_UTLA == 6, 'Decile 6',  ifelse(Decile_in_UTLA == 7, 'Decile 7',  ifelse(Decile_in_UTLA == 8, 'Decile 8',  ifelse(Decile_in_UTLA == 9, 'Decile 9',  ifelse(Decile_in_UTLA == 10, '10% least deprived', NA)))))))))), levels = c('10% most deprived', 'Decile 2', 'Decile 3', 'Decile 4', 'Decile 5', 'Decile 6', 'Decile 7', 'Decile 8', 'Decile 9', '10% least deprived'))) %>% 
   mutate(UTLA = ifelse(LTLA %in% c('Brighton and Hove'),'Brighton and Hove', ifelse(LTLA %in% c('Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing'), 'West Sussex', ifelse(LTLA %in% c('Eastbourne', 'Hastings', 'Lewes', 'Rother', 'Wealden'), 'East Sussex', NA)))) %>% 
   rename(LSOA11CD = lsoa_code) %>% 
-  arrange(LSOA11CD)
-
-if(file.exists(paste0(output_directory, '/lsoa_deprivation_2019_sussex.geojson')) == FALSE){
+  arrange(LSOA11CD) %>% 
+  filter(LSOA11CD %in% lsoa_pcn_lookup$LSOA11CD) %>% 
+  select(LSOA11CD, LTLA, IMD_2019_decile, IMD_2019_rank) %>% 
+  left_join(lsoa_pcn_lookup[c('LSOA11CD', 'PCN_Name')], by = 'LSOA11CD')
+  
+if(file.exists(paste0(output_directory, '/lsoa_deprivation_2019_west_sussex.geojson')) == FALSE){
   
   # Read in the lsoa geojson boundaries for our lsoas (actually this downloads all 30,000+ and then we filter)
   lsoa_spdf <- geojson_read('https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.geojson',  what = "sp") %>%
@@ -240,13 +242,13 @@ if(file.exists(paste0(output_directory, '/lsoa_deprivation_2019_sussex.geojson')
   # Then use df as the second argument to the spatial dataframe conversion function:
   lsoa_spdf_json <- SpatialPolygonsDataFrame(lsoa_spdf, IMD_2019)  
   
-  geojson_write(geojson_json(lsoa_spdf), file = paste0(output_directory, '/lsoa_deprivation_2019_sussex.geojson'))
+  geojson_write(geojson_json(lsoa_spdf_json), file = paste0(output_directory, '/lsoa_deprivation_2019_west_sussex.geojson'))
   
 }
 
 
 
-# gp locations
+# GP locations
 
 # Download the EPRACCUR file 
 download.file('https://files.digital.nhs.uk/assets/ods/current/epraccur.zip', paste0(github_repo_dir,'/epraccur.zip'), mode = 'wb') 

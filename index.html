@@ -15,8 +15,8 @@
 </head>
 <body>
     
-<h2>This page is in development.</h1>
-
+<h2>This page is in development.</h2>
+<p class = 'good_to_know'>Note: this page is not currently accessibility friendly, due to some of the interactive elements on some figures and the maps. We are working to create a print and screen reader friendly version of the site as soon as possible. If you need help with any part of the analyses below, please email jsna[at]westsussex.gov.uk</p>
 <section id = 'introduction'>
   <h1>Introduction</h1>
 
@@ -52,6 +52,7 @@
 <p>We have assigned every LSOA in West Sussex to one PCN based on data from the number of residents in the LSOA registered to each GP practice and some GP practices operate in areas assigned to other PCNs (e.g. Horsham Collaborative practices in Horsham Central areas). PCN boundaries can transcend district and borough boundaries and some even cross into neighbouring counties.</p>
   <h3>Primary Care Network locally derived boundaries</h3>
 <div id = "map_1_id"></div>
+<h3>PCN key</h3>
 <div id = 'pcn_key'></div>
 <h3>Age structure of PCN registered populations</h3>
 <p>Use the drop down menu here to choose a PCN to find out more information about its age and sex population structure.</p>
@@ -66,6 +67,7 @@
 <p id = 'pcn_age_structure_text_2'></p>
 <p id = 'pcn_age_structure_text_3'></p>
 <p>The shape of the pyramid gives an indication of the age structure of a population, if the shape is wider at the top, this is indicative of an ageing population and a pyramid which is wider at the bottom indicates a relatively younger population overall.</p>
+<p class = 'good_to_know'>Note that the x axis scale (along the bottom) is redrawn when a new area is selected.</p>
 </div>
 </div>
 
@@ -87,9 +89,22 @@
     <li><b>Barriers to Housing and Services</b> (9.3%)</li>
     <li><b>Living Environment</b> (9.3%)</li></ul>
 
+    <p>The map below shows the variation in relative deprivation across the PCNs in West Sussex. The darker blue areas are amongst the most deprived neighbourhoods in England and the lighter yellow are the least deprived.</p>
+    <p>You can search for a postcode in the box below for any postcode and the map will zoom into that area.</p>
+
+    <div class="inputHolder">
+      <input placeholder="Postcode" type="text" id="txtPostcode" />
+      <input type="button" value="Search" id="btnPostcode" />
+    </div>
+    <p id = 'local_pinpoint_1'></p>
+    <p id = 'local_pinpoint_2'></p>
+    
     <h3>Neighbourhood level (LSOA) deprivation across the county</h3>
     <div id="map_2_id"></div>
-
+    <h3>Deprivation key</h3>
+    <div id = 'deprivation_key'></div>
+    <p>You can see from this map that not all PCNs cover areas which are considered to be the 'Core 20' deprived neighbourhoods. <b>However</b>, it should be reiterated that the PCN boundaries are mutually exclusive for planning purposes only and do not take into account that some patients may be registered to a PCN and live outside of the designated area for that PCN.</p>
+    <p>This is covered in more detail in the section below.</p>
    <h3>Deprivation at the GP and PCN level</h3> 
    <p>GP practices within each PCN in West Sussex by their national decile group. Practices in dark blue are estimated to have the most deprived populations in England whereas those in orange are the least deprived.</p>
 </section>

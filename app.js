@@ -36,15 +36,27 @@ $.ajax({
   },
 });
 
+// Load PCN deprivation data
+
+// Load LSOA deprivation geojson
+var Deprivation_geojson = $.ajax({
+  url: "./outputs/lsoa_deprivation_2019_west_sussex.geojson",
+  dataType: "json",
+  success: console.log("LSOA deprivation data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  },
+});
+
+wsx_areas = ['Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing']
+
 var width = window.innerWidth * 0.8 - 20;
 // var width = document.getElementById("daily_case_bars").offsetWidth;
 if (width > 900) {
   var width = 900;
 }
 var width_margin = width * 0.15;
-
 var height = window.innerHeight * .5;
-
 
 // Get a list of unique PCN_codes from the data using d3.map
 var pcn_codes = d3
@@ -94,6 +106,72 @@ function pcn_boundary_colour(feature) {
   };
 }
 
+// Create a function to add stylings to the polygons in the leaflet map
+function pcn_boundary_overlay_colour(feature) {
+  return {
+    fillColor: 'none',
+    color: setPCNcolour(feature.properties.PCN_code),
+    weight: 2,
+    fillOpacity: 0.85,
+  };
+}
+
+var deprivation_deciles = [
+  "10% most deprived",
+  "Decile 2",
+  "Decile 3",
+  "Decile 4",
+  "Decile 5",
+  "Decile 6",
+  "Decile 7",
+  "Decile 8",
+  "Decile 9",
+  "10% least deprived",
+];
+
+var deprivation_colours = [
+  "#0000FF",
+  "#2080FF",
+  "#40E0FF",
+  "#70FFD0",
+  "#90FFB0",
+  "#C0E1B0",
+  "#E0FFA0",
+  "#E0FF70",
+  "#F0FF30",
+  "#FFFF00",
+];
+
+var lsoa_covid_imd_colour_func = d3
+  .scaleOrdinal()
+  .domain(deprivation_deciles)
+  .range(deprivation_colours);
+
+// Create a list with an item for each PCN and display the colour in the border 
+deprivation_deciles.forEach(function (item, index) {
+  var list = document.createElement("li");
+  list.innerHTML = item;
+  list.className = "key_list";
+  list.style.borderColor = lsoa_covid_imd_colour_func(index);
+  var tt = document.createElement("div");
+  tt.style.borderColor = setPCNcolour(index);
+  var tt_h3_1 = document.createElement("h3");
+  tt_h3_1.innerHTML = item;
+  tt.appendChild(tt_h3_1);
+  var div = document.getElementById("deprivation_key");
+  div.appendChild(list);
+});
+
+function lsoa_deprivation_colour(feature) {
+  return {
+    fillColor: lsoa_covid_imd_colour_func(feature.properties.IMD_2019_decile),
+    color: lsoa_covid_imd_colour_func(feature.properties.IMD_2019_decile),
+    // color: 'blue',
+    weight: 1,
+    fillOpacity: 0.85
+  }
+}
+
 // Define the background tiles for our maps 
 var tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
@@ -129,8 +207,7 @@ var pcn_boundary = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_col
 
 // ! Population pyramid
 
-var formatPercent = d3.format(".0%"),
-    margin_middle = 80,
+var margin_middle = 80,
     pyramid_plot_width = (height/2) - (margin_middle/2),
     male_zero = pyramid_plot_width,
     female_zero = pyramid_plot_width + margin_middle;
@@ -143,6 +220,12 @@ var svg_pcn_pyramid = d3.select("#pyramid_pcn_datavis")
 .attr("width", height + (margin_middle/2))
 .attr("height", height + (margin_middle/2))
 .append("g")
+
+// You could add NHS West Sussex CCG to the pyramid 
+// overall_ccg = ['NHS West Sussex CCG'].concat(pcn_names)
+// console.log(overall_ccg)
+
+// However, this causes some trouble when 
 
 // We need to create a dropdown button for the user to choose which area to be displayed on the figure.
 d3.select("#select_pcn_pyramid_button")
@@ -176,8 +259,8 @@ d3.select("#selected_pcn_pyramid_title").html(function (d) {
 PCN_pyramid_data.sort(function(a,b) {
   return age_levels.indexOf(a.Age_group) > age_levels.indexOf(b.Age_group)});
 
-wsx_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
-  return d.Area_name === 'NHS West Sussex CCG' })
+// wsx_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
+//   return d.Area_name === 'NHS West Sussex CCG' })
 
 // Filter to get out chosen dataset
 chosen_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
@@ -188,7 +271,7 @@ chosen_pcn_pyramid_summary_data = PCN_data.filter(function(d,i){
  
 d3.select("#pcn_age_structure_text_1").html(function (d) {
   return (
-   "There are estimated to be <b>" +
+   "There are estimated to be <b class = 'extra'>" +
    d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['Total']) +
    ' </b>patients regisered to ' +
    chosen_pcn_pyramid_summary_data[0]['Practices'] +
@@ -200,7 +283,7 @@ d3.select("#pcn_age_structure_text_1").html(function (d) {
 
 d3.select("#pcn_age_structure_text_2").html(function (d) {
   return (
-  '<b>' +
+  '<b class = "extra">' +
   d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['65+ years']) +
   ' </b>patients are aged 65+ and over, this is ' +
   d3.format('.1%')(chosen_pcn_pyramid_summary_data[0]['65+ years'] / chosen_pcn_pyramid_summary_data[0]['Total'])
@@ -209,9 +292,9 @@ d3.select("#pcn_age_structure_text_2").html(function (d) {
 
 d3.select("#pcn_age_structure_text_3").html(function (d) {
  return (
-  '<b>' +
+  '<b class = "extra">' +
   d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['0-15 years']) +
-  '</b> are aged 0-15 and <b>'+
+  '</b> are aged 0-15 and <b class = "extra">'+
   d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['16-64 years']) +
   '</b> are aged 16-64.'
  );
@@ -219,30 +302,41 @@ d3.select("#pcn_age_structure_text_3").html(function (d) {
 
 // find the maximum data value on either side
  var maxPopulation_static_pyr = Math.max(
-  d3.max(chosen_pcn_pyramid_data, function(d) { return d['Proportion']; }),
-  d3.max(wsx_pcn_pyramid_data, function(d) { return d['Proportion']; })
+  d3.max(chosen_pcn_pyramid_data, function(d) { return d['Patients']; })
 );
+
+if(maxPopulation_static_pyr < 2000) {
+  maxPopulation_static_pyr  = Math.ceil(maxPopulation_static_pyr / 200) * 200
+}
+
+if(maxPopulation_static_pyr >= 2000 && maxPopulation_static_pyr < 3000) {
+  maxPopulation_static_pyr  = Math.ceil(maxPopulation_static_pyr / 250) * 250
+}
+
+if(maxPopulation_static_pyr >= 3000) {
+    maxPopulation_static_pyr  = Math.ceil(maxPopulation_static_pyr / 500) * 500
+}
 
 // the scale goes from 0 to the width of the pyramid plotting region. We will invert this for the left x-axis
 var x_static_pyramid_scale_male = d3.scaleLinear()
  .domain([0, maxPopulation_static_pyr])
  .range([male_zero, (0 + margin_middle/4)])
-//  .nice();
+ .nice();
 
 var xAxis_static_pyramid = svg_pcn_pyramid
  .append("g")
  .attr("transform", "translate(0," + height + ")")
- .call(d3.axisBottom(x_static_pyramid_scale_male).tickFormat(formatPercent));
+ .call(d3.axisBottom(x_static_pyramid_scale_male).ticks(6))
 
-var x_static_pyramid_scale_female = d3.scaleLinear()
+ var x_static_pyramid_scale_female = d3.scaleLinear()
  .domain([0, maxPopulation_static_pyr])
  .range([female_zero, (height - margin_middle/4)])
-//  .nice();
+ .nice();
 
 var xAxis_static_pyramid_2 = svg_pcn_pyramid
  .append("g")
  .attr("transform", "translate(0," + height + ")")
- .call(d3.axisBottom(x_static_pyramid_scale_female).tickFormat(formatPercent));
+ .call(d3.axisBottom(x_static_pyramid_scale_female).ticks(6));
 
  var wsx_pyramid_scale_bars = d3.scaleLinear()
  .domain([0, maxPopulation_static_pyr])
@@ -270,7 +364,7 @@ svg_pcn_pyramid
    .attr("class", "pyramid_1")
    .attr("x", female_zero)
    .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
-   .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+   .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Patients']); })
    .attr("height", y_pyramid_wsx.bandwidth())
    .attr("fill", "#0099ff")
  
@@ -280,24 +374,12 @@ svg_pcn_pyramid
   .enter()
   .append("rect")
   .attr("class", "pyramid_1")
-  .attr("x", function(d) { return male_zero - wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("x", function(d) { return male_zero - wsx_pyramid_scale_bars(d['Patients']); })
   .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
-  .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Patients']); })
   .attr("height", y_pyramid_wsx.bandwidth())
   .attr("fill", "#ff6600")
    
- // TODO fix lines 
-// svg_pcn_pyramid
-// .append('g')
-// .append("path")
-// .datum(wsx_pcn_pyramid_data)
-// .attr("d", d3.line()
-// .x(function (d) { return wsx_pyramid_scale_bars(d['Proportion']) + female_zero })
-// .y(function(d) { return y_pyramid_wsx(d.Age_group) + 10; }))
-// .attr("stroke", '#005b99')
-// .style("stroke-width", 3)
-// .style("fill", "none");
-
 // The .on('change) part says when the drop down menu (select element) changes then retrieve the new selected area name and then use it to update the selected_pcn_pyramid_title element 
 d3.select("#select_pcn_pyramid_button").on("change", function (d) {
   var chosen_pcn_pyramid_area = d3
@@ -320,7 +402,7 @@ d3.select("#select_pcn_pyramid_button").on("change", function (d) {
     
     d3.select("#pcn_age_structure_text_1").html(function (d) {
       return (
-       "There are estimated to be <b>" +
+       "There are estimated to be <b class = 'extra'>" +
         d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['Total']) +
         ' </b>patients regisered to ' +
         chosen_pcn_pyramid_summary_data[0]['Practices'] +
@@ -332,7 +414,7 @@ d3.select("#select_pcn_pyramid_button").on("change", function (d) {
     
     d3.select("#pcn_age_structure_text_2").html(function (d) {
      return (
-       '<b>' +
+       '<b class = "extra">' +
       d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['65+ years']) +
       ' </b>patients are aged 65+ and over, this is ' +
       d3.format('.1%')(chosen_pcn_pyramid_summary_data[0]['65+ years'] / chosen_pcn_pyramid_summary_data[0]['Total'])
@@ -341,9 +423,9 @@ d3.select("#select_pcn_pyramid_button").on("change", function (d) {
     
     d3.select("#pcn_age_structure_text_3").html(function (d) {
       return (
-        '<b>' +
+        '<b class = "extra">' +
        d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['0-15 years']) +
-       '</b> are aged 0-15 and <b>'+
+       '</b> are aged 0-15 and <b class = "extra">'+
        d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['16-64 years']) +
        '</b> are aged 16-64.'
        );
@@ -352,10 +434,21 @@ d3.select("#select_pcn_pyramid_button").on("change", function (d) {
   svg_pcn_pyramid.selectAll(".pyramid_1").remove();
 
   var maxPopulation_static_pyr = Math.max(
-    d3.max(chosen_pcn_pyramid_data, function(d) { return d['Proportion']; }),
-    d3.max(wsx_pcn_pyramid_data, function(d) { return d['Proportion']; })
+    d3.max(chosen_pcn_pyramid_data, function(d) { return d['Patients']; })
   );
-  
+
+if(maxPopulation_static_pyr < 2000) {
+  maxPopulation_static_pyr  = Math.ceil(maxPopulation_static_pyr / 200) * 200
+}
+
+if(maxPopulation_static_pyr >= 2000 && maxPopulation_static_pyr < 3000) {
+  maxPopulation_static_pyr  = Math.ceil(maxPopulation_static_pyr / 250) * 250
+}
+
+if(maxPopulation_static_pyr >= 3000) {
+    maxPopulation_static_pyr  = Math.ceil(maxPopulation_static_pyr / 500) * 500
+}
+
 x_static_pyramid_scale_male
   .domain([0, maxPopulation_static_pyr])
   
@@ -365,7 +458,17 @@ x_static_pyramid_scale_female
 wsx_pyramid_scale_bars 
   .domain([0,maxPopulation_static_pyr])
 
-  svg_pcn_pyramid
+xAxis_static_pyramid 
+  .transition()
+  .duration(1000)
+  .call(d3.axisBottom(x_static_pyramid_scale_male).ticks(6));
+ 
+ xAxis_static_pyramid_2
+ .transition()
+ .duration(1000)
+ .call(d3.axisBottom(x_static_pyramid_scale_female).ticks(6));
+
+ svg_pcn_pyramid
    .selectAll("myRect")
    .data(chosen_pcn_pyramid_data)
    .enter()
@@ -373,7 +476,7 @@ wsx_pyramid_scale_bars
    .attr("class", "pyramid_1")
    .attr("x", female_zero)
    .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
-   .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+   .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Patients']); })
    .attr("height", y_pyramid_wsx.bandwidth())
    .attr("fill", "#0099ff")
  
@@ -383,12 +486,115 @@ svg_pcn_pyramid
   .enter()
   .append("rect")
   .attr("class", "pyramid_1")
-  .attr("x", function(d) { return male_zero - wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("x", function(d) { return male_zero - wsx_pyramid_scale_bars(d['Patients']); })
   .attr("y", function(d) { return y_pyramid_wsx(d.Age_group); })
-  .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Proportion']); })
+  .attr("width", function(d) { return wsx_pyramid_scale_bars(d['Patients']); })
   .attr("height", y_pyramid_wsx.bandwidth())
   .attr("fill", "#ff6600")
 
 });
 
+// ! Deprivation map 
 
+// Specify that this code should run once the PCN_geojson data request is complete
+$.when(Deprivation_geojson).done(function () {
+
+  // Create a leaflet map (L.map) in the element map_1_id
+  var map_2 = L.map("map_2_id");
+   
+  // add the background and attribution to the map
+  L.tileLayer(tileUrl, { attribution })
+   .addTo(map_2);
+    
+  var lsoa_boundary = L.geoJSON(Deprivation_geojson.responseJSON, { style: lsoa_deprivation_colour })
+   .addTo(map_2)
+   .bindPopup(function (layer) {
+      return (
+        "LSOA: <Strong>" +
+        layer.feature.properties.LSOA11CD +
+        "</Strong>.<br><br>This LSOA is in <Strong>" +
+        layer.feature.properties.PCN_Name +
+        "</Strong> in " + 
+        layer.feature.properties.LTLA +
+         "<br><br>This neighbourhood is in decile " +
+        layer.feature.properties.IMD_2019_decile +
+        ' and is ranked ' +
+        d3.format(',.0f')(layer.feature.properties.IMD_2019_rank) +
+        ' out of 32,844 small areas in England.'
+
+      );
+   });
+
+   L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
+   .addTo(map_2);
+  
+   map_2.fitBounds(lsoa_boundary.getBounds());
+
+   // Add a pin and zoom in.
+   var marker_chosen = L.marker([0, 0]).addTo(map_2);
+
+   //search event
+   $(document).on("click", "#btnPostcode", function () {
+     var input = $("#txtPostcode").val();
+     var url = "https://api.postcodes.io/postcodes/" + input;
+ 
+     post(url).done(function (postcode) {
+       var chosen_lsoa = postcode["result"]["lsoa"];
+       var chosen_lsoa_code = postcode["result"]['codes']["lsoa"];
+       var chosen_ltla = postcode['result']['admin_district'];
+       var chosen_lat = postcode["result"]["latitude"];
+       var chosen_long = postcode["result"]["longitude"];
+ 
+       marker_chosen.setLatLng([chosen_lat, chosen_long]);
+       map_2.setView([chosen_lat, chosen_long], 11);
+
+if(wsx_areas.includes(chosen_ltla)){
+
+      //    var lsoa_summary_data_chosen = lsoa_boundary.feature.properties.filter(function (d) {
+      //    return d.LSOA11CD == chosen_lsoa_code;
+      //  });
+ 
+console.log(postcode["result"])
+
+       d3.select("#local_pinpoint_1").html(function (d) {
+        return 'This postcode is in ' + chosen_ltla;
+      });
+      d3.select("#local_pinpoint_2").html(function (d) {
+        return "More detail will appear here.";
+      });
+
+}
+
+
+ 
+      });
+    });
+
+ //enter event - search
+ $("#txtPostcode").keypress(function (e) {
+  if (e.which === 13) {
+    $("#btnPostcode").click();
+  }
+});
+
+//ajax call
+function post(url) {
+  return $.ajax({
+    url: url,
+    success: function () {
+      //woop
+    },
+    error: function (desc, err) {
+      $("#result_text").html("Details: " + desc.responseText);
+
+      d3.select("#local_pinpoint_1").html(function (d) {
+        return "The postcode you entered does not seem to be valid, please check and try again.";
+      });
+      d3.select("#local_pinpoint_2").html(function (d) {
+        return "This could be because there is a problem with the postcode look up tool we are using.";
+      });
+    },
+  });
+}
+
+  });
