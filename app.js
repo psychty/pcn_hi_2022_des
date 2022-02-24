@@ -36,7 +36,24 @@ $.ajax({
   },
 });
 
-// Load PCN deprivation data
+// Load GP and PCN deprivation data
+$.ajax({
+  url: "./outputs/PCN_deprivation_data.json",
+  dataType: "json",
+  async: false,
+  success: function(data) {
+    GP_PCN_deprivation_data = data;
+   console.log('PCN deprivation data successfully loaded.')},
+  error: function (xhr) {
+    alert('PCN deprivation data not loaded - ' + xhr.statusText);
+  },
+});
+
+GP_location = GP_PCN_deprivation_data.filter(function(d,i){
+  return d.Type === 'GP'})
+
+PCN_deprivation_data = GP_PCN_deprivation_data.filter(function(d,i){
+  return d.Type === 'PCN'})
 
 // Load LSOA deprivation geojson
 var Deprivation_geojson = $.ajax({
@@ -47,6 +64,11 @@ var Deprivation_geojson = $.ajax({
     alert(xhr.statusText);
   },
 });
+
+// lsoa_data = Deprivation_geojson.responseJSON
+// console.log(lsoa_data)
+
+// console.log(Deprivation_geojson.responseJSON)
 
 wsx_areas = ['Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing']
 
@@ -99,8 +121,8 @@ pcn_codes.forEach(function (item, index) {
 // Create a function to add stylings to the polygons in the leaflet map
 function pcn_boundary_colour(feature) {
   return {
-    fillColor: setPCNcolour(feature.properties.PCN_code),
-    color: setPCNcolour(feature.properties.PCN_code),
+    fillColor: setPCNcolour(feature.properties.PCN_Code),
+    color: setPCNcolour(feature.properties.PCN_Code),
     weight: 1,
     fillOpacity: 0.85,
   };
@@ -110,7 +132,7 @@ function pcn_boundary_colour(feature) {
 function pcn_boundary_overlay_colour(feature) {
   return {
     fillColor: 'none',
-    color: setPCNcolour(feature.properties.PCN_code),
+    color: setPCNcolour(feature.properties.PCN_Code),
     weight: 2,
     fillOpacity: 0.85,
   };
@@ -172,9 +194,21 @@ function lsoa_deprivation_colour(feature) {
   }
 }
 
-// Define the background tiles for our maps 
-var tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+function core20_deprivation_colour(feature) {
+  return {
+    fillColor: 'red',
+    color: 'red',
+    weight: 2,
+    fillOpacity: 0.25
+  }
+}
 
+// Define the background tiles for our maps 
+// This tile layer is coloured
+// var tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+// This tile layer is black and white
+var tileUrl = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 // Define an attribution statement to go onto our maps
 var attribution =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Contains Ordnance Survey data © Crown copyright and database right 2022';
@@ -194,12 +228,33 @@ var pcn_boundary = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_col
  .bindPopup(function (layer) {
     return (
       "Primary Care Network: <Strong>" +
-      layer.feature.properties.PCN_code +
+      layer.feature.properties.PCN_Code +
       " " +
-      layer.feature.properties.PCN_name +
+      layer.feature.properties.PCN_Name +
       "</Strong>"
     );
  });
+
+ // TODO fix gp markers
+
+console.log(GP_location[0]['lat'], GP_location[0]['long'])
+
+// new L.circleMarker([GP_location[0]['latitude'], GP_location[0]['longitude']], {radius: 10, color: 'black'}).addTo(map_1);
+
+// new L.circleMarker(latlng([50.8115,-0.5137]), {radius: 10, color: 'black'}).addTo(map_1);
+
+//  for (var i = 0; i < GP_location.length; i++) {
+//   gps = new L.circleMarker([GP_location[i]['lat'], GP_location[i]['long']],
+//       {radius: 6,
+//        color:'black',
+//        weight: 1,
+//        opacity:1,
+//       //  fillColor: setPCNcolour(GP_location[i]['PCN_Code']),
+//        fillColor: 'blue',
+//        fillOpacity:1})
+//        .addTo(map_1)
+//        .bindPopup('<Strong>' + GP_location[i]['Area_Code'] + ' ' + GP_location[i]['Area_Name'] + '</Strong><br><br>This practice is part of the ' + GP_location[i]['PCN_Code'] + GP_location[i]['PCN_Name'] + '. There are ' + d3.format(',.0f')(GP_location[i]['Total']) +' patients registered to this practice.');
+//     }
 
  map_1.fitBounds(pcn_boundary.getBounds());
 });
@@ -211,8 +266,6 @@ var margin_middle = 80,
     pyramid_plot_width = (height/2) - (margin_middle/2),
     male_zero = pyramid_plot_width,
     female_zero = pyramid_plot_width + margin_middle;
-
-console.log(pyramid_plot_width, height, height + (margin_middle/2))
 
 // append the svg object to the body of the page
 var svg_pcn_pyramid = d3.select("#pyramid_pcn_datavis")
@@ -259,10 +312,7 @@ d3.select("#selected_pcn_pyramid_title").html(function (d) {
 PCN_pyramid_data.sort(function(a,b) {
   return age_levels.indexOf(a.Age_group) > age_levels.indexOf(b.Age_group)});
 
-// wsx_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
-//   return d.Area_name === 'NHS West Sussex CCG' })
-
-// Filter to get out chosen dataset
+2// Filter to get out chosen dataset
 chosen_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
   return d.Area_name === chosen_pcn_pyramid_area })
 
@@ -499,7 +549,10 @@ svg_pcn_pyramid
 // Specify that this code should run once the PCN_geojson data request is complete
 $.when(Deprivation_geojson).done(function () {
 
-  // Create a leaflet map (L.map) in the element map_1_id
+// lsoa_data = Deprivation_geojson.responseJSON.features
+// console.log(lsoa_data)
+
+// Create a leaflet map (L.map) in the element map_1_id
   var map_2 = L.map("map_2_id");
    
   // add the background and attribution to the map
@@ -516,85 +569,116 @@ $.when(Deprivation_geojson).done(function () {
         layer.feature.properties.PCN_Name +
         "</Strong> in " + 
         layer.feature.properties.LTLA +
-         "<br><br>This neighbourhood is in decile " +
+         "<br><br>This neighbourhood is in " +
         layer.feature.properties.IMD_2019_decile +
         ' and is ranked ' +
         d3.format(',.0f')(layer.feature.properties.IMD_2019_rank) +
         ' out of 32,844 small areas in England.'
-
       );
    });
 
-   L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
+   var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
    .addTo(map_2);
   
+   var Core20_LSOAs = L.geoJson(Deprivation_geojson.responseJSON, {filter: core_20Filter, style: core20_deprivation_colour})
+  //  .addTo(map_2)
+   .bindPopup(function (layer) {
+    return (
+      "LSOA: <Strong>" +
+      layer.feature.properties.LSOA11CD +
+      "</Strong>.<br><br>This LSOA is in <Strong>" +
+      layer.feature.properties.PCN_Name +
+      "</Strong> in " + 
+      layer.feature.properties.LTLA +
+       "<br><br>This neighbourhood is in " +
+      layer.feature.properties.IMD_2019_decile +
+      ' and is ranked ' +
+      d3.format(',.0f')(layer.feature.properties.IMD_2019_rank) +
+      ' out of 32,844 small areas in England.'
+    );
+ });
+
+   function core_20Filter(feature) {
+     if (feature.properties.IMD_2019_decile === "10% most deprived" | feature.properties.IMD_2019_decile === 'Decile 2') return true
+   }
+   
    map_2.fitBounds(lsoa_boundary.getBounds());
 
-   // Add a pin and zoom in.
-   var marker_chosen = L.marker([0, 0]).addTo(map_2);
+   var baseMaps_map_2 = {
+    "Neighbourhoods (LSOA deprivation) ": lsoa_boundary,
+    "Show PCN boundary lines": PCN_boundary_overlay,
+    "Show most deprived 20% of<br>neighbourhoods (national rankings)": Core20_LSOAs, 
+  };
 
-   //search event
-   $(document).on("click", "#btnPostcode", function () {
-     var input = $("#txtPostcode").val();
-     var url = "https://api.postcodes.io/postcodes/" + input;
+   L.control
+   .layers(null, baseMaps_map_2, { collapsed: false })
+   .addTo(map_2);
+
+//    // Add a pin and zoom in.
+//    var marker_chosen = L.marker([0, 0]).addTo(map_2);
+
+//    //search event
+//    $(document).on("click", "#btnPostcode", function () {
+//      var input = $("#txtPostcode").val();
+//      var url = "https://api.postcodes.io/postcodes/" + input;
  
-     post(url).done(function (postcode) {
-       var chosen_lsoa = postcode["result"]["lsoa"];
-       var chosen_lsoa_code = postcode["result"]['codes']["lsoa"];
-       var chosen_ltla = postcode['result']['admin_district'];
-       var chosen_lat = postcode["result"]["latitude"];
-       var chosen_long = postcode["result"]["longitude"];
+//      post(url).done(function (postcode) {
+//        var chosen_lsoa = postcode["result"]["lsoa"];
+//        var chosen_ltla = postcode['result']['admin_district'];
+//        var chosen_lat = postcode["result"]["latitude"];
+//        var chosen_long = postcode["result"]["longitude"];
  
-       marker_chosen.setLatLng([chosen_lat, chosen_long]);
-       map_2.setView([chosen_lat, chosen_long], 11);
+//        marker_chosen.setLatLng([chosen_lat, chosen_long]);
+//        map_2.setView([chosen_lat, chosen_long], 11);
 
-if(wsx_areas.includes(chosen_ltla)){
-
-      //    var lsoa_summary_data_chosen = lsoa_boundary.feature.properties.filter(function (d) {
-      //    return d.LSOA11CD == chosen_lsoa_code;
-      //  });
+//   if(wsx_areas.includes(chosen_ltla)){
+//     console.log(Deprivation_geojson.responseJSON.features[0].properties)
+// // var lsoa_summary_data_chosen = Deprivation_geojson.feature.properties.filter(function (d) {
+//   // return d.LSOA11NM == chosen_lsoa;
+//   // });
  
-console.log(postcode["result"])
+// console.log(postcode["result"])
+// // console.log(lsoa_summary_data_chosen)
 
-       d3.select("#local_pinpoint_1").html(function (d) {
-        return 'This postcode is in ' + chosen_ltla;
-      });
-      d3.select("#local_pinpoint_2").html(function (d) {
-        return "More detail will appear here.";
-      });
+//        d3.select("#local_pinpoint_1").html(function (d) {
+//         return 'This postcode is in ' + chosen_lsoa + chosen_ltla;
+//       });
+//       d3.select("#local_pinpoint_2").html(function (d) {
+//         return "More detail will appear here.";
+//       });
 
-}
-
-
+// }
  
-      });
-    });
+//       });
+//     });
 
- //enter event - search
- $("#txtPostcode").keypress(function (e) {
-  if (e.which === 13) {
-    $("#btnPostcode").click();
-  }
-});
+//  //enter event - search
+//  $("#txtPostcode").keypress(function (e) {
+//   if (e.which === 13) {
+//     $("#btnPostcode").click();
+//   }
+// });
 
-//ajax call
-function post(url) {
-  return $.ajax({
-    url: url,
-    success: function () {
-      //woop
-    },
-    error: function (desc, err) {
-      $("#result_text").html("Details: " + desc.responseText);
+// //ajax call
+// function post(url) {
+//   return $.ajax({
+//     url: url,
+//     success: function () {
+//       //woop
+//     },
+//     error: function (desc, err) {
+//       $("#result_text").html("Details: " + desc.responseText);
 
-      d3.select("#local_pinpoint_1").html(function (d) {
-        return "The postcode you entered does not seem to be valid, please check and try again.";
-      });
-      d3.select("#local_pinpoint_2").html(function (d) {
-        return "This could be because there is a problem with the postcode look up tool we are using.";
-      });
-    },
+//       d3.select("#local_pinpoint_1").html(function (d) {
+//         return "The postcode you entered does not seem to be valid, please check and try again.";
+//       });
+//       d3.select("#local_pinpoint_2").html(function (d) {
+//         return "This could be because there is a problem with the postcode look up tool we are using.";
+//       });
+//     },
+//   });
+// }
+
   });
-}
 
-  });
+  // Numbers in each quintile
