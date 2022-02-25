@@ -273,6 +273,9 @@ gp_locations <- gp_numbers_mapping_wsx %>%
 download.file(unique(grep('gp-reg-pat-prac-lsoa-male-female', calls_patient_numbers_webpage, value = T)), paste0(source_directory, '/gp_reg_lsoa.zip'), mode = 'wb')
 unzip(paste0(source_directory, '/gp_reg_lsoa.zip'), exdir = source_directory)
 
+file.remove(paste0(source_directory, '/gp-reg-pat-prac-lsoa-female.csv'))
+file.remove(paste0(source_directory, '/gp-reg-pat-prac-lsoa-male.csv'))
+
 gp_lsoa_df <- read_csv(paste0(source_directory, '/gp-reg-pat-prac-lsoa-all.csv')) %>% 
   rename(ODS_Code = PRACTICE_CODE,
          LSOA11CD = LSOA_CODE) %>% 

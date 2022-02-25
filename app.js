@@ -55,6 +55,14 @@ GP_location = GP_PCN_deprivation_data.filter(function(d,i){
 PCN_deprivation_data = GP_PCN_deprivation_data.filter(function(d,i){
   return d.Type === 'PCN'})
 
+// Add a new field which is the proportion in the most deprived quintile
+PCN_deprivation_data.forEach(function(d) {
+  d.Proportion_most = +d['20% most deprived'] / +d['Total']
+});
+
+// We could have done this in R and read in a wider table, but this approach keeps the file size load as small as possible as calculations can be done by the browser.
+
+
 // Load LSOA deprivation geojson
 var Deprivation_geojson = $.ajax({
   url: "./outputs/lsoa_deprivation_2019_west_sussex.geojson",
@@ -222,7 +230,7 @@ var map_1 = L.map("map_1_id");
 // add the background and attribution to the map
 L.tileLayer(tileUrl, { attribution })
  .addTo(map_1);
-  
+
 var pcn_boundary = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_colour })
  .addTo(map_1)
  .bindPopup(function (layer) {
@@ -235,28 +243,35 @@ var pcn_boundary = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_col
     );
  });
 
- // TODO fix gp markers
+map_1.fitBounds(pcn_boundary.getBounds());
 
-console.log(GP_location[0]['lat'], GP_location[0]['long'])
+// TODO fix gp markers
+// This loops through the dataframe and plots a marker for every record.
 
-// new L.circleMarker([GP_location[0]['latitude'], GP_location[0]['longitude']], {radius: 10, color: 'black'}).addTo(map_1);
+var pane1 = map_1.createPane('markers1');
 
-// new L.circleMarker(latlng([50.8115,-0.5137]), {radius: 10, color: 'black'}).addTo(map_1);
+ for (var i = 0; i < GP_location.length; i++) {
+ gps = new L.circleMarker([GP_location[i]['lat'], GP_location[i]['long']],
+      {
+      pane: 'markers1',
+      radius: 6,
+      color: '#000',
+      weight: .5,
+      fillColor: setPCNcolour(GP_location[i]['PCN_Code']),
+      fillOpacity: 1})
+    .bindPopup('<Strong>' + GP_location[i]['Area_Code'] + ' ' + GP_location[i]['Area_Name'] + '</Strong><br><br>This practice is part of the ' + GP_location[i]['PCN_Code'] + ' ' + GP_location[i]['PCN_Name'] + '. There are ' + d3.format(',.0f')(GP_location[i]['Total']) +' patients registered to this practice.')
+    .addTo(map_1) 
+   }
 
-//  for (var i = 0; i < GP_location.length; i++) {
-//   gps = new L.circleMarker([GP_location[i]['lat'], GP_location[i]['long']],
-//       {radius: 6,
-//        color:'black',
-//        weight: 1,
-//        opacity:1,
-//       //  fillColor: setPCNcolour(GP_location[i]['PCN_Code']),
-//        fillColor: 'blue',
-//        fillOpacity:1})
-//        .addTo(map_1)
-//        .bindPopup('<Strong>' + GP_location[i]['Area_Code'] + ' ' + GP_location[i]['Area_Name'] + '</Strong><br><br>This practice is part of the ' + GP_location[i]['PCN_Code'] + GP_location[i]['PCN_Name'] + '. There are ' + d3.format(',.0f')(GP_location[i]['Total']) +' patients registered to this practice.');
-//     }
+    var baseMaps_map_1 = {
+      "Show PCN boundary": pcn_boundary,
+      // "Show GP practices": markers1, 
+    };
+  
+     L.control
+     .layers(null, baseMaps_map_1, { collapsed: false })
+     .addTo(map_1);
 
- map_1.fitBounds(pcn_boundary.getBounds());
 });
 
 
@@ -454,7 +469,7 @@ d3.select("#select_pcn_pyramid_button").on("change", function (d) {
       return (
        "There are estimated to be <b class = 'extra'>" +
         d3.format(',.0f')(chosen_pcn_pyramid_summary_data[0]['Total']) +
-        ' </b>patients regisered to ' +
+        ' </b>patients registered to ' +
         chosen_pcn_pyramid_summary_data[0]['Practices'] +
          ' partnering practices in ' +
         chosen_pcn_pyramid_area + 
@@ -681,4 +696,57 @@ $.when(Deprivation_geojson).done(function () {
 
   });
 
-  // Numbers in each quintile
+// ! Numbers in each quintile
+
+// PCN Figure
+
+window.onload = () => {
+  loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data);
+};
+
+console.log(PCN_deprivation_data)
+
+// PCN table 
+function loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data) {
+  const tableBody = document.getElementById("pcn_table_deprivation_1");
+  var dataHTML = "";
+
+  for (let item of PCN_deprivation_data) {
+    dataHTML += `<tr><td>${item.Area_Name}</td><td>${d3.format(",.0f")(item["20% most deprived"])}</td><td>${d3.format('.1%')(item["Proportion_most"])}</td><td>${d3.format(",.0f")(item["Total"])}</td></tr>`;
+  }
+  tableBody.innerHTML = dataHTML;
+}
+
+
+
+// ! Searchable GP table
+// draw the table
+d3.select("#container_search")
+  .append("div")
+  .attr("class", "SearchBar")
+  .append("p")
+  .attr("class", "SearchBar")
+  .text("Search By PCN:");
+
+d3.select(".SearchBar")
+  .append("input")
+  .attr("class", "SearchBar")
+  .attr("id", "search_ltla")
+  .attr("type", "text")
+  .attr("placeholder", "Search...");
+
+// var msoa_table = d3.select("#msoa_table_vaccines").append("table");
+
+// msoa_table.append("thead").append("tr").attr("class", "msoa_table");
+
+// var headers = msoa_table
+//   .select("tr")
+//   .selectAll("th")
+//   .data(column_names)
+//   .enter()
+//   .append("th")
+//   .text(function (d) {
+//     return d;
+//   });
+
+// var rows, row_entries, row_entries_no_anchor, row_entries_with_anchor;

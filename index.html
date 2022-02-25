@@ -46,15 +46,17 @@
   <h1>Primary Care Networks</h1>
   <p>Primary Care Networks (PCNs) are networks of general practices which attempt to integrate primary care with secondary and community services, and bridge a gap between general practice and emerging Integrated Care Systems (Fisher, Thorlby, & Alderwick, 2019). Each PCN is made up a group of a number of GP practices forming a network that covers approximately 30,000 to 50,000 patients.</p>
   <p>Directed Enhanced Services (DES) are voluntary add-ons to the core GP contract to incentivise specific services. The specific DES requirements of PCNs are set out in the Network Contract DES Specification (NHS England, 2019 (2)).</p>
-
   <p>The map below shows the geographical footprint of West Sussex PCNs.</p>
 <p>Each PCN boundary is made by aggregating Lower-layer Super Output Areas (LSOAs) together. However, it should be noted that GP practices do not have geographical boundaries and more than one GP practice can operate in the same local area. Whilst the map is useful to understand roughly the local areas that each PCN may cover, for planning purposes, in reality these boundaries are not mutually exclusive (e.g. there is some crossover as patients may use GP services outside of their local areas).</p>
 <p>We have assigned every LSOA in West Sussex to one PCN based on data from the number of residents in the LSOA registered to each GP practice and some GP practices operate in areas assigned to other PCNs (e.g. Horsham Collaborative practices in Horsham Central areas). PCN boundaries can transcend district and borough boundaries and some even cross into neighbouring counties.</p>
+<p>Each GP practice in West Sussex is shown as a dot which is also coloured by the PCN (see the key under the map). Click on one of these dots to see more. Note that GP practices often have patients on their lists who may travel far, even out of the district or county, to use their services.</p>
+<p class = 'good_to_know'>Some practices may be part of one PCN but physically located inside an area designated to a different PCN.</p>
   <h3>Primary Care Network locally derived boundaries</h3>
 <div id = "map_1_id"></div>
 <h3>PCN key</h3>
 <div id = 'pcn_key'></div>
 <h3>Age structure of PCN registered populations</h3>
+<p>NHS Digital publish the number of patients registered to individual organisations along side basic demographic information such as age, sex, and LSOA of residence, in monthly snapshots available to the public. See the publication <a href = 'https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/patients-registered-at-a-gp-practice'>Patients registered at a GP practice</a> for more details. We have used this information to get a picture of the overall age/sex structure of each PCN (by aggregating individual organisation data) and later in the section on deprivation we use the LSOA data to summarise the core20 population.</p>
 <p>Use the drop down menu here to choose a PCN to find out more information about its age and sex population structure.</p>
 
 <select id="select_pcn_pyramid_button"></select>
@@ -70,11 +72,10 @@
 <p class = 'good_to_know'>Note that the x axis scale (along the bottom) is redrawn when a new area is selected.</p>
 </div>
 </div>
-
 </section>
 
 <section id = 'deprivation'>
-  <h1>Core 20 - Deprivation in West Sussex</h1>
+  <h1>Deprivation in West Sussex</h1>
   <p>West Sussex overall is relative less deprived, and is in the top 20% of least deprived local authorities in the country. However, a small number of neighbourhoods along the coast in Arun and in Crawley are among the most deprived neighbourhoods in England.</p>
 
   <h3>The indices of deprivation</h3>
@@ -107,10 +108,30 @@
     <div id = 'deprivation_key'></div>
     <p>You can see from this map that not all PCNs cover areas which are considered to be the 'Core 20' deprived neighbourhoods (this is deciles 1 and 2, representing the 20% of most deprived neighbourhoods in England). <b>However</b>, it should be reiterated that the PCN boundaries are mutually exclusive for planning purposes only and do not take into account that some patients may be registered to a PCN and live outside of the designated area for that PCN.</p>
     <p>This is covered in more detail in the section below.</p>
-   <h3>Deprivation at the GP and PCN level</h3> 
+   <h3>Deprivation at the PCN (and GP) level</h3> 
+   <p>The number of patients registered to individual practices, plus some basic information about the residential location of patients (postcode data aggregated to LSOA), is available in the public domain, and we can use this to get an idea of the number of patients PCNs and individual practices have on their lists that reside in more or less deprived areas.</p>
    <p>GP practices within each PCN in West Sussex by their national decile group. Practices in dark blue are estimated to have the most deprived populations in England whereas those in orange are the least deprived.</p>
 
-   <h3>Table</h3>
+   <h3>Table 1 - number of patients registered to West Sussex PCNs; patients living in most deprived neighbourhoods</h3>
+   <table id = 'table_1' style="margin-bottom: 20px">
+    <thead>
+      <tr>
+        <th style = 'text-align: left;'>PCN</th>
+        <th style = 'text-align: right;'>No. registered patients living in the most deprived 20% of neighbourhoods in England
+        </th>
+        <th style = 'text-align: right;'>Proportion of registered patients living in the most deprived 20%</th>
+        <th style = 'text-align: right;'>Total number of patients</th>
+      </tr>
+    </thead>
+  <tbody id="pcn_table_deprivation_1"></tbody>
+  </table>
+
+   <!-- <h3>Table 2</h3>
+   <div class="give_me_space_to_search">
+    <div id="container_search"></div>
+  </div>
+  <div id="gp_table_deprivation_1" style="margin-bottom: 20px"></div> -->
+
 </section>
 
 <section id = 'osci_local_insight'>
