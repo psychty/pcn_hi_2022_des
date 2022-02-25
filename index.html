@@ -56,7 +56,8 @@
 <h3>PCN key</h3>
 <div id = 'pcn_key'></div>
 <h3>Age structure of PCN registered populations</h3>
-<p>NHS Digital publish the number of patients registered to individual organisations along side basic demographic information such as age, sex, and LSOA of residence, in monthly snapshots available to the public. See the publication <a href = 'https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/patients-registered-at-a-gp-practice'>Patients registered at a GP practice</a> for more details. We have used this information to get a picture of the overall age/sex structure of each PCN (by aggregating individual organisation data) and later in the section on deprivation we use the LSOA data to summarise the core20 population.</p>
+<p>NHS Digital publish the number of patients registered to individual organisations along side basic demographic information such as age and sex, in monthly snapshots available to the public. See the publication <a href = 'https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/patients-registered-at-a-gp-practice'>Patients registered at a GP practice</a> for more details. Data at LSOA level is published quarterly in January, April, July, and October each year.</p>
+<p>We have used the January 2022 snapshot which contains the full range of data to get a picture of the overall age/sex structure of each PCN (by aggregating individual organisation data) and later in the section on deprivation we use the LSOA data to summarise the core20 population.</p>
 <p>Use the drop down menu here to choose a PCN to find out more information about its age and sex population structure.</p>
 
 <select id="select_pcn_pyramid_button"></select>
@@ -76,7 +77,7 @@
 
 <section id = 'deprivation'>
   <h1>Deprivation in West Sussex</h1>
-  <p>West Sussex overall is relative less deprived, and is in the top 20% of least deprived local authorities in the country. However, a small number of neighbourhoods along the coast in Arun and in Crawley are among the most deprived neighbourhoods in England.</p>
+  <p>West Sussex overall is relatively less deprived, and is in the top 20% of least deprived local authorities in the country. However, a small number of neighbourhoods along the coast in Arun and in Crawley are among the most deprived neighbourhoods in England.</p>
 
   <h3>The indices of deprivation</h3>
   <p>The Indices of Deprivation are an area-based measure of relative levels of deprivation in small areas, (Lower Super Output Areas (LSOAs), which contain approximately 1,500 people). It can be used to compare the deprivation across different areas, identify the most deprived areas within a larger geography (for example in the CCG), and to examine which domains of deprivation are more or less prominent in an area. The Indices cannot be used to quantify how deprived an area is (nor can it say by how much one area is more deprived than another), and there are different indices of deprivation for Wales, Scotland and Northern Ireland (so comparisons cannot be made across countries).</p>
@@ -102,17 +103,17 @@
     <p id = 'local_pinpoint_1'></p>
     <p id = 'local_pinpoint_2'></p> -->
     
-    <h3>Neighbourhood level (LSOA) deprivation across the county</h3>
+    <h4>Neighbourhood level (LSOA) deprivation across the county</h4>
     <div id="map_2_id"></div>
     <h3>Deprivation key</h3>
     <div id = 'deprivation_key'></div>
     <p>You can see from this map that not all PCNs cover areas which are considered to be the 'Core 20' deprived neighbourhoods (this is deciles 1 and 2, representing the 20% of most deprived neighbourhoods in England). <b>However</b>, it should be reiterated that the PCN boundaries are mutually exclusive for planning purposes only and do not take into account that some patients may be registered to a PCN and live outside of the designated area for that PCN.</p>
     <p>This is covered in more detail in the section below.</p>
    <h3>Deprivation at the PCN (and GP) level</h3> 
-   <p>The number of patients registered to individual practices, plus some basic information about the residential location of patients (postcode data aggregated to LSOA), is available in the public domain, and we can use this to get an idea of the number of patients PCNs and individual practices have on their lists that reside in more or less deprived areas.</p>
-   <p>GP practices within each PCN in West Sussex by their national decile group. Practices in dark blue are estimated to have the most deprived populations in England whereas those in orange are the least deprived.</p>
-
-   <h3>Table 1 - number of patients registered to West Sussex PCNs; patients living in most deprived neighbourhoods</h3>
+   <p>The number of patients registered to individual practices, plus some basic information about the residential location of patients (postcode data aggregated to LSOA), is available in the public domain, and we can use this to get an idea of the number of patients PCNs and individual practices have on their lists that reside in more or less deprived areas. LSOA data is not published as frequently as the monthly snapshots, and so the data in this section are from an extract taken in January 2022.</p>
+   <p>Table 1 shows the number and proportion of patients in the West Sussex PCNs who are from the most deprived 20% of neighbourhoods in England. More than half of the PCNs in the county have less than 1% of their registered population living in the most deprived areas of England. <b>However, a small number of PCNs along the coast serve populations where more than one in ten patients live in a more deprived area.</b> In the Angmering Coppice Fitzalan (ACF) PCN, this rises to one in six patients.</p>
+   <p>The table below is sorted by the proportion of patients living in the most deprived 20% of areas.</p>
+   <h4>Table 1 - number of patients registered to West Sussex PCNs; patients living in the most deprived neighbourhoods; registered popoulation; January 2022</h4>
    <table id = 'table_1' style="margin-bottom: 20px">
     <thead>
       <tr>
@@ -120,17 +121,34 @@
         <th style = 'text-align: right;'>No. registered patients living in the most deprived 20% of neighbourhoods in England
         </th>
         <th style = 'text-align: right;'>Proportion of registered patients living in the most deprived 20%</th>
-        <th style = 'text-align: right;'>Total number of patients</th>
+        <th style = 'text-align: right;'>Total number of patients (includes those where no address details are known)</th>
       </tr>
     </thead>
   <tbody id="pcn_table_deprivation_1"></tbody>
   </table>
 
-   <!-- <h3>Table 2</h3>
-   <div class="give_me_space_to_search">
-    <div id="container_search"></div>
-  </div>
-  <div id="gp_table_deprivation_1" style="margin-bottom: 20px"></div> -->
+  <p>The figure below shows the distribution of patients registered to PCNs by their residential deprivation quintile; with more dark blue areas denoting PCNs with a higher proportion of patients in the most deprived neighbourhoods in England and those with more orange represent patients living in less deprived areas.</p>
+  <h4>Proportion of patients by deprivation quintile; West Sussex PCNs; registered population; January 2022</h4>
+  <div id = 'stacked_pcn_quintiles_figure'></div>
+
+
+
+  <p>Some practices within individual PCNs have an even greater proportion of patients living in deprived areas. Table 2 shows GP practices within each PCN. By default it shows Angmering Coppice Fitzalan (ACF) PCN, but you can use the drop down menu below to choose another network to display in the table.</p>
+
+  <select id="select_pcn_table_2_button"></select>
+  <h4 id = 'selected_pcn_table_2_title'></h4> 
+  <table id = 'table_2' style="margin-bottom: 20px">
+    <thead>
+      <tr>
+        <th style = 'text-align: left;'>GP Practice</th>
+        <th style = 'text-align: right;'>No. registered patients living in the most deprived 20% of neighbourhoods in England
+        </th>
+        <th style = 'text-align: right;'>Proportion of registered patients living in the most deprived 20%</th>
+        <th style = 'text-align: right;'>Total number of patients (includes those where no address details are known)</th>
+      </tr>
+    </thead>
+  <tbody id="gp_table_deprivation_2"></tbody>
+  </table>
 
 </section>
 

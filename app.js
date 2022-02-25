@@ -52,16 +52,33 @@ $.ajax({
 GP_location = GP_PCN_deprivation_data.filter(function(d,i){
   return d.Type === 'GP'})
 
+// Add a new field which is the proportion in the most deprived quintile
+GP_location.forEach(function(d) {
+  d.Proportion_most = +d['20% most deprived'] / +d['Total'],
+  d.Proportion_q2 = +d['Quintile 2'] / +d['Total'],
+  d.Proportion_q3 = +d['Quintile 3'] / +d['Total'],
+  d.Proportion_q4 = +d['Quintile 4'] / +d['Total'],
+  d.Proportion_least = +d['20% least deprived'] / +d['Total']
+});
+
+GP_location.sort(function(a,b) { return +b.Proportion_most - +a.Proportion_most })
+
 PCN_deprivation_data = GP_PCN_deprivation_data.filter(function(d,i){
   return d.Type === 'PCN'})
 
 // Add a new field which is the proportion in the most deprived quintile
 PCN_deprivation_data.forEach(function(d) {
-  d.Proportion_most = +d['20% most deprived'] / +d['Total']
+  d.Proportion_most = +d['20% most deprived'] / +d['Total'],
+  d.Proportion_q2 = +d['Quintile 2'] / +d['Total'],
+  d.Proportion_q3 = +d['Quintile 3'] / +d['Total'],
+  d.Proportion_q4 = +d['Quintile 4'] / +d['Total'],
+  d.Proportion_least = +d['20% least deprived'] / +d['Total']
 });
 
-// We could have done this in R and read in a wider table, but this approach keeps the file size load as small as possible as calculations can be done by the browser.
+console.log(PCN_deprivation_data)
 
+PCN_deprivation_data.sort(function(a,b) { return +b.Proportion_most - +a.Proportion_most })
+// We could have done this in R and read in a wider table, but this approach keeps the file size load as small as possible as calculations can be done by the browser.
 
 // Load LSOA deprivation geojson
 var Deprivation_geojson = $.ajax({
@@ -73,10 +90,10 @@ var Deprivation_geojson = $.ajax({
   },
 });
 
-// lsoa_data = Deprivation_geojson.responseJSON
-// console.log(lsoa_data)
-
-// console.log(Deprivation_geojson.responseJSON)
+window.onload = () => {
+  loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data);
+  loadTable_gp_numbers_in_quintiles(chosen_PCN_gp_quintile);
+};
 
 wsx_areas = ['Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing']
 
@@ -274,9 +291,7 @@ var pane1 = map_1.createPane('markers1');
 
 });
 
-
 // ! Population pyramid
-
 var margin_middle = 80,
     pyramid_plot_width = (height/2) - (margin_middle/2),
     male_zero = pyramid_plot_width,
@@ -288,12 +303,6 @@ var svg_pcn_pyramid = d3.select("#pyramid_pcn_datavis")
 .attr("width", height + (margin_middle/2))
 .attr("height", height + (margin_middle/2))
 .append("g")
-
-// You could add NHS West Sussex CCG to the pyramid 
-// overall_ccg = ['NHS West Sussex CCG'].concat(pcn_names)
-// console.log(overall_ccg)
-
-// However, this causes some trouble when 
 
 // We need to create a dropdown button for the user to choose which area to be displayed on the figure.
 d3.select("#select_pcn_pyramid_button")
@@ -318,11 +327,11 @@ d3.select("#selected_pcn_pyramid_title").html(function (d) {
   return (
     "Population pyramid; " +
     chosen_pcn_pyramid_area +
-    "; registered population"   
+    "; registered population; January 2022"   
    );
  });
 
- var age_levels = ["0-4 years", "5-9 years", "10-14 years", "15-19 years", "20-24 years", "25-29 years", "30-34 years", "35-39 years", "40-44 years", "45-49 years", "50-54 years", "55-59 years", "60-64 years", "65-69 years", "70-74 years", "75-79 years", "80-84 years", "85-89 years", "90-94 years", '95+ years']
+  var age_levels = ["0-4 years", "5-9 years", "10-14 years", "15-19 years", "20-24 years", "25-29 years", "30-34 years", "35-39 years", "40-44 years", "45-49 years", "50-54 years", "55-59 years", "60-64 years", "65-69 years", "70-74 years", "75-79 years", "80-84 years", "85-89 years", "90-94 years", '95+ years']
 
 PCN_pyramid_data.sort(function(a,b) {
   return age_levels.indexOf(a.Age_group) > age_levels.indexOf(b.Age_group)});
@@ -698,14 +707,6 @@ $.when(Deprivation_geojson).done(function () {
 
 // ! Numbers in each quintile
 
-// PCN Figure
-
-window.onload = () => {
-  loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data);
-};
-
-console.log(PCN_deprivation_data)
-
 // PCN table 
 function loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data) {
   const tableBody = document.getElementById("pcn_table_deprivation_1");
@@ -717,36 +718,80 @@ function loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data) {
   tableBody.innerHTML = dataHTML;
 }
 
+// PCN figure
+var svg_stacked_pcn_quintiles = d3.select("#stacked_pcn_quintiles_figure")
+.append("svg")
+.attr("width", width)
+.attr("height", height)
+.append("g")
 
 
-// ! Searchable GP table
-// draw the table
-d3.select("#container_search")
-  .append("div")
-  .attr("class", "SearchBar")
-  .append("p")
-  .attr("class", "SearchBar")
-  .text("Search By PCN:");
 
-d3.select(".SearchBar")
-  .append("input")
-  .attr("class", "SearchBar")
-  .attr("id", "search_ltla")
-  .attr("type", "text")
-  .attr("placeholder", "Search...");
 
-// var msoa_table = d3.select("#msoa_table_vaccines").append("table");
+// ! Filtered GP table
 
-// msoa_table.append("thead").append("tr").attr("class", "msoa_table");
+// We need to create a dropdown button for the user to choose which area to be displayed on the figure.
+d3.select("#select_pcn_table_2_button")
+  .selectAll("myOptions")
+  .data(pcn_names)
+  .enter()
+  .append("option")
+  .text(function (d) {
+    return d;
+  })
+  .attr("value", function (d) {
+    return d;
+  });
 
-// var headers = msoa_table
-//   .select("tr")
-//   .selectAll("th")
-//   .data(column_names)
-//   .enter()
-//   .append("th")
-//   .text(function (d) {
-//     return d;
-//   });
+// Retrieve the selected area name
+var chosen_pcn_table_2_area = d3
+  .select("#select_pcn_table_2_button")
+  .property("value");
 
-// var rows, row_entries, row_entries_no_anchor, row_entries_with_anchor;
+// Use the value from chosen_pcn_pyramid_area to populate a title for the figure. This will be placed as the element 'selected_pcn_table_2_title' on the webpage
+d3.select("#selected_pcn_table_2_title").html(function (d) {
+  return (
+    "Table 2 - number of patients registered to practices in " +
+    chosen_pcn_table_2_area +
+    "; patients living in the most deprived neighbourhoods; registered population; January 2022"   
+   );
+ });
+
+chosen_PCN_gp_quintile = GP_location.filter(function(d,i){
+  return d.PCN_Name === chosen_pcn_table_2_area})
+
+// GP table 
+function loadTable_gp_numbers_in_quintiles(chosen_PCN_gp_quintile) {
+  const tableBody = document.getElementById("gp_table_deprivation_2");
+  var dataHTML = "";
+
+  for (let item of chosen_PCN_gp_quintile) {
+    dataHTML += `<tr><td>${item.Area_Name}</td><td>${d3.format(",.0f")(item["20% most deprived"])}</td><td>${d3.format('.1%')(item["Proportion_most"])}</td><td>${d3.format(",.0f")(item["Total"])}</td></tr>`;
+  }
+  tableBody.innerHTML = dataHTML;
+} 
+
+ // The .on('change) part says when the drop down menu (select element) changes then retrieve the new selected area name and then use it to update the selected_pcn_table_2_title element 
+d3.select("#select_pcn_table_2_button").on("change", function (d) {
+  var chosen_pcn_table_2_area = d3
+    .select("#select_pcn_table_2_button")
+    .property("value");
+   
+    d3.select("#selected_pcn_table_2_title").html(function (d) {
+      return (
+        "Table 2 - number of patients registered to practices in " +
+        chosen_pcn_table_2_area +
+        "; patients living in the most deprived neighbourhoods; registered population; January 2022"   
+       );
+     });
+
+     chosen_PCN_gp_quintile = GP_location.filter(function(d,i){
+      return d.PCN_Name === chosen_pcn_table_2_area})
+    
+    console.log(chosen_PCN_gp_quintile)
+
+    loadTable_gp_numbers_in_quintiles(chosen_PCN_gp_quintile)
+
+    })
+
+    
