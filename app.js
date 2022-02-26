@@ -75,8 +75,6 @@ PCN_deprivation_data.forEach(function(d) {
   d.Proportion_least = +d['20% least deprived'] / +d['Total']
 });
 
-console.log(PCN_deprivation_data)
-
 PCN_deprivation_data.sort(function(a,b) { return +b.Proportion_most - +a.Proportion_most })
 // We could have done this in R and read in a wider table, but this approach keeps the file size load as small as possible as calculations can be done by the browser.
 
@@ -724,9 +722,93 @@ var svg_stacked_pcn_quintiles = d3.select("#stacked_pcn_quintiles_figure")
 .attr("width", width)
 .attr("height", height)
 .append("g")
+.attr("transform", "translate(" + 50 + "," + 0 + ")");
 
+var quintile_fields = ["Proportion_most", 'Proportion_q2', 'Proportion_q3', 'Proportion_q4', 'Proportion_least'];
 
+var quintile_label = d3
+  .scaleOrdinal()
+  .domain(quintile_fields)
+  .range(['Most deprived 20%', 'Quintile 2', 'Quintile 3', 'Quintile 4', 'Least deprived 20%']);
 
+  var colour_quintile_label = d3
+  .scaleOrdinal()
+  .domain(quintile_fields)
+  .range(["#0033cc", 
+  "#00b0f0",
+  '#e4e4e4',
+  '#ffc000',
+  '#e46c0a']);
+
+// Create a list with an item for each PCN and display the colour in the border 
+quintile_fields.forEach(function (item, index) {
+  var list = document.createElement("li");
+  list.innerHTML = quintile_label(item);
+  list.className = "key_list";
+  list.style.borderColor = colour_quintile_label(index);
+  var tt = document.createElement("div");
+  tt.style.borderColor = colour_quintile_label(index);
+  var tt_h3_1 = document.createElement("h3");
+  tt_h3_1.innerHTML = item;
+  tt.appendChild(tt_h3_1);
+  var div = document.getElementById("quintile_key");
+  div.appendChild(list);
+});
+
+var PCN_new_order = PCN_deprivation_data.map(function (d) {
+  return d.Area_Name;
+})
+
+var stackedData_quintiles_fig = d3.stack().keys(quintile_fields)(PCN_deprivation_data);
+
+// Bars going horizontally
+var x_stacked_pcn_quintiles = d3
+.scaleLinear()
+.domain([0, 1])
+.range([width *.25, width -100])
+.nice();
+
+var xAxis_stacked_quintiles = svg_stacked_pcn_quintiles
+.append("g")
+.attr("transform", "translate(0," + (height - 50) + ")")
+.call(d3.axisBottom(x_stacked_pcn_quintiles).tickFormat(d3.format(".0%")));
+
+var y_stacked_pcn_quintiles = d3
+  .scaleBand()
+  .domain(PCN_new_order)
+  .range([20, (height -50)])
+  .padding([0.2]);
+
+var yAxis_stacked_pcn_quintiles = svg_stacked_pcn_quintiles
+  .append("g")
+  .attr("transform", "translate(" + width * .25 + ",0)")
+  .call(d3.axisLeft(y_stacked_pcn_quintiles));
+
+var bars_stacked_pcn_quintiles = svg_stacked_pcn_quintiles
+  .append("g")
+  .selectAll("g")
+  .data(stackedData_quintiles_fig)
+  .enter()
+  .append("g")
+  .attr("fill", function (d) {
+    return colour_quintile_label(d.key);
+  })
+  .selectAll("rect")
+  .data(function (d) {
+    return d;
+  })
+  .enter()
+  .append("rect")
+  .attr("x", function (d) {
+    return x_stacked_pcn_quintiles(d[0]);
+  })
+  .attr("y", function (d) {
+    return y_stacked_pcn_quintiles(d.data.Area_Name);
+  })
+  .attr("width", function (d) {
+    return x_stacked_pcn_quintiles(d[1]) - x_stacked_pcn_quintiles(d[0]);
+  })
+  .attr("height", y_stacked_pcn_quintiles.bandwidth())
 
 // ! Filtered GP table
 
@@ -788,8 +870,6 @@ d3.select("#select_pcn_table_2_button").on("change", function (d) {
      chosen_PCN_gp_quintile = GP_location.filter(function(d,i){
       return d.PCN_Name === chosen_pcn_table_2_area})
     
-    console.log(chosen_PCN_gp_quintile)
-
     loadTable_gp_numbers_in_quintiles(chosen_PCN_gp_quintile)
 
     })

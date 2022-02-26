@@ -86,7 +86,7 @@ header {
   font-family: inherit;
   margin: 0 0 1px;
   border-left: 13px solid #ccc;
-  opacity: 0.8;
+  opacity: 1;
   position: relative;
   z-index: 1;
 }
@@ -110,6 +110,13 @@ header {
   justify-content: space-between;
   align-items: top;
   flex: auto;
+}
+
+#quintile_key {
+  margin: 5px;
+  columns: 5;
+  -webkit-columns: 5;
+  -moz-columns: 5;
 }
 
 .good_to_know {
