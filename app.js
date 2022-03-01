@@ -88,6 +88,16 @@ var Deprivation_geojson = $.ajax({
   },
 });
 
+// Load MSOA inequalities geojson
+var msoa_geojson = $.ajax({
+  url: "./outputs/msoa_inequalities.geojson",
+  dataType: "json",
+  success: console.log("MSOA data successfully loaded."),
+  error: function (xhr) {
+    alert(xhr.statusText);
+  },
+});
+
 window.onload = () => {
   loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data);
   loadTable_gp_numbers_in_quintiles(chosen_PCN_gp_quintile);
@@ -600,7 +610,7 @@ $.when(Deprivation_geojson).done(function () {
    });
 
    var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
-   .addTo(map_2);
+  //  .addTo(map_2);
   
    var Core20_LSOAs = L.geoJson(Deprivation_geojson.responseJSON, {filter: core_20Filter, style: core20_deprivation_colour})
   //  .addTo(map_2)
@@ -875,3 +885,263 @@ d3.select("#select_pcn_table_2_button").on("change", function (d) {
     })
 
     
+// ! MSOA map
+
+function getUnemploymentColor(d) {
+  return d > 5 ? '#0B0405' :
+         d > 4  ? '#382A54' :
+         d > 3  ? '#395D9C' :
+         d > 2  ? '#3497A9' :
+         d > 1   ? '#60CEAC' :
+         '#DEF5E5' ;
+
+}
+
+// Create a function to add stylings to the polygons in the leaflet map
+function msoa_unemployment_colour(feature) {
+  return {
+    fillColor: getUnemploymentColor(feature.properties.Unemployment),
+    // color: getUnemploymentColor(feature.properties.Unemployment),
+    color: '#999999',
+    weight: 1,
+    fillOpacity: 0.85,
+  };
+}
+
+function getLEColor(d) {
+  return d < 75 ? '#03051A' :
+         d < 77.5 ? '#3F1B44' :
+         d < 80 ? '#841E5A' :
+         d < 82.5 ? '#CB1B4F' :
+         d < 85 ? '#F06043' :
+         d < 87.5 ? '#F6AA82' :
+         d < 90 ? '#FFEDA0' :
+                  '#FAEBDD';
+}
+
+function male_le_colour(feature) {
+  return {
+    fillColor: getLEColor(feature.properties.Male_LE_at_birth),
+    // color: getLEColor(feature.properties.Male_LE_at_birth),
+    color: '#dbdbdb',
+    weight: 1,
+    fillOpacity: 0.85,
+  };
+}
+
+function female_le_colour(feature) {
+  return {
+    fillColor: getLEColor(feature.properties.Female_LE_at_birth),
+    color: getLEColor(feature.properties.Female_LE_at_birth),
+    color: '#dbdbdb',
+    weight: 1,
+    fillOpacity: 0.85,
+  };
+}
+
+function getSARColor(d) {
+  return d < 70 ? '#30123B' :
+         d < 80 ? '#4777EF' :
+         d < 90 ? '#1BD0D5' :
+         d < 100 ? '#62FC6B' :
+         d < 110 ? '#D2E935' :
+         d < 120 ? '#FE9B2D' :
+         d < 130 ? '#DB3A07' :
+                  '#7A0403';
+}
+
+msoa_hospital_admission_colour
+function msoa_hospital_admission_colour(feature) {
+  return {
+    fillColor: getSARColor(feature.properties.Hosp_all_cause),
+    color: getSARColor(feature.properties.Hosp_all_cause),
+    color: '#dbdbdb',
+    weight: 1,
+    fillOpacity: 0.85,
+  };
+}
+
+// Specify that this code should run once the PCN_geojson data request is complete
+$.when(msoa_geojson).done(function () {
+
+// Create a leaflet map (L.map) in the element map_3_id for unemployement and fuel poverty
+var map_3 = L.map("map_3_id");
+     
+// add the background and attribution to the map
+  L.tileLayer(tileUrl, { attribution })
+  .addTo(map_3);
+      
+var msoa_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: msoa_unemployment_colour })
+  .addTo(map_3)
+  .bindPopup(function (layer) {
+    return (
+     "MSOA: <Strong>" +
+      layer.feature.properties.Area_Code +
+      " (" +
+      layer.feature.properties.msoa11hclnm +
+      ")</Strong>.<br><br>Proportion of working age (16-64 year olds) claming benefit principally for the reason of being unemployed: <Strong>" +
+      layer.feature.properties.Unemployment + 
+      "% in 2019/20 </Strong>"
+      );
+    });
+  
+var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
+  
+map_3.fitBounds(msoa_unemployment_boundary.getBounds());
+  
+var baseMaps_map_3 = {
+  "Proportion unemployed": msoa_unemployment_boundary,
+};
+
+var overlay_maps_pcn = {
+  "Show PCN boundary lines": PCN_boundary_overlay,
+}; 
+  
+L.control
+ .layers(baseMaps_map_3, overlay_maps_pcn, { collapsed: false })
+ .addTo(map_3);
+
+var legend_map_3 = L.control({position: 'bottomright'});
+
+legend_map_3.onAdd = function (map_3) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 1, 2, 3, 4, 5],
+        labels = ['% age 16-64<br>unemployed'];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+        labels.push(
+            '<i style="background:' + getUnemploymentColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%' : '%+'));
+    }
+    div.innerHTML = labels.join('<br>');
+    return div;
+};
+
+legend_map_3.addTo(map_3);
+
+// Create a leaflet map (L.map) in the element map_4_id for Life expectancy and mortality
+  var map_4 = L.map("map_4_id");
+     
+// add the background and attribution to the map
+ L.tileLayer(tileUrl, { attribution })
+ .addTo(map_4);
+
+var msoa_male_le_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: male_le_colour })
+  .addTo(map_4)
+  .bindPopup(function (layer) {
+   return (
+    "MSOA: <Strong>" +
+   layer.feature.properties.Area_Code +
+   " (" +
+   layer.feature.properties.msoa11hclnm +
+   ")</Strong>.<br><br>Male life expectancy: " +
+   d3.format(',.1f')(layer.feature.properties.Male_LE_at_birth) +
+   " years<br>Female life expectancy: " +
+   d3.format(',.1f')(layer.feature.properties.Female_LE_at_birth) +
+   ' years' 
+   );
+ });
+
+ var msoa_female_le_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: female_le_colour })
+//  .addTo(map_4)
+ .bindPopup(function (layer) {
+  return (
+   "MSOA: <Strong>" +
+  layer.feature.properties.Area_Code +
+  " (" +
+  layer.feature.properties.msoa11hclnm +
+  ")</Strong>.<br><br>Male life expectancy: " +
+  d3.format(',.1f')(layer.feature.properties.Male_LE_at_birth) +
+  " years<br>Female life expectancy: " +
+  d3.format(',.1f')(layer.feature.properties.Female_LE_at_birth) +
+  ' years' 
+  );
+});
+
+var baseMaps_map_4 = {
+  "Male life expectancy at birth": msoa_male_le_boundary,
+  "Female life expectancy at birth": msoa_female_le_boundary,
+  };
+
+ L.control
+ .layers(baseMaps_map_4, overlay_maps_pcn, { collapsed: false })
+ .addTo(map_4);
+ 
+ map_4.fitBounds(msoa_male_le_boundary.getBounds());
+
+var legend_map_4 = L.control({position: 'bottomright'});
+
+legend_map_4.onAdd = function (map_4) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [72.5, 75, 77.5, 80, 82.5, 85, 87.5, 90],
+        labels = ['Life expectancy<br>at birth (years)'];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+        labels.push(
+            '<i style="background:' + getLEColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + ' years' : '+ years'));
+    }
+    div.innerHTML = labels.join('<br>');
+    return div;
+};
+
+legend_map_4.addTo(map_4);
+
+// Create a leaflet map (L.map) in the element map_3_id for unemployement and fuel poverty
+var map_5 = L.map("map_5_id");
+     
+// add the background and attribution to the map
+  L.tileLayer(tileUrl, { attribution })
+  .addTo(map_5);
+      
+var msoa_hospital_admissions_all_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: msoa_hospital_admission_colour })
+  .addTo(map_5)
+  .bindPopup(function (layer) {
+    return (
+     "MSOA: <Strong>" +
+      layer.feature.properties.Area_Code +
+      " (" +
+      layer.feature.properties.msoa11hclnm +
+      ")</Strong>.<br><br>Standardised Admission Ratio: <Strong>" +
+      d3.format(',.1f')(layer.feature.properties.Hosp_all_cause) + 
+      " per 100 estimated in 2015/16 - 19/20</Strong><br><br>A value higher than 100 indicates a higher than expected number of admissions given local population age profile."
+      );
+    });
+  
+var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
+  
+map_5.fitBounds(msoa_hospital_admissions_all_boundary.getBounds());
+  
+var baseMaps_map_5 = {
+  "Emergency hospital admissions (all cause) SAR": msoa_hospital_admissions_all_boundary,
+};
+ 
+L.control
+ .layers(baseMaps_map_5, overlay_maps_pcn, { collapsed: false })
+ .addTo(map_5);
+
+var legend_map_5 = L.control({position: 'bottomright'});
+legend_map_5.onAdd = function (map_5) {
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [60, 70, 80, 90, 100, 110, 120, 130],
+        labels = ['Emergency hospital<br>admission SAR'];
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+        labels.push(
+            '<i style="background:' + getSARColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + ' per 100' : '+ per 100'));
+    }
+    div.innerHTML = labels.join('<br>');
+    return div;
+};
+legend_map_5.addTo(map_5);
+
+});
+  

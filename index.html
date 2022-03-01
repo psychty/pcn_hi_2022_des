@@ -16,8 +16,10 @@
 <body>
     
 <h2>This page is in development.</h2>
+<p>This analyses brings together publicly available datsets to support work on health inequalities, particularly for Primary Care Networks (PCNs) and the Directed Enhanced Services (DES) for Core20PLUS5. Many of the datasets are reproduced here under the terms of the Open Government Licence v.3.0. Other data sources are specified throughtout the report.</p>
 <p class = 'good_to_know'>Note: this page is not currently accessibility friendly, due to some of the interactive elements on some figures and the maps. We are working to create a print and screen reader friendly version of the site as soon as possible. If you need help with any part of the analyses below, please email jsna[at]westsussex.gov.uk</p>
 <section id = 'introduction'>
+  
   <h1>Introduction</h1>
 
   <p>Life expectancy, nationally and in West Sussex, has increased in the last 20 years overall (Global Burden of Disease, 2019) but there is a gap of almost four years between males and females. Healthy life expectancy (the number of years an average person might expect to live in good, disease free, life) has also increased but the gain in healthy life expectancy has not been as high compared to gains in overall life expectancy. Similar to overall life expectancy, male healthy life expectancy trails behind females although the gap is much smaller at just over one years difference. Whilst females may live longer lives than males, in West Sussex and nationally, females tend to spend more of their lives living with disability or in 'sub-optimal' health, compared to males.</p>
@@ -107,17 +109,18 @@
     <div id="map_2_id"></div>
     <h3>Deprivation key (nationally ranked deciles)</h3>
     <div id = 'deprivation_key'></div>
-    <p>You can see from this map that not all PCNs cover areas which are considered to be the 'Core 20' deprived neighbourhoods (this is deciles 1 and 2, representing the 20% of most deprived neighbourhoods in England). <b>However</b>, it should be reiterated that the PCN boundaries are mutually exclusive for planning purposes only and do not take into account that some patients may be registered to a PCN and live outside of the designated area for that PCN.</p>
+    <p>You can see from this map that not all PCNs cover areas which are considered to be the 'Core20' deprived neighbourhoods (this is deciles 1 and 2, representing the 20% of most deprived neighbourhoods in England). <b>However</b>, it should be reiterated that the PCN boundaries are mutually exclusive for planning purposes only and do not take into account that some patients may be registered to a PCN and live outside of the designated area for that PCN.</p>
     <p>This is covered in more detail in the section below.</p>
    <h3>Deprivation at the PCN (and GP) level</h3> 
    <p>The number of patients registered to individual practices, plus some basic information about the residential location of patients (postcode data aggregated to LSOA), is available in the public domain, and we can use this to get an idea of the number of patients PCNs and individual practices have on their lists that reside in more or less deprived areas. LSOA data is not published as frequently as the monthly snapshots, and so the data in this section are from an extract taken in January 2022.</p>
+   <p class = 'good_to_know'>Using the registered population data enables us to capture the Core20 population for any PCN regardless of whether the patient lives in West Sussex or somewhere else in England, rather than denoting a single geographical area to a PCN as we have done earlier in this report. However, as a relatively less deprived county, there are relative few local areas designated as being in the top 20% of deprived areas.</p>
    <p>Table 1 shows the number and proportion of patients in the West Sussex PCNs who are from the most deprived 20% of neighbourhoods in England. More than half of the PCNs in the county have less than 1% of their registered population living in the most deprived areas of England. <b>However, a small number of PCNs along the coast serve populations where more than one in ten patients live in a more deprived area.</b> In the Angmering Coppice Fitzalan (ACF) PCN, this rises to one in six patients.</p>
    <p>The table below is sorted by the proportion of patients living in the most deprived 20% of areas.</p>
    <h4>Table 1 - number of patients registered to West Sussex PCNs; patients living in the most deprived neighbourhoods; registered popoulation; January 2022</h4>
    <table id = 'table_1' style="margin-bottom: 20px">
     <thead>
       <tr>
-        <th style = 'text-align: left;'>PCN</th>
+        <th style = 'text-align: left;'>Primary Care Network</th>
         <th style = 'text-align: right;'>No. registered patients living in the most deprived 20% of neighbourhoods in England
         </th>
         <th style = 'text-align: right;'>Proportion of registered patients living in the most deprived 20%</th>
@@ -132,9 +135,8 @@
   <div id = 'stacked_pcn_quintiles_figure'></div>
   <h3>Deprivation key (nationally ranked quintiles)</h3>
   <div id = 'quintile_key'></div>
-
-
-
+  <p>If an area has a fairly equal footprint of deprivation, that is to say it has about the same number of patients living in each of the five deprivation quintiles, then the coloured bars will be about the same size/length. This is the case for Angmering Coppice Fitzalan (PCN) which has the highest proportion of patients living in the most deprived 20% of neighbourhoods in England at around 18% (or one in every six patients registered to the PCN). According the the latest publicly available snapshot of registrations, three PCNs have no patients living in the most deprived areas of the country. Indeed, in East Grinstead PCN, almost three out of four patients expected to be living in the least deprived 20% of neighbourhoods in England.</p>
+  <p class = 'good_to_know'>The Core20 population refers to the nationally ranked deprivation profile which compares all 32,844 local areas in England.</p>
   <p>Some practices within individual PCNs have an even greater proportion of patients living in deprived areas. Table 2 shows GP practices within each PCN. By default it shows Angmering Coppice Fitzalan (ACF) PCN, but you can use the drop down menu below to choose another network to display in the table.</p>
 
   <select id="select_pcn_table_2_button"></select>
@@ -151,22 +153,38 @@
     </thead>
   <tbody id="gp_table_deprivation_2"></tbody>
   </table>
+  </section>
 
-</section>
+  <h1>Other community differences</h1>
+  <p>The remainder of small area data (sub PCN level) in this report are presented at the level of Middle-Layer Super Output Area (MSOA) which covers a larger area than LSOAs. As MSOAs have a larger and consistent population size, it is easier to report on differences across areas in disease prevalence and mortality where the actual numbers of people with conditions or number of people dying will be relatively low which could cause issues of disclosure of identity as well as increase the level of uncertainty in estimates of difference.</p>
 
-<section id = 'osci_local_insight'>
-  <h1>OSCI Local Insight</h1>
-<p>This might not be public data</p>
+  <div class="good_to_know">
+  <p>MSOAs are built up from smaller neighbourhing LSOAs and have an average population size of 7,200 residents and roughly 4,000 households (at the last census in 2011). MSOAs are often used in reporting of demographic and health related data at a granular level as the whole of England and Wales can be broken down into these small areas which have a reasonably consistent population size. However, the boundaries of MSOAs can sometimes be difficult to interpret, particularly for those more familiar with wards as a geography.</p>
+  <p>The difficulty of using wards as a basis for small area differences is that ward boundaries change frequently and can cover a population varying from around 1,000 to 30,000 people.  </p>
+  <p>The House of Commons Library (2019) derived a set of recognisable names for MSOAs based on the towns, villages and neighbourhoods that they cover. Whilst these are not the official names, we present these names alongside the MSOA code to aid interpretation of local areas.</p>
+</div>
+<p>The next map shows indicators for fuel poverty and unemployment, and you can toggle between these indicators using the buttons on the top right of the map.</p>
+<p>The PCN boundaries are also overlayed, but note that PCN footprint boundaries are derived from LSOAs and as such one MSOA may be partially in multiple PCN footprints.</p>
+<h4>Neighbourhood level (MSOA) fuel poverty and unemployment variation across the county</h4>
+
+<div id="map_3_id"></div>
+<p>Unemployment is measured as the proportion of working age population claiming an out of work benefit. More details about this indicator can be found at the <a href = 'https://fingertips.phe.org.uk/profile/local-health/data#page/6/gid/1938133180/pat/402/par/E06000001/ati/3/are/E02002483/iid/93097/age/204/sex/4/cat/-1/ctp/-1/yrr/1/cid/4/tbm/1'>OHID definition page for unemployment</a>.</p>
 </section>
 
 <section id = 'disease_inequalities'>
 <h1>Inequalities in disease prevalence and burden</h1>
-
-<p>At a national level, it is also clear to see that those</p>
-
+<p>Data in this section were extracted from the Fingertips service (Office for Health Improvement & Disparities, 2022)</p>
 <p class = 'good_to_know'>It should be noted that at small area level such as neighbourhoods (and even at county level for some conditions), the number of deaths or people with conditions can be relatively small and as such, any variation can have a big impact. We often group or pool the number of deaths over a longer time period (such as five years for MSOA based life expectancy estimates) and also look at confidence intervals of estimates when deciding if one areas is bigger/smaller or better/worse than another.</p>
-<h3>Neighbourhood level (MSOA) life expectancy and disease prevalence variation across the county</h3>
-<div id="map_3_id"></div>
+<h4>Neighbourhood level (MSOA) life expectancy and mortality variation across the county</h4>
+<div id="map_4_id"></div>
+
+<p>The next map shows hospital admissions for all causes as well as for selected acute and chronic conditions. The values presented are indrectly standardised ratios of admissions per 100 registered patients (estimated). More details about this indicator can be found at the <a href="https://fingertips.phe.org.uk/profile/local-health/data#page/6/gid/1938133184/pat/402/par/E06000001/ati/3/are/E02002483/iid/93227/age/1/sex/4/cat/-1/ctp/-1/yrr/5/cid/4/tbm/1">OHID definition page for emergency hospital admissions</a>.</p>
+<div class = 'good_to_know'>
+  <p>Emergency admissions can be due to a variety of causes such as high levels of injury within a population as well as poor management of chronic conditions within primary care. As such, the all cause indicator of emergency admissions should be viewed as an indication of the levels of unplanned secondary care use within a population and care should be taken when interpreting these results.</p>
+  <p>Indirect standardisation uses the number of admissions for England overall by age group and calculates an expected number of admissions for each area given its age demographic distribution. The ratio then describes the difference between the actual and expected number of admissions.</p>
+  </div>
+<h4>Neighbourhood level (MSOA) hospital admissions for all cause, and specific diseases variation across the county</h4>
+<div id="map_5_id"></div>
 </section>
 
 <section id = 'cancer'>
@@ -174,13 +192,16 @@
 <p>A look at screening and outcomes at PCN level</p>
 </section>
 
+
 <section>
   <h1>References</h1>
   <p>Asaria M, Doran T, Cookson R. The costs of inequality: whole-population modelling study of lifetime inpatient hospital costs in the English National Health Service by level of neighbourhood deprivation. Journal of Epidemiology and Community Health. 2016;70(10):990</p>
   <p>Fisher R, Thorlby R, Alderwick H, 'Understanding primary care networks: context, benefits and risks. Health Foundation; 2019 (https://www.health.org.uk/publications/reports/understanding-primary-care-networks)</p>
   <p>GBD online results tool; Institute for Health Metrics and Evaluation (IHME). Findings from the Global Burden of Disease Study 2017. Seattle, WA: IHME, 2018'.</p>
+  <p>House of Commons Library, 2019. MSOA Names published list. https://houseofcommonslibrary.github.io/msoanames/</p>
   <p>NHS England (1). NHS Long Term Plan. 2019</p>
   <p>NHS England (2). Network Contract Directed Enhanced Service: Contract specification 2019/20. 2019. Available from: www.england.nhs.uk/publication/network-contract-directed-enhanced-service-des-specification-2019-20</p>
+  <p>Office for Health Improvement & Disparities. Public Health Profiles. 2022 https://fingertips.phe.org.uk © Crown copyright 2022</p>
   <p>Office for National Statistics, 2021. Health state life expectancies by national deprivation deciles, England: 2017 to 2019. https://www.ons.gov.uk/peoplepopulationandcommunity/healthandsocialcare/healthinequalities/bulletins/healthstatelifeexpectanciesbyindexofmultipledeprivationimd/2017to2019</p>
 </section>
 

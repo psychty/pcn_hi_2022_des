@@ -1,6 +1,6 @@
 library(easypackages)
 
-libraries(c("readxl", "readr", "plyr", "dplyr", "ggplot2", "png", "tidyverse", "reshape2", "scales", "rgdal", 'rgeos', "tmaptools", 'sp', 'sf', 'maptools', 'leaflet', 'leaflet.extras', 'spdplyr', 'geojsonio', 'rmapshaper', 'jsonlite', 'httr', 'rvest', 'stringr'))
+libraries(c("readxl", "readr", "plyr", "dplyr", "ggplot2", "png", "tidyverse", "reshape2", "scales", "rgdal", 'rgeos', "tmaptools", 'sp', 'sf', 'maptools', 'leaflet', 'leaflet.extras', 'spdplyr', 'geojsonio', 'rmapshaper', 'jsonlite', 'httr', 'rvest', 'stringr', 'fingertipsR'))
 
 options(scipen = 999)
 
@@ -326,6 +326,74 @@ dep_df %>%
   toJSON() %>% 
   write_lines(paste0(output_directory, '/PCN_deprivation_data.json'))
 
+# MSOA inequalities ####
+
+# Local Health data from fingertips
+
+local_health_metadata <- read_csv('https://fingertips.phe.org.uk/api/indicator_metadata/csv/by_profile_id?profile_id=143') %>%
+  rename(ID = 'Indicator ID',
+         Source = 'Data source') %>% 
+  select(ID, Definition, Rationale, Methodology, Source)
+
+msoa_local_health_data <- read_csv('https://fingertips.phe.org.uk/api/all_data/csv/by_profile_id?child_area_type_id=3&parent_area_type_id=402&profile_id=143&parent_area_code=E10000032') %>% 
+  filter(is.na(Category)) %>% 
+  select(!c('Parent Code', 'Parent Name', 'Category Type', 'Category', 'Lower CI 99.8 limit', 'Upper CI 99.8 limit', 'Recent Trend', 'New data', 'Compared to goal')) %>% 
+  rename(ID = 'Indicator ID',
+         Indicator_Name = 'Indicator Name',
+         Area_Code = 'Area Code',
+         Area_Name = 'Area Name',
+         Type = 'Area Type',
+         Period = 'Time period',
+         Lower_CI = 'Lower CI 95.0 limit',
+         Upper_CI = 'Upper CI 95.0 limit',
+         Numerator = 'Count',
+         Compared_to_eng = 'Compared to England value or percentiles',
+         Compared_to_wsx = 'Compared to Counties & UAs (from Apr 2021) value or percentiles',
+         Note = 'Value note') %>% 
+  mutate(Indicator = trimws(paste(ifelse(Indicator_Name == 'Life expectancy at birth, (upper age band 90+)', Sex, ''), Indicator_Name, Age, Period, sep = ' '), which = 'left')) %>% 
+  select(ID, Indicator, Area_Code, Area_Name, Value, Lower_CI, Upper_CI, Numerator, Denominator, Note, Compared_to_wsx, Compared_to_eng)
+
+England_local_health_data <- msoa_local_health_data %>% 
+  filter(Area_Name == 'England')
+
+WSx_local_health_Data <- msoa_local_health_data %>% 
+  filter(Area_Name == 'West Sussex')
+
+msoa_local_health_data <- msoa_local_health_data %>% 
+  filter(Area_Name != 'England') %>% 
+  filter(Area_Name != 'West Sussex') %>% 
+  left_join(local_health_metadata, by = 'ID')
+
+indicators_from_local_health <- msoa_local_health_data %>% 
+  select(ID, Indicator) %>% 
+  unique()
+
+inequalities_data <- msoa_local_health_data %>% 
+  filter(ID %in% c('93283', '93097', '93098', '93280', '93227', '93229', '93231', '93232', '93233', '93250', '93252', '93253', '93254', '93255', '93256', '93257', '93259', '93260'))
+
+inequalities_data_summary <- inequalities_data %>% 
+  select(Indicator, Area_Code, Area_Name, Value) %>% 
+  pivot_wider(names_from = 'Indicator',
+              values_from = 'Value') %>% 
+  rename(Male_LE_at_birth = 'Male Life expectancy at birth, (upper age band 90+) All ages 2015 - 19',
+         Female_LE_at_birth = 'Female Life expectancy at birth, (upper age band 90+) All ages 2015 - 19')
+
+
+
+
+
+inequalities_data_summary %>% 
+  toJSON() %>% 
+  write_lines(paste0(output_directory, '/msoa_inequalities.json'))
+
+inequalities_data %>% 
+  select(ID, Area_Code, Value) %>% 
+  toJSON() %>% 
+  write_lines(paste0(output_directory, '/msoa_inequalities.json'))
+
+
+# Cancer ####
+# Screening at GP level ####
 
 # CVDPREVENT ####
 

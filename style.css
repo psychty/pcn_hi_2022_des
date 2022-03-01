@@ -73,7 +73,34 @@ header {
     height: 50vh;
     background-color: antiquewhite;
   }
-  
+
+#map_4_id {
+    height: 50vh;
+    background-color: antiquewhite;
+  }
+
+#map_5_id {
+    height: 50vh;
+    background-color: antiquewhite;
+  }
+
+ .legend {
+   border-radius: 10px;
+   background-color: #fff;
+   padding: 5px;
+   line-height: 18px;
+   color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    float: left;
+    margin-right: 8px;
+    opacity: 1;
+} 
+
+
 /* For our legends/keys */
 .key_list {
   display: block;
