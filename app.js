@@ -202,20 +202,20 @@ var lsoa_covid_imd_colour_func = d3
   .domain(deprivation_deciles)
   .range(deprivation_colours);
 
-// Create a list with an item for each PCN and display the colour in the border 
-deprivation_deciles.forEach(function (item, index) {
-  var list = document.createElement("li");
-  list.innerHTML = item;
-  list.className = "key_list";
-  list.style.borderColor = lsoa_covid_imd_colour_func(index);
-  var tt = document.createElement("div");
-  tt.style.borderColor = setPCNcolour(index);
-  var tt_h3_1 = document.createElement("h3");
-  tt_h3_1.innerHTML = item;
-  tt.appendChild(tt_h3_1);
-  var div = document.getElementById("deprivation_key");
-  div.appendChild(list);
-});
+// // Create a list with an item for each PCN and display the colour in the border 
+// deprivation_deciles.forEach(function (item, index) {
+//   var list = document.createElement("li");
+//   list.innerHTML = item;
+//   list.className = "key_list";
+//   list.style.borderColor = lsoa_covid_imd_colour_func(index);
+//   var tt = document.createElement("div");
+//   tt.style.borderColor = setPCNcolour(index);
+//   var tt_h3_1 = document.createElement("h3");
+//   tt_h3_1.innerHTML = item;
+//   tt.appendChild(tt_h3_1);
+//   var div = document.getElementById("deprivation_key");
+//   div.appendChild(list);
+// });
 
 function lsoa_deprivation_colour(feature) {
   return {
@@ -645,6 +645,24 @@ $.when(Deprivation_geojson).done(function () {
    L.control
    .layers(null, baseMaps_map_2, { collapsed: false })
    .addTo(map_2);
+
+  // Categorical legend 
+var legend_map_2 = L.control({position: 'bottomright'});
+legend_map_2.onAdd = function (map_2) {
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = ["10% most deprived", "Decile 2", "Decile 3", "Decile 4", "Decile 5", "Decile 6", "Decile 7", "Decile 8","Decile 9", "10% least deprived"], // Note that you have to print the labels, you cannot use the object deprivation_deciles
+        labels = ['Nationally ranked<br>deprivation deciles'];
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+        labels.push(
+            '<i style="background:' + lsoa_covid_imd_colour_func(grades[i] + 1) + '"></i> ' +
+            grades[i] );
+    }
+    div.innerHTML = labels.join('<br>');
+    return div;
+};
+legend_map_2.addTo(map_2);
 
 //    // Add a pin and zoom in.
 //    var marker_chosen = L.marker([0, 0]).addTo(map_2);

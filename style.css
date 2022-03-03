@@ -84,7 +84,7 @@ header {
     background-color: antiquewhite;
   }
 
- .legend {
+.legend {
    border-radius: 10px;
    background-color: #fff;
    padding: 5px;
@@ -105,14 +105,14 @@ header {
 .key_list {
   display: block;
   padding: 5px;
-  border-radius: 4px;
+  /* border-radius: 5px; */
   color: #000000;
   background: #ffffff;
   text-align: left;
   font-size: 0.8rem;
   font-family: inherit;
   margin: 0 0 1px;
-  border-left: 13px solid #ccc;
+  border-left: 12px solid #ccc;
   opacity: 1;
   position: relative;
   z-index: 1;

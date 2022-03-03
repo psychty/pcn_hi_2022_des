@@ -328,6 +328,8 @@ dep_df %>%
 
 # MSOA inequalities ####
 
+
+
 # Local Health data from fingertips
 
 local_health_metadata <- read_csv('https://fingertips.phe.org.uk/api/indicator_metadata/csv/by_profile_id?profile_id=143') %>%
@@ -371,27 +373,55 @@ indicators_from_local_health <- msoa_local_health_data %>%
 inequalities_data <- msoa_local_health_data %>% 
   filter(ID %in% c('93283', '93097', '93098', '93280', '93227', '93229', '93231', '93232', '93233', '93250', '93252', '93253', '93254', '93255', '93256', '93257', '93259', '93260'))
 
+msoa_names <- read_csv('https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-Latest.csv') %>%
+  select(msoa11cd, msoa11hclnm) %>%
+  rename(Area_Code = msoa11cd)
+
 inequalities_data_summary <- inequalities_data %>% 
-  select(Indicator, Area_Code, Area_Name, Value) %>% 
+  select(Indicator, Area_Code, Value) %>% 
   pivot_wider(names_from = 'Indicator',
               values_from = 'Value') %>% 
-  rename(Male_LE_at_birth = 'Male Life expectancy at birth, (upper age band 90+) All ages 2015 - 19',
-         Female_LE_at_birth = 'Female Life expectancy at birth, (upper age band 90+) All ages 2015 - 19')
+  rename(Unemployment = 'Unemployment (% of the working age population claiming out of work benefit) 16-64 yrs 2019/20',
+         Long_term_unemployment = 'Long-Term Unemployment- rate per 1,000 working age population 16-64 yrs 2019/20',
+         HH_in_fuel_poverty = 'Estimated percentage of households that experience fuel poverty, 2018 Not applicable 2018',
+         Male_LE_at_birth = 'Male Life expectancy at birth, (upper age band 90+) All ages 2015 - 19',
+         Female_LE_at_birth = 'Female Life expectancy at birth, (upper age band 90+) All ages 2015 - 19',
+         Hosp_all_cause = 'Emergency hospital admissions for all causes, all ages, standardised admission ratio All ages 2015/16 - 19/20') %>% 
+  arrange(Area_Code) %>% 
+  left_join(msoa_names, by = 'Area_Code')
 
+summary(inequalities_data_summary$Hosp_all_cause)
 
+# MSOA geographies ####
+# lsoa_to_msoa <- read_csv('https://opendata.arcgis.com/datasets/a46c859088a94898a7c462eeffa0f31a_0.csv') %>% 
+#   select(LSOA11CD, MSOA11CD, MSOA11NM) %>% 
+#   unique() %>% 
+#   left_join(lsoa_pcn_lookup, by = 'LSOA11CD') %>% 
+#   filter(!is.na(PCN_Name))
+# 
+# lsoa_to_msoa %>% 
+#   write.csv(., paste0(source_directory, '/lsoa_to_msoa.csv'), row.names = FALSE)
 
+lsoa_to_msoa <- read_csv(paste0(source_directory, '/lsoa_to_msoa.csv'))
 
+msoa_boundaries_json <- geojson_read(paste0(source_directory, '/failsafe_msoa_boundary.geojson'),  what = "sp") %>% 
+  filter(MSOA11CD %in% inequalities_data_summary$Area_Code) %>%
+  arrange(MSOA11CD)
 
-inequalities_data_summary %>% 
-  toJSON() %>% 
-  write_lines(paste0(output_directory, '/msoa_inequalities.json'))
+df <- data.frame(ID = character())
 
-inequalities_data %>% 
-  select(ID, Area_Code, Value) %>% 
-  toJSON() %>% 
-  write_lines(paste0(output_directory, '/msoa_inequalities.json'))
+# Get the IDs of spatial polygon
+for (i in msoa_boundaries_json@polygons ) { df <- rbind(df, data.frame(ID = i@ID, stringsAsFactors = FALSE))  }
 
+# and set rowname = ID
+row.names(inequalities_data_summary) <- df$ID
 
+# Then use df as the second argument to the spatial dataframe conversion function:
+msoa_boundaries_json <- SpatialPolygonsDataFrame(msoa_boundaries_json, inequalities_data_summary)  
+
+geojson_write(geojson_json(msoa_boundaries_json), file = paste0(output_directory, '/msoa_inequalities.geojson'))
+
+viridis::turbo(9)
 # Cancer ####
 # Screening at GP level ####
 
