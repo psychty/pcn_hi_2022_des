@@ -1,0 +1,69 @@
+INDICATOR_CODE,INDICATOR_POINT_VALUE,GROUP_CODE,GROUP_DESCRIPTION,DOMAIN_CODE,DOMAIN_DESCRIPTION,PATIENT_LIST_TYPE
+AF001,5,AF,Atrial fibrillation,CL,Clinical,TOTAL
+AF006,12,AF,Atrial fibrillation,CL,Clinical,TOTAL
+AF007,12,AF,Atrial fibrillation,CL,Clinical,TOTAL
+AST005,4,AST,Asthma,CL,Clinical,06OV
+AST006,4,AST,Asthma,CL,Clinical,06OV
+AST007,20,AST,Asthma,CL,Clinical,06OV
+AST008,6,AST,Asthma,CL,Clinical,TOTAL
+BP002,15,BP,Blood pressure,PH,Public Health,45OV
+CAN001,5,CAN,Cancer,CL,Clinical,TOTAL
+CAN003,6,CAN,Cancer,CL,Clinical,TOTAL
+CHD001,4,CHD,Secondary prevention of coronary heart disease,CL,Clinical,TOTAL
+CHD005,7,CHD,Secondary prevention of coronary heart disease,CL,Clinical,TOTAL
+CHD007,14,CHD,Secondary prevention of coronary heart disease,CL,Clinical,TOTAL
+CHD008,12,CHD,Secondary prevention of coronary heart disease,CL,Clinical,TOTAL
+CHD009,5,CHD,Secondary prevention of coronary heart disease,CL,Clinical,TOTAL
+CKD005,6,CKD,Chronic kidney disease,CL,Clinical,18OV
+COPD007,12,COPD,Chronic obstructive pulmonary disease,CL,Clinical,TOTAL
+COPD008,2,COPD,Chronic obstructive pulmonary disease,CL,Clinical,TOTAL
+COPD009,8,COPD,Chronic obstructive pulmonary disease,CL,Clinical,TOTAL
+COPD010,9,COPD,Chronic obstructive pulmonary disease,CL,Clinical,TOTAL
+CS005,14,CS,Cervical screening,PH,Public Health,TOTAL
+CS006,8,CS,Cervical screening,PH,Public Health,TOTAL
+DEM001,5,DEM,Dementia,CL,Clinical,TOTAL
+DEM004,39,DEM,Dementia,CL,Clinical,TOTAL
+DEP003,10,DEP,Depression,CL,Clinical,18OV
+DM006,3,DM,Diabetes mellitus,CL,Clinical,17OV
+DM012,4,DM,Diabetes mellitus,CL,Clinical,17OV
+DM014,11,DM,Diabetes mellitus,CL,Clinical,17OV
+DM017,6,DM,Diabetes mellitus,CL,Clinical,17OV
+DM018,6,DM,Diabetes mellitus,CL,Clinical,17OV
+DM019,10,DM,Diabetes mellitus,CL,Clinical,17OV
+DM020,17,DM,Diabetes mellitus,CL,Clinical,17OV
+DM021,10,DM,Diabetes mellitus,CL,Clinical,17OV
+DM022,4,DM,Diabetes mellitus,CL,Clinical,TOTAL
+DM023,2,DM,Diabetes mellitus,CL,Clinical,17OV
+EP001,1,EP,Epilepsy,CL,Clinical,18OV
+HF001,4,HF,Heart failure,CL,Clinical,TOTAL
+HF003,6,HF,Heart failure,CL,Clinical,TOTAL
+HF005,6,HF,Heart failure,CL,Clinical,TOTAL
+HF006,6,HF,Heart failure,CL,Clinical,TOTAL
+HF007,7,HF,Heart failure,CL,Clinical,TOTAL
+HYP001,6,HYP,Hypertension,CL,Clinical,TOTAL
+HYP003,14,HYP,Hypertension,CL,Clinical,TOTAL
+HYP007,5,HYP,Hypertension,CL,Clinical,TOTAL
+LD004,4,LD,Learning disability,CL,Clinical,TOTAL
+MH001,4,MH,Mental health,CL,Clinical,TOTAL
+MH002,6,MH,Mental health,CL,Clinical,TOTAL
+MH003,4,MH,Mental health,CL,Clinical,TOTAL
+MH006,4,MH,Mental health,CL,Clinical,TOTAL
+NDH001,0,NDH,Non-diabetic hyperglycaemia,CL,Clinical,18OV
+OB002,8,OB,Obesity,PH,Public Health,18OV
+OST004,3,OST,Osteoporosis: secondary prevention of fragility fractures,CL,Clinical,50OV
+PAD001,2,PAD,Peripheral arterial disease,CL,Clinical,TOTAL
+PC001,3,PC,Palliative care,CL,Clinical,TOTAL
+QIECD005,27,QIECD,Early cancer diagnosis,QI,Quality improvement,TOTAL
+QIECD006,10,QIECD,Early cancer diagnosis,QI,Quality improvement,TOTAL
+QILD007,27,QILD,Care of people with learning disabilities,QI,Quality improvement,TOTAL
+QILD008,10,QILD,Care of people with learning disabilities,QI,Quality improvement,TOTAL
+RA001,1,RA,Rheumatoid arthritis,CL,Clinical,16OV
+RA002,5,RA,Rheumatoid arthritis,CL,Clinical,16OV
+SMOK002,25,SMOK,Smoking,PH,Public Health,15OV
+SMOK004,12,SMOK,Smoking,PH,Public Health,15OV
+SMOK005,25,SMOK,Smoking,PH,Public Health,15OV
+STIA001,2,STIA,Stroke and transient ischaemic attack,CL,Clinical,TOTAL
+STIA007,4,STIA,Stroke and transient ischaemic attack,CL,Clinical,TOTAL
+STIA009,4,STIA,Stroke and transient ischaemic attack,CL,Clinical,TOTAL
+STIA010,3,STIA,Stroke and transient ischaemic attack,CL,Clinical,TOTAL
+STIA011,2,STIA,Stroke and transient ischaemic attack,CL,Clinical,TOTAL

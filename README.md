@@ -4,7 +4,7 @@
 
 ## Sussex wide health inequalities work
 
-This repository contains publicly available datasets and analyses to support the Sussex wide work on health inequalities; particularly for Primary Care Networks and the Directed Enhanced Services (DES) for Core20P:US5.
+This repository contains publicly available datasets and analyses to support the Sussex wide work on health inequalities; particularly for Primary Care Networks and the Directed Enhanced Services (DES) for Core20PLUS5.
 
 ### Definitions
 
@@ -32,8 +32,8 @@ Key documents relating to the Core20PLUS5 DES:
 ### Key tasks
 
 - [x] create a github repo and informative readme
-- [ ] describe PCN footprint of Sussex
-- [ ] describe deprivation footprint of Sussex
+- [x] describe PCN footprint of Sussex
+- [x] describe deprivation footprint of Sussex
 - [ ] outline existing data relevant to Core20PLUS5
 
 ### Key outputs

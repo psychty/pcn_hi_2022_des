@@ -49,6 +49,16 @@ h1 {
   margin-left: 20px;
 }
 
+.tooltip_class {
+  max-width: 200px;
+  padding: 10px;
+  font-size: 0.9rem;
+  background: #ffffff;
+  color: #000000;
+  border-radius: 5px;
+  border: 1px solid #000;
+}
+
 header {
   position: sticky;
   top: 0px;
@@ -116,6 +126,11 @@ header {
   opacity: 1;
   position: relative;
   z-index: 1;
+}
+
+.caption {
+  font-style: italic;
+  font-size: .8rem;
 }
 
 #pcn_key {

@@ -10,7 +10,6 @@ var PCN_geojson = $.ajax({
   },
 });
 
-
 // ! Load PCN level data
  $.ajax({
   url: "./outputs/PCN_data.json",
@@ -89,8 +88,45 @@ var Deprivation_geojson = $.ajax({
   },
 });
 
+// Load PCN QOF data
+$.ajax({
+  url: "./outputs/QOF_prevalence.json",
+  dataType: "json",
+  async: false,
+  success: function(data) {
+    PCN_qof_data = data;
+   console.log('QOF data successfully loaded.')},
+  error: function (xhr) {
+    alert('QOF data not loaded - ' + xhr.statusText);
+  },
+});
 
+// // Load PCN QOF data
+// $.ajax({
+//   url: "./outputs/QOF_prevalence_wide.json",
+//   dataType: "json",
+//   async: false,
+//   success: function(data) {
+//     PCN_qof_wide_data = data;
+//    console.log('QOF wide data successfully loaded.')},
+//   error: function (xhr) {
+//     alert('QOF wide data not loaded - ' + xhr.statusText);
+//   },
+// });
 
+var PCN_qof_wide_data;  //Global var
+
+d3.csv('./outputs/qof_prevalence_wide_test.csv', function(error, data) {
+    // If error is not null, something went wrong.
+    if (error) {
+          console.log(error);  //Log the error.
+    } else {
+          console.log(data);   //Log the data.
+          PCN_qof_wide_data = data; // Give the data a global scope
+          //Call some other functions that generate the visualization
+          // console.log(dataset)
+    }
+});
 
 // Load MSOA inequalities geojson
 var msoa_geojson = $.ajax({
@@ -117,6 +153,9 @@ if (width > 900) {
 var width_margin = width * 0.15;
 var height = window.innerHeight * .5;
 
+var formatPercent = d3.format(".1%");
+var formatPercent_1 = d3.format(".0%");
+
 // Get a list of unique PCN_codes from the data using d3.map
 var pcn_codes = d3
   .map(PCN_data, function (d) {
@@ -132,7 +171,7 @@ var pcn_names = d3
   .keys();
 
 // Create an array of colours
-pcn_colours = ['#a04866', '#d74356', '#c4705e', '#ca572a', '#d49445',  '#526dd6', '#37835c', '#a2b068', '#498a36',  '#a678e4', '#8944b3',  '#57c39b', '#4ab8d2', '#658dce', '#776e29', '#60bf52', '#7e5b9e' ,  '#afb136',  '#ce5cc6','#d58ec6']
+pcn_colours = ['#a04866', '#d74356', '#c4705e', '#ca572a', '#d49445',  '#526dd6', '#37835c', '#a2b068', '#498a36',  '#a678e4', '#8944b3',  '#57c39b', '#4ab8d2', '#658dce', '#776e29', '#60bf52', '#7e5b9e' ,  '#afb136',  '#ce5cc6','#d58ec6', '#000099', '#000000']
 
 // Create a function which takes the pcn_code as input and outputs the colour
 var setPCNcolour = d3
@@ -140,14 +179,20 @@ var setPCNcolour = d3
   .domain(pcn_codes)
   .range(pcn_colours);
 
+// Create a function which takes the pcn_code as input and outputs the colour
+var setPCNcolour_by_name = d3
+  .scaleOrdinal()
+  .domain(pcn_names.concat(['West Sussex', 'England']))
+  .range(pcn_colours);
+
 // Create a list with an item for each PCN and display the colour in the border 
 pcn_codes.forEach(function (item, index) {
   var list = document.createElement("li");
   list.innerHTML = item + ' ' + pcn_names[index];
   list.className = "key_list";
-  list.style.borderColor = setPCNcolour(index);
+  list.style.borderColor = setPCNcolour_by_name(index);
   var tt = document.createElement("div");
-  tt.style.borderColor = setPCNcolour(index);
+  tt.style.borderColor = setPCNcolour_by_name(index);
   var tt_h3_1 = document.createElement("h3");
   tt_h3_1.innerHTML = item;
   tt.appendChild(tt_h3_1);
@@ -158,8 +203,8 @@ pcn_codes.forEach(function (item, index) {
 // Create a function to add stylings to the polygons in the leaflet map
 function pcn_boundary_colour(feature) {
   return {
-    fillColor: setPCNcolour(feature.properties.PCN_Code),
-    color: setPCNcolour(feature.properties.PCN_Code),
+    fillColor: setPCNcolour_by_name(feature.properties.PCN_Name),
+    color: setPCNcolour_by_name(feature.properties.PCN_Name),
     weight: 1,
     fillOpacity: 0.85,
   };
@@ -169,7 +214,7 @@ function pcn_boundary_colour(feature) {
 function pcn_boundary_overlay_colour(feature) {
   return {
     fillColor: 'none',
-    color: setPCNcolour(feature.properties.PCN_Code),
+    color: setPCNcolour_by_name(feature.properties.PCN_Name),
     weight: 2,
     fillOpacity: 0.85,
   };
@@ -213,7 +258,7 @@ var lsoa_covid_imd_colour_func = d3
 //   list.className = "key_list";
 //   list.style.borderColor = lsoa_covid_imd_colour_func(index);
 //   var tt = document.createElement("div");
-//   tt.style.borderColor = setPCNcolour(index);
+//   tt.style.borderColor = setPCNcolour_by_name(index);
 //   var tt_h3_1 = document.createElement("h3");
 //   tt_h3_1.innerHTML = item;
 //   tt.appendChild(tt_h3_1);
@@ -286,7 +331,7 @@ var pane1 = map_1.createPane('markers1');
       radius: 6,
       color: '#000',
       weight: .5,
-      fillColor: setPCNcolour(GP_location[i]['PCN_Code']),
+      fillColor: setPCNcolour_by_name(GP_location[i]['PCN_Name']),
       fillOpacity: 1})
     .bindPopup('<Strong>' + GP_location[i]['Area_Code'] + ' ' + GP_location[i]['Area_Name'] + '</Strong><br><br>This practice is part of the ' + GP_location[i]['PCN_Code'] + ' ' + GP_location[i]['PCN_Name'] + '. There are ' + d3.format(',.0f')(GP_location[i]['Total']) +' patients registered to this practice.')
     .addTo(map_1) 
@@ -1167,3 +1212,488 @@ legend_map_5.addTo(map_5);
 
 });
   
+// ! QOF 
+qof_height = height * 1.4
+
+var svg_pcn_qof_1 = d3.select("#qof_1_datavis")
+.append("svg")
+.attr("width", width)
+.attr("height", qof_height)
+.append("g")
+
+var qof_1_prevalence_tooltip = d3
+.select("#qof_1_datavis")
+.append("div")
+.style("opacity", 0)
+.attr("class", "tooltip_class")
+.style("position", "absolute")
+.style("z-index", "10");
+
+// The tooltip function
+show_qof_1_prevalence_tooltip = function (d) {
+
+  qof_1_prevalence_tooltip.transition().duration(200).style("opacity", 1);
+
+  qof_1_prevalence_tooltip
+  .html(
+    "<p>The recorded prevalence of " +
+      d.Condition +
+      " in " +
+      d.Area_Name +
+      " in 2020/21 was <b>" +
+      d3.format(".1%")(d.Prevalence) +
+      "</b>.</p><p>There were a total of <b>" +
+      d3.format(',.0f')(d.Numerator) + 
+      "</b> patients on this disease register.</p>"
+  )
+  .style("opacity", 1)
+.style("top", (event.pageY - 10) + "px")
+.style("left", (event.pageX + 10) + "px")
+};
+
+// Specify that this code should run once the PCN_geojson data request is complete
+$.when(PCN_qof_data).done(function () {
+
+conditions = d3
+.map(PCN_qof_data, function (d) {
+  return d.Condition;
+})
+.keys();
+
+// We need to create a dropdown button for the user to choose which area to be displayed on the figure.
+d3.select("#select_qof_1_condition")
+  .selectAll("myOptions")
+  .data(conditions)
+  .enter()
+  .append("option")
+  .text(function (d) {
+    return d;
+  })
+  .attr("value", function (d) {
+    return d;
+  });
+
+// Retrieve the selected area name
+var chosen_qof_1_condition = d3
+  .select("#select_qof_1_condition")
+  .property("value");
+
+var chosen_qof_1_df = PCN_qof_data
+  .filter(function (d) {
+    return d.Condition === chosen_qof_1_condition;
+  })
+  .sort(function (a, b) {
+    return +a.Prevalence - +b.Prevalence;
+  });
+
+ d3.select("#qof_1_title").html(function (d) {
+  return (
+    "West Sussex PCN recorded prevalence; " +
+    chosen_qof_1_condition +
+    "; QOF 2020/21"   
+   );
+ });
+
+ var qof_1_area_order =  d3.map(chosen_qof_1_df, function (d) {
+  return (d.Area_Name);
+ })
+ .keys()
+
+ var x_qof_1 = d3
+ .scaleBand()
+ .domain(qof_1_area_order)
+ .range([50, width - 50])
+ .padding(0.2);
+
+ qof_1_prevalence_x_axis = svg_pcn_qof_1
+ .append("g")
+ .attr("transform", "translate(0," + (qof_height - 200) + ")")
+ .call(d3.axisBottom(x_qof_1))
+
+ qof_1_prevalence_x_axis
+ .selectAll("text")
+ .style("text-anchor", "end")
+ .attr("dx", "-.8em")
+ .attr("dy", ".15em")
+ .attr("transform", function (d) { return "rotate(-65)"; })
+
+var y_qof_1 = d3
+ .scaleLinear()
+ .domain([
+   0,
+   d3.max(chosen_qof_1_df, function (d) {
+     return +d.Prevalence;
+   }),
+ ]) 
+ .range([qof_height - 200, 10])
+ .nice()
+ 
+qof_1_prevalence_y_axis = svg_pcn_qof_1
+ .append("g")
+ .attr("transform", "translate(50, 0)")
+ .call(d3.axisLeft(y_qof_1).tickFormat(formatPercent));
+
+update_qof_1_prevalence = function() {
+
+  var chosen_qof_1_condition = d3
+  .select("#select_qof_1_condition")
+  .property("value");
+ 
+  d3.select("#qof_1_title").html(function (d) {
+    return (
+      "West Sussex PCN recorded prevalence; " +
+      chosen_qof_1_condition +
+      "; QOF 2020/21"   
+     );
+   });
+  
+   var chosen_qof_1_df = PCN_qof_data
+   .filter(function (d) {
+     return d.Condition === chosen_qof_1_condition;
+   })
+   .sort(function (a, b) {
+     return +a.Prevalence - +b.Prevalence;
+   });
+
+   var qof_1_area_order =  d3.map(chosen_qof_1_df, function (d) {
+    return (d.Area_Name);
+   })
+   .keys()
+
+x_qof_1.domain(qof_1_area_order);
+
+y_qof_1.domain([0, d3.max(chosen_qof_1_df, function (d) { return +d.Prevalence; }),])
+   .nice()
+
+// Redraw axis
+qof_1_prevalence_y_axis
+.transition()
+.duration(1000)
+.call(d3.axisLeft(y_qof_1).tickFormat(formatPercent));
+
+qof_1_prevalence_x_axis 
+.transition()
+.duration(1000)
+.call(d3.axisBottom(x_qof_1));
+
+qof_1_prevalence_bars = svg_pcn_qof_1.selectAll("rect")
+ .data(chosen_qof_1_df);
+
+qof_1_prevalence_bars
+   .enter()
+   .append("rect")
+   .merge(qof_1_prevalence_bars)
+   .transition()
+   .duration(1000)
+   .attr("class", "qof_1_figure")
+   .attr("id", "qof_1_bars")
+   .attr("x", function (d) {
+     return x_qof_1(d.Area_Name);
+   })
+   .attr("width", x_qof_1.bandwidth())
+   .attr("height", function (d) {
+     return qof_height - 200 - y_qof_1(d.Prevalence);
+   })
+   .attr("y", function (d) {
+     return y_qof_1(d.Prevalence);
+   })
+   .style("fill", function (d) {
+     return setPCNcolour_by_name(d.Area_Name);
+   })
+
+ qof_1_prevalence_bars
+   .enter()
+   .append("rect")
+   .merge(qof_1_prevalence_bars)
+   .on("mouseover", function () {
+     return qof_1_prevalence_tooltip.style("visibility", "visible");
+   })
+   .on("mousemove", show_qof_1_prevalence_tooltip)
+   .on("mouseout", function () {
+     return qof_1_prevalence_tooltip.style("visibility", "hidden");
+   });
+  }
+
+  update_qof_1_prevalence()
+  update_qof_1_prevalence()
+
+ d3.select("#select_qof_1_condition").on("change", function (d) {
+  update_qof_1_prevalence()
+  })
+
+//! QOF 2 
+var svg_pcn_qof_2 = d3.select("#qof_2_datavis")
+ .append("svg")
+ .attr("width", width)
+ .attr("height", qof_height)
+ .append("g")
+
+ var qof_2_prevalence_tooltip = d3
+ .select("#qof_2_datavis")
+ .append("div")
+ .style("opacity", 0)
+ .attr("class", "tooltip_class")
+ .style("position", "absolute")
+ .style("z-index", "10");
+
+// We need to create a dropdown button for the user to choose which area to be displayed on the figure.
+d3.select("#select_qof_2_area_1")
+  .selectAll("myOptions")
+  .data(pcn_names.concat(['West Sussex', 'England']))
+  .enter()
+  .append("option")
+  .text(function (d) {
+    return d;
+  })
+  .attr("value", function (d) {
+    return d;
+  });
+
+d3.select("#select_qof_2_area_2")
+  .selectAll("myOptions")
+  .data(['England', 'West Sussex'].concat(pcn_names))
+  .enter()
+  .append("option")
+  .text(function (d) {
+    return d;
+  })
+  .attr("value", function (d) {
+    return d;
+  });
+
+// Retrieve the selected area name
+var chosen_qof_2_area_1 = d3
+  .select("#select_qof_2_area_1")
+  .property("value");
+ 
+// Retrieve the selected area name
+var chosen_qof_2_area_2 = d3
+  .select("#select_qof_2_area_2")
+  .property("value");
+
+d3.select("#qof_2_title").html(function (d) {
+   return (
+      "Recorded prevalence; " +
+      chosen_qof_2_area_1 +
+      " compared to " +
+      chosen_qof_2_area_2 +
+      "; all conditions; QOF 2020/21"   
+     );
+   });
+ 
+// PCN_qof_wide_data.forEach(function(d) {
+//     d.Area_1_prevalence = d[chosen_qof_2_area_1],
+//     d.Area_2_prevalence = d[chosen_qof_2_area_2]});
+
+// var listToKeep = ['Condition', 'Area_1_prevalence', 'Area_2_prevalence'];
+
+// var qof_2_df = PCN_qof_wide_data.map(obj => listToKeep.reduce((newObj, key) => {
+//   newObj[key] = obj[key]
+//   return newObj
+// }, {}))
+
+
+var Short_label_conditions = d3
+.scaleOrdinal()
+.domain(['Asthma (6+ years)', 'Atrial fibrillation (All ages)', 'Cancer (All ages)', 'Chronic kidney disease (18+ years)', 'Chronic obstructive pulmonary disease (All ages)', 'Dementia (All ages)', 'Depression (18+ years)', 'Diabetes mellitus (17+ years)', 'Epilepsy (18+ years)', 'Heart failure (All ages)', 'Hypertension (All ages)', 'Learning disability (All ages)', 'Mental health (All ages)', 'Non-diabetic hyperglycaemia (18+ years)', 'Obesity (18+ years)', 'Osteoporosis: secondary prevention of fragility fractures (50+ years)', 'Palliative care (All ages)', 'Peripheral arterial disease (All ages)', 'Rheumatoid arthritis (16+ years)', 'Secondary prevention of coronary heart disease (All ages)', 'Stroke and transient ischaemic attack (All ages)'])
+ .range(['Asthma (6+)', 'Atrial Fibrilation', 'Cancer', 'CKD (18+)', 'COPD', 'Dementia', 'Depression (18+)', 'Diabetes (17+)', 'Epilepsy (18+)', 'Heart failure', 'Hypertension', 'Learning disability', 'Mental Health', 'NDH (18+)', 'Obesity (18+)', 'Osteoporosis (50+)', 'Palliative care', 'PAD', 'Rheumatoid arthritis (16+)', 'CHD', 'Stroke and TIA'])
+// .range(groups)
+
+// The tooltip function
+show_qof_2_prevalence_tooltip = function (d) {
+
+  // console.log(d3.select(this)._groups[0][0].__data__)
+  qof_2_prevalence_tooltip.transition().duration(200).style("opacity", 1);
+
+  qof_2_prevalence_tooltip
+  .html(
+    "<p>The recorded prevalence of " +
+    d3.select(this)._groups[0][0].__data__.condition +
+    ' in ' +
+    d3.select(this)._groups[0][0].__data__.key +
+    ' in 2020/21 was <b>' +
+    d3.format('.1%')(d3.select(this)._groups[0][0].__data__.value) +
+      "</b>.</p>"
+  )
+  .style("opacity", 1)
+.style("top", (event.pageY - 10) + "px")
+.style("left", (event.pageX + 10) + "px")
+};
+
+
+// ! Upon reading csv 
+d3.csv("./outputs/qof_prevalence_wide_test.csv", function(qof_2_data) {
+// console.log(qof_2_data, PCN_qof_wide_data)
+var groups = d3.map(qof_2_data, function(d){return(d.group)}).keys()
+var subgroups = [chosen_qof_2_area_1, chosen_qof_2_area_2]
+
+// Add x axis 
+var x_qof_2 = d3.scaleBand()
+  .domain(d3.map(groups, function (d) {
+      return Short_label_conditions(d);
+    })
+    .keys())
+  .range([50, width - 50])
+  .padding(0.2);
+  
+qof_2_prevalence_x_axis = svg_pcn_qof_2
+  .append("g")
+  .attr("transform", "translate(0," + (qof_height - 150) + ")")
+  .call(d3.axisBottom(x_qof_2).tickSize(0));
+
+qof_2_prevalence_x_axis
+ .selectAll("text")
+ .style("text-anchor", "end")
+ .attr("dx", "-.8em")
+ .attr("dy", ".15em")
+ .attr("transform", function (d) { return "rotate(-65)"; })
+
+// A secondary scale for subgroup position
+var xqof_2_subgroup = d3.scaleBand()
+ .domain(subgroups)
+ .range([0, x_qof_2.bandwidth()])
+ .padding([0.05])
+   
+// Add y axis 
+var y_qof_2 = d3.scaleLinear()
+ .domain([0, .2]) 
+ .range([qof_height - 150, 10])
+ .nice()
+     
+var qof_2_prevalence_y_axis = svg_pcn_qof_2.append("g")
+ .attr("transform", "translate(50, 0)")
+ .call(d3.axisLeft(y_qof_2).tickFormat(formatPercent_1));
+
+// color palette = one color per subgroup
+var qof_2_area_color = d3.scaleOrdinal()
+  .domain(subgroups)
+  .range(['#377eb8',
+          '#dbdbdb'
+          ])
+
+// Show the bars
+var pcn_qof_2_bars = svg_pcn_qof_2.append("g")
+.selectAll("g")
+.data(qof_2_data)
+.enter()
+.append("g")
+.attr("transform", function(d) { return "translate(" + x_qof_2(Short_label_conditions(d.group)) + ", 0)"; })
+.selectAll("rect")
+.data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key], condition: d.group}; }); })
+.enter()
+.append("rect")
+.attr("x", function(d) { return xqof_2_subgroup(d.key); })
+.attr("y", function(d) { return y_qof_2(d.value); })
+.attr("width", xqof_2_subgroup.bandwidth())
+.attr("height", function(d) { return (qof_height - 150) - y_qof_2(d.value); })
+.attr("fill", function(d) { return setPCNcolour_by_name(d.key); })
+.attr('class', 'grouped_bars_qof_2')
+.on("mouseover", function () {
+  return qof_2_prevalence_tooltip.style("visibility", "visible");
+})
+.on("mousemove", show_qof_2_prevalence_tooltip)
+.on("mouseout", function () {
+  return qof_2_prevalence_tooltip.style("visibility", "hidden");
+});
+
+}) // within the d3.csv chunk
+
+// ! The qof_2 update function
+update_qof_2_prevalence = function() {
+
+  svg_pcn_qof_2.selectAll(".grouped_bars_qof_2").remove();  
+  console.log('what sugary hell is this? You may not like it, but we had to load another csv file in (dataset) just for this function.')
+      
+  // Retrieve the selected area name
+  var chosen_qof_2_area_1 = d3
+  .select("#select_qof_2_area_1")
+  .property("value");
+     
+  // Retrieve the selected area name
+  var chosen_qof_2_area_2 = d3
+  .select("#select_qof_2_area_2")
+  .property("value");
+      
+  d3.select("#qof_2_title").html(function (d) {
+   return (
+    "Recorded prevalence; " +
+    chosen_qof_2_area_1 +
+    " compared to " +
+    chosen_qof_2_area_2 +
+    "; all conditions; QOF 2020/21"   
+     );
+   });
+      
+  var groups = d3.map(PCN_qof_wide_data, function(d){return(d.group)}).keys() // This is not updated because qof_2_data is no longer in scope
+
+  var subgroups = [chosen_qof_2_area_1, chosen_qof_2_area_2]
+  
+  var x_qof_2 = d3.scaleBand()
+  .domain(d3.map(groups, function (d) {
+      return Short_label_conditions(d);
+    })
+    .keys())
+  .range([50, width - 50])
+  .padding(0.2);
+
+// A secondary scale for subgroup position
+var xqof_2_subgroup = d3.scaleBand()
+ .domain(subgroups)
+ .range([0, x_qof_2.bandwidth()])
+ .padding([0.05])
+
+// Add y axis 
+var y_qof_2 = d3.scaleLinear()
+ .domain([0, .2]) 
+ .range([qof_height - 150, 10])
+ .nice()
+     
+   
+// color palette = one color per subgroup
+var qof_2_area_color = d3.scaleOrdinal()
+  .domain(subgroups)
+  .range(['#377eb8',
+          '#dbdbdb'
+          ])
+    
+  qof_2_df_long = PCN_qof_data.filter(function(d,i){
+   return d.Area_Name === chosen_qof_2_area_1 | d.Area_Name === chosen_qof_2_area_2 })
+          
+  // Show the bars
+  var pcn_qof_2_bars = svg_pcn_qof_2.append("g")
+   .selectAll("g")
+   .data(PCN_qof_wide_data)
+   .enter()
+   .append("g")
+   .attr("transform", function(d) { return "translate(" + x_qof_2(Short_label_conditions(d.group)) + ", 0)"; })
+   .selectAll("rect")
+   .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
+   .enter()
+   .append("rect")
+   .attr("x", function(d) { return xqof_2_subgroup(d.key); })
+   .attr("y", function(d) { return y_qof_2(d.value); })
+   .attr("width", xqof_2_subgroup.bandwidth())
+   .attr("height", function(d) { return (qof_height - 150) - y_qof_2(d.value); })
+   .attr("fill", function(d) { return setPCNcolour_by_name(d.key); })
+   .attr('class', 'grouped_bars_qof_2')
+   .on("mouseover", function () {
+    return qof_2_prevalence_tooltip.style("visibility", "visible");
+  })
+  .on("mousemove", show_qof_2_prevalence_tooltip)
+  .on("mouseout", function () {
+    return qof_2_prevalence_tooltip.style("visibility", "hidden");
+  });
+      
+  }
+    
+
+d3.select("#select_qof_2_area_1").on("change", function (d) {
+  update_qof_2_prevalence()
+  })
+
+d3.select("#select_qof_2_area_2").on("change", function (d) {
+  update_qof_2_prevalence()
+  })
+
+
+})

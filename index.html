@@ -30,18 +30,7 @@
     
   <p>The approach to acting on health inequalities was established in the NHS Long Term Plan (NHS England, 2019 (1)), prior to the COVID-19 global pandemic and the rationale and urgency for this work has only increased in response to the burden resulting from the pandemic and as services recover. There has never been a more important moment to coordinate an effort to reduce the gap in health inequalities.</p>
   <p>High quality services on their own can reduce unwarranted variation in outcomes. However, they will not reduce inequalities at a population level unless they also identify (with partners) and give graduated and targetted support to populations in greatest need, who may not be using those services to the best effect.</p>
-<h1>The Core20PLUS5 approach</h1>
-<p>The ‘Core20PLUS5’ initiative is to drive targeted health inequalities improvements in the following areas:</p>
-<ul>
-  <li><b>Core 20</b> – Most deprived 20% of our population</li>
-  <li><b>PLUS</b> – Other population groups as identified by local population health data such as ethnic minority communities</li>
- <li><b>5</b> – Targeting five key clinical areas of health inequalities:</li>
- <ul><li><b>Early Cancer diagnosis (screening & early referral)</b> 75% of cases diagnosed at stage 1 or 2 by 2028</li>
-  <li><b>Hypertension case finding</b> allowing for interventions to optimise blood pressure and minimise risk of myocardial infarction and stroke</li>
-  <li><b>Chronic Respiratory disease (driving Covid & Flu vaccination uptake)</b> a clear focus on Chronic Obstructive Pulmonary Disease driving up uptake of vaccines to reduce infective exacerbations and emergency hospital admissions resulting from these exacerbations</li>
-  <li><b>Annual health checks for people with Serious Mental Illness</b> 60% of those living with Severe Mental Illness (SMI) receiving annual health checks</li>
-  <li><b>Continuity of maternity carer plan</b> ensure continuity of care for 75% of women from Black, Asian and minority ethnic communities and from the most deprived groups.</li>
- </ul></ul>
+
 </section>
 
 <section id = 'population'>
@@ -177,8 +166,32 @@
 
 <section id = 'disease_inequalities'>
 <h1>Inequalities in disease prevalence and burden</h1>
-<p>Data in this section were extracted from the Fingertips service (Office for Health Improvement & Disparities, 2022)</p>
+
+<p>The Quality and Outcomes Framework (QOF) is a voluntary reward and incentive programme for all GP practices in England, detailing achievement in four domains. The four domains are: Clinical; Public Health and Public Health – Additional Services and Quality Improvement. Each domain consists of a set of achievement measures, known as indicators, against which practices score points according to their level of achievement. As part of this, practices are asked to maintain patient registers for certain conditions. This is one of the best tools we have available to us to understand differences in prevalence of disease across areas/providers.</p>
+<p class = 'good_to_know'>Note that QOF prevalence is based on disease registers and not all patients with the same conditions present in the same way, and using QOF assumes that all those with the condition are engaged with their GP practice. We know that some groups (such as, but not limited to, those in deprived areas, those from Black and Minority Ethnicity (BAME) groups, and those with no fixed abode) are less likely to present to their GP with health problems. As such, disease registers can often under represent the true prevalence of conditions.</p>
+
+<p>The QOF includes cardiovascular conditions such as hypertension and heart failure, respiratory diseases such as asthma and chronic obstructive pulmonary disease, musculoskeletal conditions such as osteoporosis and rheumatoid arthritis, high dependency or long term conditions such as cancer, diabetes, and chronic kidney disease, and mental health/neurology conditions such as depression, dementia, epilepsy and learning disabilities.</p>
+
+<p>As data are provided at the GP practice level, we are able to aggregate these to PCN level to compare across areas and with West Sussex overall and against national prevalence too. To do this we present the prevalence values along with confidence intervals (see the box below for an explanation on why confidence intervals are useful).</p>
+<p>The first figure below shows all providers/areas for each condition. By default the figure shows asthma prevalence but this can be changed using the drop down menu below. From this you can see how recorded prevalence for each condition varies across West Sussex.</p>
+
+<select id="select_qof_1_condition"></select>
+<h4 id = 'qof_1_title'></h4>
+<div id = qof_1_datavis></div>
+
+<p>The second figure allows you to compare individual providers against other areas or nationally against all conditions at once. Choose area one (Angmering Coppice Fitzalan (ACF) PCN by default) and a comparator area (England by default). Hover over a bar to find out more.</p>
+
+<select id = "select_qof_2_area_1">First area: </select>
+<select id = "select_qof_2_area_2">Compaerator: </select>
+<h4 id = 'qof_2_title'></h4>
+<div id = qof_2_datavis></div>
+
+<div id  = 'my_dataviz'></div>
+
+<p class = 'caption'>* Unless an age is given in brackets, the prevalence is for all ages. CKD = Chronic Kidney Disease, COPD = Chronic Obstructive Pulmonary Disease, NDH = Non-diabetic Hyperglycaemia, PAD = Perhipheral Aterial Disease, CHD = Coronary Heart Disease, and TIA = Transient Iscaemic Attack.</p>
+
 <p class = 'good_to_know'>It should be noted that at small area level such as neighbourhoods (and even at county level for some conditions), the number of deaths or people with conditions can be relatively small and as such, any variation can have a big impact. We often group or pool the number of deaths over a longer time period (such as five years for MSOA based life expectancy estimates) and also look at confidence intervals of estimates when deciding if one areas is bigger/smaller or better/worse than another.</p>
+<p>Data in this section were extracted from the Fingertips service (Office for Health Improvement & Disparities, 2022)</p>
 <h4>Neighbourhood level (MSOA) life expectancy and mortality variation across the county</h4>
 <div id="map_4_id"></div>
 
@@ -196,6 +209,18 @@
 <p>A look at screening and outcomes at PCN level</p>
 </section> -->
 
+<h1>The Core20PLUS5 approach</h1>
+<p>The ‘Core20PLUS5’ initiative is to drive targeted health inequalities improvements in the following areas:</p>
+<ul>
+  <li><b>Core 20</b> – Most deprived 20% of our population</li>
+  <li><b>PLUS</b> – Other population groups as identified by local population health data such as ethnic minority communities</li>
+ <li><b>5</b> – Targeting five key clinical areas of health inequalities:</li>
+ <ul><li><b>Early Cancer diagnosis (screening & early referral)</b> 75% of cases diagnosed at stage 1 or 2 by 2028</li>
+  <li><b>Hypertension case finding</b> allowing for interventions to optimise blood pressure and minimise risk of myocardial infarction and stroke</li>
+  <li><b>Chronic Respiratory disease (driving Covid & Flu vaccination uptake)</b> a clear focus on Chronic Obstructive Pulmonary Disease driving up uptake of vaccines to reduce infective exacerbations and emergency hospital admissions resulting from these exacerbations</li>
+  <li><b>Annual health checks for people with Serious Mental Illness</b> 60% of those living with Severe Mental Illness (SMI) receiving annual health checks</li>
+  <li><b>Continuity of maternity carer plan</b> ensure continuity of care for 75% of women from Black, Asian and minority ethnic communities and from the most deprived groups.</li>
+ </ul></ul>
 
 <section>
   <h1>References</h1>

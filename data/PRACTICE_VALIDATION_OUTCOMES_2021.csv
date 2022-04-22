@@ -1,0 +1,210 @@
+PRACTICE_CODE,VALIDATION_RULE,RULE_DESCRIPTION
+A82034,1,Achieved points <= manual points total
+A82048,1,Achieved points <= manual points total
+A82049,1,Achieved points <= manual points total
+A82050,1,Achieved points <= manual points total
+A82065,1,Achieved points <= manual points total
+A82621,1,Achieved points <= manual points total
+A82623,1,Achieved points <= manual points total
+A83630,1,Achieved points <= manual points total
+A83632,1,Achieved points <= manual points total
+A84003,1,Achieved points <= manual points total
+A84015,1,Achieved points <= manual points total
+A84043,1,Achieved points <= manual points total
+A87015,1,Achieved points <= manual points total
+A89604,1,Achieved points <= manual points total
+B81603,1,Achieved points <= manual points total
+B81677,1,Achieved points <= manual points total
+B81688,1,Achieved points <= manual points total
+B82103,1,Achieved points <= manual points total
+B83011,1,Achieved points <= manual points total
+B83040,1,Achieved points <= manual points total
+B84002,1,Achieved points <= manual points total
+B84615,1,Achieved points <= manual points total
+B85638,3,Practice status on 31 March <> Active
+B86031,1,Achieved points <= manual points total
+B86095,1,Achieved points <= manual points total
+B86633,1,Achieved points <= manual points total
+B87040,1,Achieved points <= manual points total
+C81076,1,Achieved points <= manual points total
+C81104,3,Practice status on 31 March <> Active
+C81648,1,Achieved points <= manual points total
+C83637,1,Achieved points <= manual points total
+C84048,1,Achieved points <= manual points total
+C84096,3,Practice status on 31 March <> Active
+C84104,1,Achieved points <= manual points total
+C84602,1,Achieved points <= manual points total
+C84680,3,Practice status on 31 March <> Active
+C84698,1,Achieved points <= manual points total
+C84709,1,Achieved points <= manual points total
+C84710,1,Achieved points <= manual points total
+C85628,3,Practice status on 31 March <> Active
+C88024,1,Achieved points <= manual points total
+C88643,1,Achieved points <= manual points total
+D81040,1,Achieved points <= manual points total
+D81623,1,Achieved points <= manual points total
+D81624,1,Achieved points <= manual points total
+E81023,1,Achieved points <= manual points total
+E81056,3,Practice status on 31 March <> Active
+E81059,1,Achieved points <= manual points total
+E82028,1,Achieved points <= manual points total
+E82034,1,Achieved points <= manual points total
+E82057,1,Achieved points <= manual points total
+E82109,1,Achieved points <= manual points total
+E82603,1,Achieved points <= manual points total
+E82620,1,Achieved points <= manual points total
+E82641,3,Practice status on 31 March <> Active
+E83036,1,Achieved points <= manual points total
+E84696,1,Achieved points <= manual points total
+E85105,3,Practice status on 31 March <> Active
+E85672,1,Achieved points <= manual points total
+E85723,3,Practice status on 31 March <> Active
+E87050,1,Achieved points <= manual points total
+F81016,1,Achieved points <= manual points total
+F81074,1,Achieved points <= manual points total
+F81127,1,Achieved points <= manual points total
+F81168,1,Achieved points <= manual points total
+F81195,2,Practice closure before 1 April and recorded before 1 July
+F81200,1,Achieved points <= manual points total
+F81622,2,Practice closure before 1 April and recorded before 1 July
+F81688,3,Practice status on 31 March <> Active
+F81691,2,Practice closure before 1 April and recorded before 1 July
+F81738,1,Achieved points <= manual points total
+F82676,1,Achieved points <= manual points total
+F83677,1,Achieved points <= manual points total
+F83682,1,Achieved points <= manual points total
+F84624,1,Achieved points <= manual points total
+F84631,1,Achieved points <= manual points total
+F84706,1,Achieved points <= manual points total
+F84734,1,Achieved points <= manual points total
+F85003,1,Achieved points <= manual points total
+F85024,1,Achieved points <= manual points total
+F85027,1,Achieved points <= manual points total
+F85036,1,Achieved points <= manual points total
+F85048,1,Achieved points <= manual points total
+F85055,1,Achieved points <= manual points total
+F85076,1,Achieved points <= manual points total
+F85645,1,Achieved points <= manual points total
+F85652,1,Achieved points <= manual points total
+F85656,1,Achieved points <= manual points total
+F85681,1,Achieved points <= manual points total
+F85684,3,Practice status on 31 March <> Active
+F85686,1,Achieved points <= manual points total
+F85703,1,Achieved points <= manual points total
+F85707,1,Achieved points <= manual points total
+G81026,1,Achieved points <= manual points total
+G81027,1,Achieved points <= manual points total
+G81035,1,Achieved points <= manual points total
+G81045,1,Achieved points <= manual points total
+G81053,1,Achieved points <= manual points total
+G81056,1,Achieved points <= manual points total
+G81105,1,Achieved points <= manual points total
+G82109,1,Achieved points <= manual points total
+G82133,1,Achieved points <= manual points total
+G82622,1,Achieved points <= manual points total
+G82690,1,Achieved points <= manual points total
+G82722,1,Achieved points <= manual points total
+G82757,1,Achieved points <= manual points total
+G82820,1,Achieved points <= manual points total
+G83003,1,Achieved points <= manual points total
+G83061,1,Achieved points <= manual points total
+G83663,3,Practice status on 31 March <> Active
+G84021,1,Achieved points <= manual points total
+G84022,3,Practice status on 31 March <> Active
+G85050,2,Practice closure before 1 April and recorded before 1 July
+G85106,1,Achieved points <= manual points total
+G85118,1,Achieved points <= manual points total
+H81079,2,Practice closure before 1 April and recorded before 1 July
+H81647,1,Achieved points <= manual points total
+H82015,1,Achieved points <= manual points total
+H82029,1,Achieved points <= manual points total
+H82083,1,Achieved points <= manual points total
+H82641,1,Achieved points <= manual points total
+H83027,1,Achieved points <= manual points total
+H84632,2,Practice closure before 1 April and recorded before 1 July
+J81031,1,Achieved points <= manual points total
+J81071,1,Achieved points <= manual points total
+J82029,1,Achieved points <= manual points total
+J82117,1,Achieved points <= manual points total
+J82133,1,Achieved points <= manual points total
+J82141,1,Achieved points <= manual points total
+J82166,1,Achieved points <= manual points total
+J82177,1,Achieved points <= manual points total
+J83632,1,Achieved points <= manual points total
+J84010,1,Achieved points <= manual points total
+J84018,1,Achieved points <= manual points total
+J84020,1,Achieved points <= manual points total
+K81613,1,Achieved points <= manual points total
+K82042,1,Achieved points <= manual points total
+K82043,1,Achieved points <= manual points total
+K82050,1,Achieved points <= manual points total
+K82062,1,Achieved points <= manual points total
+K83033,1,Achieved points <= manual points total
+K84040,1,Achieved points <= manual points total
+L81043,1,Achieved points <= manual points total
+L81648,1,Achieved points <= manual points total
+L83022,1,Achieved points <= manual points total
+L84001,1,Achieved points <= manual points total
+L84020,1,Achieved points <= manual points total
+L84044,1,Achieved points <= manual points total
+L85041,1,Achieved points <= manual points total
+M81073,1,Achieved points <= manual points total
+M81621,1,Achieved points <= manual points total
+M83041,1,Achieved points <= manual points total
+M83115,1,Achieved points <= manual points total
+M83134,1,Achieved points <= manual points total
+M83722,1,Achieved points <= manual points total
+M84617,1,Achieved points <= manual points total
+M85064,1,Achieved points <= manual points total
+M85085,1,Achieved points <= manual points total
+M85092,3,Practice status on 31 March <> Active
+M85159,1,Achieved points <= manual points total
+M85663,1,Achieved points <= manual points total
+M86023,1,Achieved points <= manual points total
+M88024,1,Achieved points <= manual points total
+M88623,1,Achieved points <= manual points total
+M88629,1,Achieved points <= manual points total
+M88637,1,Achieved points <= manual points total
+M92003,1,Achieved points <= manual points total
+M92020,1,Achieved points <= manual points total
+N81026,1,Achieved points <= manual points total
+N81042,1,Achieved points <= manual points total
+N82621,1,Achieved points <= manual points total
+N82647,2,Practice closure before 1 April and recorded before 1 July
+N82665,2,Practice closure before 1 April and recorded before 1 July
+N83022,1,Achieved points <= manual points total
+N85001,1,Achieved points <= manual points total
+N85034,1,Achieved points <= manual points total
+P81093,1,Achieved points <= manual points total
+P81134,1,Achieved points <= manual points total
+P81146,1,Achieved points <= manual points total
+P81173,1,Achieved points <= manual points total
+P81642,1,Achieved points <= manual points total
+P81689,1,Achieved points <= manual points total
+P81713,1,Achieved points <= manual points total
+P81756,1,Achieved points <= manual points total
+P81769,1,Achieved points <= manual points total
+P81778,1,Achieved points <= manual points total
+P84062,1,Achieved points <= manual points total
+P84631,1,Achieved points <= manual points total
+P85001,3,Practice status on 31 March <> Active
+P85006,1,Achieved points <= manual points total
+P87003,1,Achieved points <= manual points total
+P87014,1,Achieved points <= manual points total
+P87036,1,Achieved points <= manual points total
+P87039,1,Achieved points <= manual points total
+P87652,1,Achieved points <= manual points total
+P87659,1,Achieved points <= manual points total
+P87660,1,Achieved points <= manual points total
+P88600,1,Achieved points <= manual points total
+P91032,3,Practice status on 31 March <> Active
+P91615,1,Achieved points <= manual points total
+P92623,1,Achieved points <= manual points total
+P92652,1,Achieved points <= manual points total
+Y00915,1,Achieved points <= manual points total
+Y02129,2,Practice closure before 1 April and recorded before 1 July
+Y02585,1,Achieved points <= manual points total
+Y02613,1,Achieved points <= manual points total
+Y02826,3,Practice status on 31 March <> Active
+Y03112,1,Achieved points <= manual points total
+Y06592,1,Achieved points <= manual points total
