@@ -12,48 +12,115 @@
     type="text/css"
   />
   <link rel="stylesheet" type="text/css" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,500&display=swap" rel="stylesheet">
 </head>
 <body>
     
-<h2>This page is in development.</h2>
+<header>
+<nav>
+ <div class = 'nav_bar'>
+   <button class = 'nav-item'><a href = '#introduction'>Introduction</a></button>
+   <button class = 'nav-item'><a href = '#primary_care_networks'>Primary Care Networks</a></button>
+   <div class="nav_population">
+    <button>Population &#8693</button>
+     <ul>
+       <li class = 'nav-item'><a href = '#pyramid'>Age structure</a></li>
+       <li class = 'nav-item'><a href = '#deprivation'>Deprivation</a></li>
+       <li class = 'nav-item'><a href = '#other_small_area_differences'>Other community differences</a></li>
+     </ul> 
+   </div>
+  
+   <div class="nav_disease">
+    <button>Disease inequalities &#8693</button>
+     <ul>
+      <li class = 'nav-item'><a href = '#qof'>Recorded prevalence</a></li>
+      <li class = 'nav-item'><a href = '#life_expectancy'>Life expectancy and mortality</a></li>
+      <li class = 'nav-item'><a href = '#hospital'>Secondary care use</a></li>
+     </ul> 
+   </div>
+
+   <div class="nav_cvd_prevent">
+    <button>CVD Prevent &#8693</button>
+     <ul>
+      <li class = 'nav-item'><a href = '#hypertension'>Hypertension</a></li>
+      <li class = 'nav-item'><a href = '#cholesterol'>Cholesterol</a></li>
+      <li class = 'nav-item'><a href = '#atrial'>Atrial fibrilation</a></li>
+     </ul> 
+   </div>
+
+   <div class="nav_cancer">
+    <button>Cancer &#8693</button>
+     <ul>
+      <li class = 'nav-item'><a href = '#cancer_incidence'>Incidence</a></li>
+      <li class = 'nav-item'><a href = '#cancer_screening'>Screening</a></li>
+      <li class = 'nav-item'><a href = '#cancer_outcomes'>Outcomes</a></li>
+    </ul>
+   </div>
+
+   <button class = 'nav-item'><a href = '#references'>References</a></button>
+  </div>
+</nav>
+
+</header>
+
+<section id = 'introduction' style = 'padding-top: 5vh;'>
+
+<main>
+
+<h2>An analysis to support the Core20PLUS5 Directed Enhanced Services programme in West Sussex.</h2>
 <p>This analyses brings together publicly available datsets to support work on health inequalities, particularly for Primary Care Networks (PCNs) and the Directed Enhanced Services (DES) for Core20PLUS5. Many of the datasets are reproduced here under the terms of the Open Government Licence v.3.0. Other data sources are specified throughtout the report.</p>
 <p class = 'good_to_know'>Note: this page is not currently accessibility friendly, due to some of the interactive elements on some figures and the maps. We are working to create a print and screen reader friendly version of the site as soon as possible. If you need help with any part of the analyses below, please email jsna[at]westsussex.gov.uk</p>
-<section id = 'introduction'>
-  
+
   <h1>Introduction</h1>
-
-  <p>Life expectancy, nationally and in West Sussex, has increased in the last 20 years overall (Global Burden of Disease, 2019) but there is a gap of almost four years between males and females. Healthy life expectancy (the number of years an average person might expect to live in good, disease free, life) has also increased but the gain in healthy life expectancy has not been as high compared to gains in overall life expectancy. Similar to overall life expectancy, male healthy life expectancy trails behind females although the gap is much smaller at just over one years difference. Whilst females may live longer lives than males, in West Sussex and nationally, females tend to spend more of their lives living with disability or in 'sub-optimal' health, compared to males.</p>
-
-  <p>Health inequalities are unfair and often avoidable differences in health across the population, and between different groups within society based on their sex (such as with life expectancy) but it can also arise from factors such as our age, race, sexual orientation, where we are born, work, and where we live. Indeed, the gap in life expectancy at birth between the most and least deprived areas in England overall is around nine years for males and almost eight years for females (Office for National Statistics, 2021). This means that <b>those living in the most deprived parts of the country could expect to die around eight or nine years earlier than those in the least deprived areas of England</b>. The gap in healthy life expectancy is doubled at around 19 years for males and females living in the least deprived areas compared to their counterparts in the most deprived areas.</p>
-
-  <p>The extra years in sub-optimal health place even further pressure on health services as well as having an impact on employment and productivity. The additional costs to the NHS of health inequalities have been estimated at almost £5 billion per year from the greater use of hospital services by people in deprived areas alone (Asaria, Doran, & Cookson, 2016).</p> 
+  <p>Life expectancy, nationally and in West Sussex, has increased in the last 20 years overall (Global Burden of Disease, 2019) but there is a gap of almost four years between males and females. However, whilst females may live longer lives than males, females tend to spend more of their lives living with disability or in 'sub-optimal' health, compared to males.</p>
+  <p>Those living in the most deprived parts of the country could expect to <b>die around eight or nine years earlier </b>than those in the least deprived areas of England. The gap in healthy life expectancy is doubled at around 19 years for males and females living in the least deprived areas compared to their counterparts in the most deprived areas.</p>
+  <p>The extra years in sub-optimal health place even further pressure on health services as well as having an impact on employment and productivity. The additional costs to the NHS of health inequalities have been estimated at almost £5 billion per year from the greater use of hospital services by people in deprived areas alone (Asaria, Doran, & Cookson, 2016).</p>
     
-  <p>The approach to acting on health inequalities was established in the NHS Long Term Plan (NHS England, 2019 (1)), prior to the COVID-19 global pandemic and the rationale and urgency for this work has only increased in response to the burden resulting from the pandemic and as services recover. There has never been a more important moment to coordinate an effort to reduce the gap in health inequalities.</p>
+  <p>Health inequalities are unfair and often avoidable differences in health across the population, and between different groups within society based on their sex (such as with life expectancy) but it can also arise from factors such as our age, race, sexual orientation, where we are born, work, and where we live. Indeed, the gap in life expectancy at birth between the most and least deprived areas in England overall is around nine years for males and almost eight years for females (Office for National Statistics, 2021).</p>
   <p>High quality services on their own can reduce unwarranted variation in outcomes. However, they will not reduce inequalities at a population level unless they also identify (with partners) and give graduated and targetted support to populations in greatest need, who may not be using those services to the best effect.</p>
 
-</section>
+  <p>The approach to acting on health inequalities was established in the NHS Long Term Plan (NHS England, 2019 (1)), prior to the COVID-19 global pandemic and the rationale and urgency for this work has only increased in response to the burden resulting from the pandemic and as services recover. There has never been a more important moment to coordinate an effort to reduce the gap in health inequalities.</p>
+  
 
-<section id = 'population'>
+<h1>The Core20PLUS5 approach</h1>
+<p>The ‘Core20PLUS5’ initiative is to drive targeted health inequalities improvements in the following areas:</p>
+<ul>
+  <li><b>Core 20</b> – Most deprived 20% of our population</li>
+  <li><b>PLUS</b> – Other population groups as identified by local population health data such as ethnic minority communities</li>
+ <li><b>5</b> – Targeting five key clinical areas of health inequalities:</li>
+ <ul><li><b>Early Cancer diagnosis (screening & early referral)</b> 75% of cases diagnosed at stage 1 or 2 by 2028</li>
+  <li><b>Hypertension case finding</b> allowing for interventions to optimise blood pressure and minimise risk of myocardial infarction and stroke</li>
+  <li><b>Chronic Respiratory disease (driving Covid & Flu vaccination uptake)</b> a clear focus on Chronic Obstructive Pulmonary Disease driving up uptake of vaccines to reduce infective exacerbations and emergency hospital admissions resulting from these exacerbations</li>
+  <li><b>Annual health checks for people with Serious Mental Illness</b> 60% of those living with Severe Mental Illness (SMI) receiving annual health checks</li>
+  <li><b>Continuity of maternity carer plan</b> ensure continuity of care for 75% of women from Black, Asian and minority ethnic communities and from the most deprived groups.</li>
+ </ul></ul>
+
+</section>
+<section id = 'primary_care_networks'>
   <h1>Primary Care Networks</h1>
   <p>Primary Care Networks (PCNs) are networks of general practices which attempt to integrate primary care with secondary and community services, and bridge a gap between general practice and emerging Integrated Care Systems (Fisher, Thorlby, & Alderwick, 2019). Each PCN is made up a group of a number of GP practices forming a network that covers approximately 30,000 to 50,000 patients.</p>
   <p>Directed Enhanced Services (DES) are voluntary add-ons to the core GP contract to incentivise specific services. The specific DES requirements of PCNs are set out in the Network Contract DES Specification (NHS England, 2019 (2)).</p>
   <p>The map below shows the geographical footprint of West Sussex PCNs.</p>
 <p>Each PCN boundary is made by aggregating Lower-layer Super Output Areas (LSOAs) together. However, it should be noted that GP practices do not have geographical boundaries and more than one GP practice can operate in the same local area. Whilst the map is useful to understand roughly the local areas that each PCN may cover, for planning purposes, in reality these boundaries are not mutually exclusive (e.g. there is some crossover as patients may use GP services outside of their local areas).</p>
 <p>We have assigned every LSOA in West Sussex to one PCN based on data from the number of residents in the LSOA registered to each GP practice and some GP practices operate in areas assigned to other PCNs (e.g. Horsham Collaborative practices in Horsham Central areas). PCN boundaries can transcend district and borough boundaries and some even cross into neighbouring counties.</p>
-<p>Each GP practice in West Sussex is shown as a dot which is also coloured by the PCN (see the key under the map). Click on one of these dots to see more. Note that GP practices often have patients on their lists who may travel far, even out of the district or county, to use their services.</p>
-<p class = 'good_to_know'>Some practices may be part of one PCN but physically located inside an area designated to a different PCN.</p>
+<p>Each GP practice in West Sussex is shown as a dot which is also coloured by the PCN (see the key under the map). Click on one of these dots to see more. Note that GP practices often have patients on their lists who may travel far, even out of the district or county, to use their services. Some practices may be part of one PCN but physically located inside an area designated to a different PCN.</p>
   <h3>Primary Care Network locally derived boundaries</h3>
 <div id = "map_1_id"></div>
 <h3>PCN key</h3>
 <div id = 'pcn_key'></div>
+</section>
+
+<section id = 'pyramid' style = 'padding-top: 5vh;'>
 <h3>Age structure of PCN registered populations</h3>
-<p>NHS Digital publish the number of patients registered to individual organisations along side basic demographic information such as age and sex, in monthly snapshots available to the public. See the publication <a href = 'https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/patients-registered-at-a-gp-practice'>Patients registered at a GP practice</a> for more details. Data at LSOA level is published quarterly in January, April, July, and October each year.</p>
+<p>Different PCNs across the county have markedly different populations. For example, almost one in three patients registered to Arun Integrated Care (AIC) PCN are aged 65 and over whilst South Crawley PCN provide services for a relative younger cohort of patients with just one in ten patients being aver the age of 65.</p>
+<p>NHS Digital publish the number of patients registered to individual organisations along side basic demographic information such as age and sex, in monthly snapshots. See the publication <a href = 'https://digital.nhs.uk/data-and-information/data-tools-and-services/data-services/general-practice-data-hub/patients-registered-at-a-gp-practice'>Patients registered at a GP practice</a> for more details. Data at LSOA level is published quarterly in January, April, July, and October each year.</p>
 <p>We have used the January 2022 snapshot which contains the full range of data to get a picture of the overall age/sex structure of each PCN (by aggregating individual organisation data) and later in the section on deprivation we use the LSOA data to summarise the core20 population.</p>
 <p>Use the drop down menu here to choose a PCN to find out more information about its age and sex population structure.</p>
 
 <select id="select_pcn_pyramid_button"></select>
 <h4 id = 'selected_pcn_pyramid_title'></h4>
-
 <div id = 'pyramid_container'>
 <div id = 'pyramid_pcn_datavis'></div>
 <div>
@@ -71,16 +138,16 @@
   <p>West Sussex overall is relatively less deprived, and is in the top 20% of least deprived local authorities in the country. However, a small number of neighbourhoods along the coast in Arun and in Crawley are among the most deprived neighbourhoods in England.</p>
 
   <h3>The indices of deprivation</h3>
-  <p>The Indices of Deprivation are an area-based measure of relative levels of deprivation in small areas, (Lower Super Output Areas (LSOAs), which contain approximately 1,500 people). It can be used to compare the deprivation across different areas, identify the most deprived areas within a larger geography (for example in the CCG), and to examine which domains of deprivation are more or less prominent in an area. The Indices cannot be used to quantify how deprived an area is (nor can it say by how much one area is more deprived than another), and there are different indices of deprivation for Wales, Scotland and Northern Ireland (so comparisons cannot be made across countries).</p>
-  <p>The indices are published by the Department for Communities and Local Government every 3-4 years and are widely used, notably in funding allocations and targeting. The most recent update is the ID2019, released in October 2019. ID2019 is made up of seven domains of deprivation, although each domain is not given equal weighting. From these, an overall score of small area deprivation is calculated; these are then ranked from most deprived (1) to least deprived (32,844). It is important to note that the indices measure deprivation and not affluence (the least deprived area may not necessarily be the most affluent).</p>
-  <p>Domains contributing to the overall Index of multiple deprivation:</p>
+  <p>The Indices of Deprivation are an area-based measure of relative levels of deprivation in small areas, (Lower Super Output Areas (LSOAs), which contain approximately 1,500 people). It can be used to compare the deprivation across different areas, identify the most deprived areas within a larger geography (for example in the CCG), and to examine which domains of deprivation are more or less prominent in an area. There are seven domains (income, employment, health and disability, education, crime, barriers to services and living environments).</p>
+  <p>The indices are published by the Department for Communities and Local Government every 3-4 years and are widely used, notably in funding allocations and targeting. The most recent update is the ID2019, released in October 2019. An overall score of small area deprivation is calculated from the measures in the seven domains; these are then ranked from most deprived (1) to least deprived (32,844). It is important to note that the indices measure deprivation and not affluence (the least deprived area may not necessarily be the most affluent) and the scores/ranks cannot be used to quantify how deprived an area is (nor can it say by how much one area is more deprived than another).</p>
+  <!-- <p>Domains contributing to the overall Index of multiple deprivation:</p>
   <ul><li><b>Income</b> (22.5%)</li>
     <li><b>Employment</b> (22.5%)</li>
     <li><b>Health Deprivation and Disability</b> (13.5%)</li>
     <li><b>Education, Skills and Training</b> (13.5%)</li>
     <li><b>Crime</b> (9.3%)</li>
     <li><b>Barriers to Housing and Services</b> (9.3%)</li>
-    <li><b>Living Environment</b> (9.3%)</li></ul>
+    <li><b>Living Environment</b> (9.3%)</li></ul> -->
 
     <p>The map below shows the variation in relative deprivation across the PCNs in West Sussex. The darker blue areas are amongst the most deprived neighbourhoods in England and the lighter yellow are the least deprived.</p>
 
@@ -98,7 +165,7 @@
     <div id="map_2_id"></div>
     <h3>Deprivation key (nationally ranked deciles)</h3>
     <div id = 'deprivation_key'></div>
-    <p>You can see from this map that not all PCNs cover areas which are considered to be the 'Core20' deprived neighbourhoods (this is deciles 1 and 2, representing the 20% of most deprived neighbourhoods in England). <b>However</b>, it should be reiterated that the PCN boundaries are mutually exclusive for planning purposes only and do not take into account that some patients may be registered to a PCN and live outside of the designated area for that PCN.</p>
+    <p>You can see from this map that not all PCNs cover areas which are considered to be the 'Core20' deprived neighbourhoods (this is deciles 1 and 2, representing the 20% of most deprived neighbourhoods in England). However, it should be reiterated that the PCN boundaries are mutually exclusive for planning purposes only and do not take into account that some patients may be registered to a PCN and live outside of the designated area for that PCN.</p>
     <p>This is covered in more detail in the section below.</p>
    <h3>Deprivation at the PCN (and GP) level</h3> 
    <p>The number of patients registered to individual practices, plus some basic information about the residential location of patients (postcode data aggregated to LSOA), is available in the public domain, and we can use this to get an idea of the number of patients PCNs and individual practices have on their lists that reside in more or less deprived areas. LSOA data is not published as frequently as the monthly snapshots, and so the data in this section are from an extract taken in January 2022.</p>
@@ -144,6 +211,7 @@
   </table>
   </section>
 
+ <section id = 'other_small_area_differences'>
   <h1>Other community differences</h1>
   <p>The remainder of small area data (sub PCN level) in this report are presented at the level of Middle-Layer Super Output Area (MSOA) which covers a larger area than LSOAs. As MSOAs have a larger and consistent population size, it is easier to report on differences across areas in disease prevalence and mortality where the actual numbers of people with conditions or number of people dying will be relatively low which could cause issues of disclosure of identity as well as increase the level of uncertainty in estimates of difference.</p>
 
@@ -164,9 +232,8 @@
 <p>Unemployment is measured as the proportion of working age population claiming an out of work benefit. More details about this indicator can be found at the <a href = 'https://fingertips.phe.org.uk/profile/local-health/data#page/6/gid/1938133180/pat/402/par/E06000001/ati/3/are/E02002483/iid/93097/age/204/sex/4/cat/-1/ctp/-1/yrr/1/cid/4/tbm/1'>OHID definition page for unemployment</a>.</p>
 </section>
 
-<section id = 'disease_inequalities'>
 <h1>Inequalities in disease prevalence and burden</h1>
-
+<section id = 'qof'>
 <p>The Quality and Outcomes Framework (QOF) is a voluntary reward and incentive programme for all GP practices in England, detailing achievement in four domains. The four domains are: Clinical; Public Health and Public Health – Additional Services and Quality Improvement. Each domain consists of a set of achievement measures, known as indicators, against which practices score points according to their level of achievement. As part of this, practices are asked to maintain patient registers for certain conditions. This is one of the best tools we have available to us to understand differences in prevalence of disease across areas/providers.</p>
 <p class = 'good_to_know'>Note that QOF prevalence is based on disease registers and not all patients with the same conditions present in the same way, and using QOF assumes that all those with the condition are engaged with their GP practice. We know that some groups (such as, but not limited to, those in deprived areas, those from Black and Minority Ethnicity (BAME) groups, and those with no fixed abode) are less likely to present to their GP with health problems. As such, disease registers can often under represent the true prevalence of conditions.</p>
 
@@ -185,13 +252,13 @@
 <select id = "select_qof_2_area_2">Compaerator: </select>
 <h4 id = 'qof_2_title'></h4>
 <div id = qof_2_datavis></div>
-
-<div id  = 'my_dataviz'></div>
-
 <p class = 'caption'>* Unless an age is given in brackets, the prevalence is for all ages. CKD = Chronic Kidney Disease, COPD = Chronic Obstructive Pulmonary Disease, NDH = Non-diabetic Hyperglycaemia, PAD = Perhipheral Aterial Disease, CHD = Coronary Heart Disease, and TIA = Transient Iscaemic Attack.</p>
 
 <p class = 'good_to_know'>It should be noted that at small area level such as neighbourhoods (and even at county level for some conditions), the number of deaths or people with conditions can be relatively small and as such, any variation can have a big impact. We often group or pool the number of deaths over a longer time period (such as five years for MSOA based life expectancy estimates) and also look at confidence intervals of estimates when deciding if one areas is bigger/smaller or better/worse than another.</p>
 <p>Data in this section were extracted from the Fingertips service (Office for Health Improvement & Disparities, 2022)</p>
+
+</section>
+<section id = 'life_expectancy'>
 <h4>Neighbourhood level (MSOA) life expectancy and mortality variation across the county</h4>
 <div id="map_4_id"></div>
 
@@ -204,25 +271,25 @@
 <div id="map_5_id"></div>
 </section>
 
-<!-- <section id = 'cancer'>
-  <h1>A closer look at cancer</h1>
-<p>A look at screening and outcomes at PCN level</p>
-</section> -->
+ 
+<section id = 'hypertension'>
+  <h1>A closer look at hypertension</h1>
+  <p>Hypertension, persistently raised blood pressure, is a major risk factor for cardioascular diseases such as heart failure, stroke, heart attack (myocardial infarction) as well as chronic kidney disease, and dementia, and is widely linked to premature mortality. Hypertension is also one of the most treatable conditions</p>
+  <p>The cardioascular disease (CVD) prevention programme sets a 10 year ambition for hypertension that 80% of the total number of people receiving a diagnosis are treated to target.</p>
+</section>
 
-<h1>The Core20PLUS5 approach</h1>
-<p>The ‘Core20PLUS5’ initiative is to drive targeted health inequalities improvements in the following areas:</p>
-<ul>
-  <li><b>Core 20</b> – Most deprived 20% of our population</li>
-  <li><b>PLUS</b> – Other population groups as identified by local population health data such as ethnic minority communities</li>
- <li><b>5</b> – Targeting five key clinical areas of health inequalities:</li>
- <ul><li><b>Early Cancer diagnosis (screening & early referral)</b> 75% of cases diagnosed at stage 1 or 2 by 2028</li>
-  <li><b>Hypertension case finding</b> allowing for interventions to optimise blood pressure and minimise risk of myocardial infarction and stroke</li>
-  <li><b>Chronic Respiratory disease (driving Covid & Flu vaccination uptake)</b> a clear focus on Chronic Obstructive Pulmonary Disease driving up uptake of vaccines to reduce infective exacerbations and emergency hospital admissions resulting from these exacerbations</li>
-  <li><b>Annual health checks for people with Serious Mental Illness</b> 60% of those living with Severe Mental Illness (SMI) receiving annual health checks</li>
-  <li><b>Continuity of maternity carer plan</b> ensure continuity of care for 75% of women from Black, Asian and minority ethnic communities and from the most deprived groups.</li>
- </ul></ul>
+<section id = 'cholesterol'></section>
 
-<section>
+<section id = 'atrial_fibrilation'></section>
+
+<h1>A closer look at cancer</h1>
+<p>A look at cancer screening and outcomes at PCN level</p>
+<section id = 'cancer_incidence'>
+<p>The incidence rate of diagnosed cancer in West Sussex, although below the national average, has increased in recent years. Overall uptake of screening programmes is higher than or similar to England uptake although there is more variability in the county for outcomes and late stage diagnoses.</p>
+<b>Look at HI slides</b>
+</section>
+
+<section id = 'references'>
   <h1>References</h1>
   <p>Asaria M, Doran T, Cookson R. The costs of inequality: whole-population modelling study of lifetime inpatient hospital costs in the English National Health Service by level of neighbourhood deprivation. Journal of Epidemiology and Community Health. 2016;70(10):990</p>
   <p>Fisher R, Thorlby R, Alderwick H, 'Understanding primary care networks: context, benefits and risks. Health Foundation; 2019 (https://www.health.org.uk/publications/reports/understanding-primary-care-networks)</p>
@@ -241,6 +308,6 @@
     <script src="https://d3js.org/d3-format.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="app.js"></script>
- 
+ </main>
 </body>
 </html>

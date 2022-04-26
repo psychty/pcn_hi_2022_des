@@ -123,5 +123,21 @@ qof_prev %>%
 
 rm(qof_prev_wsx, qof_prev_wsx_gps, qof_prev_wsx_pcns, qof_national_prev)
 
+# CVD PREVENT ####
+
+# hypertension case finding
+
+cvd_prevent_hyp <- read_csv('https://api.cvdprevent.nhs.uk/indicator/4/rawDataCSV?timePeriodID=2&systemLevelID=4')
+
+unique(cvd_prevent$IndicatorName)
 
 
+# Cancer services ####
+
+
+# Other equalities datasets ####
+
+# download.file('https://www.ons.gov.uk/file?uri=%2fpeoplepopulationandcommunity%2fwellbeing%2fdatasets%2finequalitiesdataaudit%2fjanuary2022/equalitiesaudit250122.xlsx', paste0(github_repo_dir, '/data/equalities_audit.xlsx'), mode = 'wb')
+
+equalities_audit <- read_excel("GitHub/pcn_hi_2022_des/data/equalities_audit.xlsx", 
+                               sheet = "Audit", skip = 2)

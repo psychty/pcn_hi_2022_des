@@ -1,7 +1,5 @@
-
-/* global style */
 * {
-  font-family: "Open Sans", sans-serif; 
+  font-family: 'Roboto', 'Open Sans', sans-serif;
 }
 
 body {
@@ -38,6 +36,10 @@ a {
   color: #cc0052;
 }
 
+a:hover {
+  color: #000; 
+}
+
 h1 {
   font-size: 1.8rem;
   font-weight: bold;
@@ -59,39 +61,36 @@ h1 {
   border: 1px solid #000;
 }
 
-header {
-  position: sticky;
-  top: 0px;
-  max-height: 10vh;
-  /* width: 100%; */
-  background: #fff;
-  z-index: 999;
-}
 
 /* You must specify at least height or width for maps to be rendered */
 #map_1_id {
     height: 50vh;
     background-color: antiquewhite;
+    z-index: 1;
   }
   
 #map_2_id {
     height: 50vh;
     background-color: antiquewhite;
+    z-index: 1;
   }
   
 #map_3_id {
     height: 50vh;
     background-color: antiquewhite;
+    z-index: 1;
   }
 
 #map_4_id {
     height: 50vh;
     background-color: antiquewhite;
+    z-index: 1;
   }
 
 #map_5_id {
     height: 50vh;
     background-color: antiquewhite;
+    z-index: 1;
   }
 
 .legend {
@@ -172,7 +171,6 @@ header {
 table {
   border-collapse: collapse;
   width: auto;
-  /* margin: 25px; */
 }
 
 th {
@@ -184,8 +182,6 @@ th {
   font-size: 0.9rem;
   color: #003366;
 }
-
-
 
 tbody {
   text-align: right;
@@ -203,10 +199,6 @@ td:nth-child(1) {
   width: 30%;
   text-align: left;
 }
-/* 
-#table_1:th:nth-child(2) {
-  width: 10%;
- } */
 
 #FilterableTable {
   width: 100%;
@@ -237,3 +229,77 @@ td:nth-child(1) {
   font-weight: normal;
 }
 
+header{
+  position: sticky;
+  top: 0;
+  width: auto;
+  height: 10vh;
+  z-index: 999;
+}
+
+.nav_bar {
+  display: flex;
+  justify-content: space-around;
+  align-items: top;
+  background-color: #1e4b7a;
+  margin: auto;
+  z-index: 999;
+}
+
+.nav_bar button {
+  background-color: #1e4b7a;
+  border: none;
+  text-decoration: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: .9rem;
+}
+
+.nav_bar button:hover {
+  color: #000; 
+}
+
+.nav_bar li {
+  list-style: none;
+  width: 100%;
+}
+
+.nav-item a:hover {
+  color: #000; 
+}
+
+.nav_bar a{
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.nav_population, .nav_disease, .nav_cvd_prevent, .nav_cancer {
+  position: relative;
+}
+
+.nav_population ul, .nav_disease ul, .nav_cvd_prevent ul, .nav_cancer ul {
+  background-color: #1e4b7a;
+  position: absolute;
+  display: flex;
+  justify-content: space-around;
+  align-items: top;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.6s ease;
+} 
+
+.nav_population button:focus + ul,
+.nav_disease button:focus + ul,
+.nav_population button:focus + ul,
+.nav_cvd_prevent button:focus + ul,
+.nav_cancer button:focus + ul {
+ opacity: 1;
+ visibility: visible;
+ transform: translateY(0px);
+}
+
+section {
+ padding-top: 5vh;
+}

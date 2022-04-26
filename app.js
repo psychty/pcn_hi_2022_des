@@ -101,19 +101,6 @@ $.ajax({
   },
 });
 
-// // Load PCN QOF data
-// $.ajax({
-//   url: "./outputs/QOF_prevalence_wide.json",
-//   dataType: "json",
-//   async: false,
-//   success: function(data) {
-//     PCN_qof_wide_data = data;
-//    console.log('QOF wide data successfully loaded.')},
-//   error: function (xhr) {
-//     alert('QOF wide data not loaded - ' + xhr.statusText);
-//   },
-// });
-
 var PCN_qof_wide_data;  //Global var
 
 d3.csv('./outputs/qof_prevalence_wide_test.csv', function(error, data) {
@@ -121,7 +108,7 @@ d3.csv('./outputs/qof_prevalence_wide_test.csv', function(error, data) {
     if (error) {
           console.log(error);  //Log the error.
     } else {
-          console.log(data);   //Log the data.
+          // console.log(data);   //Log the data.
           PCN_qof_wide_data = data; // Give the data a global scope
           //Call some other functions that generate the visualization
           // console.log(dataset)
@@ -147,8 +134,8 @@ wsx_areas = ['Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', '
 
 var width = window.innerWidth * 0.8 - 20;
 // var width = document.getElementById("daily_case_bars").offsetWidth;
-if (width > 900) {
-  var width = 900;
+if (width > 1200) {
+  var width = 1200;
 }
 var width_margin = width * 0.15;
 var height = window.innerHeight * .5;
@@ -250,21 +237,6 @@ var lsoa_covid_imd_colour_func = d3
   .scaleOrdinal()
   .domain(deprivation_deciles)
   .range(deprivation_colours);
-
-// // Create a list with an item for each PCN and display the colour in the border 
-// deprivation_deciles.forEach(function (item, index) {
-//   var list = document.createElement("li");
-//   list.innerHTML = item;
-//   list.className = "key_list";
-//   list.style.borderColor = lsoa_covid_imd_colour_func(index);
-//   var tt = document.createElement("div");
-//   tt.style.borderColor = setPCNcolour_by_name(index);
-//   var tt_h3_1 = document.createElement("h3");
-//   tt_h3_1.innerHTML = item;
-//   tt.appendChild(tt_h3_1);
-//   var div = document.getElementById("deprivation_key");
-//   div.appendChild(list);
-// });
 
 function lsoa_deprivation_colour(feature) {
   return {
@@ -1552,7 +1524,7 @@ qof_2_prevalence_x_axis
 var xqof_2_subgroup = d3.scaleBand()
  .domain(subgroups)
  .range([0, x_qof_2.bandwidth()])
- .padding([0.05])
+ .padding([0.1])
    
 // Add y axis 
 var y_qof_2 = d3.scaleLinear()
@@ -1602,7 +1574,7 @@ var pcn_qof_2_bars = svg_pcn_qof_2.append("g")
 update_qof_2_prevalence = function() {
 
   svg_pcn_qof_2.selectAll(".grouped_bars_qof_2").remove();  
-  console.log('what sugary hell is this? You may not like it, but we had to load another csv file in (dataset) just for this function.')
+  // console.log('what sugary hell is this? You may not like it, but we had to load another csv file in (dataset) just for this function.')
       
   // Retrieve the selected area name
   var chosen_qof_2_area_1 = d3
