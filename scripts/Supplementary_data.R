@@ -125,6 +125,172 @@ rm(qof_prev_wsx, qof_prev_wsx_gps, qof_prev_wsx_pcns, qof_national_prev)
 
 # CVD PREVENT ####
 
+time_periods <- c('To March 2020', 'To September 2020', 'To March 2021', 'To September 2021', 'To March 2022', 'To September 2022', 'To March 2023', 'To September 2023', 'To March 2024', 'To September 2024')
+
+# AF prevalence wsx
+
+indicator_x <- 1
+
+# This will attempt to download data for all area types and dates for indicator_x.
+
+af_prevalence <- read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=1')) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=5'))) %>% 
+  rename(Indicator = IndicatorName,
+         Sex = CategoryAttribute,
+         Note = ValueNote,
+         Area_Code = AreaCode,
+         Area_Name = AreaName,
+         Period = TimePeriodName) %>% 
+  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England', gp_lookup$PCN_Name)) %>% 
+  mutate(Period = factor(Period, levels = time_periods))
+
+indicator_x <- 11
+
+hyp_prevalence <- read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=1')) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=5'))) %>% 
+  rename(Indicator = IndicatorName,
+         Sex = CategoryAttribute,
+         Note = ValueNote,
+         Area_Code = AreaCode,
+         Area_Name = AreaName,
+         Period = TimePeriodName) %>% 
+  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England', gp_lookup$PCN_Name)) %>% 
+  mutate(Period = factor(Period, levels = time_periods))
+
+indicator_x <- 8
+
+ckd_prevalence <- read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=1')) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=5'))) %>% 
+  rename(Indicator = IndicatorName,
+         Sex = CategoryAttribute,
+         Note = ValueNote,
+         Area_Code = AreaCode,
+         Area_Name = AreaName,
+         Period = TimePeriodName) %>% 
+  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England', gp_lookup$PCN_Name)) %>% 
+  mutate(Period = factor(Period, levels = time_periods))
+
+indicator_x <- 9
+
+famililal_hypercholesterolaemia_prevalence <- read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=1')) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=5'))) %>% 
+  rename(Indicator = IndicatorName,
+         Sex = CategoryAttribute,
+         Note = ValueNote,
+         Area_Code = AreaCode,
+         Area_Name = AreaName,
+         Period = TimePeriodName) %>% 
+  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England', gp_lookup$PCN_Name)) %>% 
+  mutate(Period = factor(Period, levels = time_periods))
+
+age_sex_table <- af_prevalence %>% 
+  bind_rows(ckd_prevalence) %>% 
+  bind_rows(hyp_prevalence) %>% 
+  # bind_rows(famililal_hypercholesterolaemia_prevalence) %>% 
+  filter(MetricCategoryTypeName == 'Age group') %>% 
+  rename(Age_group = MetricCategoryName) %>%
+  filter(Period == 'To September 2021') %>% 
+  mutate(Label = ifelse(IndicatorCode == 'CVDP002FH', paste0(trimws(format(Numerator, big.mark = ','), 'both'), ' (', Value, ' per 1,000, ', LowerConfidenceLimit, '-', UpperConfidenceLimit,' per 1,000)'), paste0(trimws(format(Numerator, big.mark = ','), 'both'), ' (', Value, '%, ', LowerConfidenceLimit, '-', UpperConfidenceLimit,'%)'))) %>%  
+  # mutate(Label = paste0(Value, '% (', LowerConfidenceLimit, '-', UpperConfidenceLimit,'% , ', trimws(format(Numerator, big.mark = ','), 'both'), ')')) %>%  
+  select(Indicator, Area_Name, Sex, Age_group, Label) %>% 
+  pivot_wider(names_from = 'Age_group', 
+              values_from = 'Label')
+
+age_sex_table %>% 
+  toJSON() %>% 
+  write_lines(paste0(output_directory, '/cvd_prevent_prevalence_agesex.json'))
+
+
+unique(age_sex_table$Indicator)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+af_prevalence_sex <- af_prevalence %>% 
+  filter(MetricCategoryTypeName == 'Sex')
+
+af_prevalence_age <- af_prevalence %>% 
+  filter(MetricCategoryTypeName == 'Age group',
+         Sex == 'Persons')
+
+
+unique(af_prevalence$MetricCategoryTypeName)
+
+
+
+af_prevalence_sex %>% 
+  
+  
+
+
+# directly age-standardised prevalence estimates for each deprivation group
+
 # hypertension case finding
 
 cvd_prevent_hyp <- read_csv('https://api.cvdprevent.nhs.uk/indicator/4/rawDataCSV?timePeriodID=2&systemLevelID=4')

@@ -22,7 +22,7 @@
 <nav>
  <div class = 'nav_bar'>
    <button class = 'nav-item'><a href = '#introduction'>Introduction</a></button>
-   <button class = 'nav-item'><a href = '#primary_care_networks'>Primary Care Networks</a></button>
+   <button class = 'nav-item'><a href = '#primary_care_networks'>What are Primary Care Networks?</a></button>
    <div class="nav_population">
     <button>Population &#8693</button>
      <ul>
@@ -44,9 +44,10 @@
    <div class="nav_cvd_prevent">
     <button>CVD Prevent &#8693</button>
      <ul>
+      <li class = 'nav-item'><a href = '#atrial_fibrilation'>Atrial fibrilation</a></li>
       <li class = 'nav-item'><a href = '#hypertension'>Hypertension</a></li>
+      <li class = 'nav-item'><a href = '#ckd'>Chronic Kidney Disease</a></li>
       <li class = 'nav-item'><a href = '#cholesterol'>Cholesterol</a></li>
-      <li class = 'nav-item'><a href = '#atrial'>Atrial fibrilation</a></li>
      </ul> 
    </div>
 
@@ -83,7 +84,6 @@
 
   <p>The approach to acting on health inequalities was established in the NHS Long Term Plan (NHS England, 2019 (1)), prior to the COVID-19 global pandemic and the rationale and urgency for this work has only increased in response to the burden resulting from the pandemic and as services recover. There has never been a more important moment to coordinate an effort to reduce the gap in health inequalities.</p>
   
-
 <h1>The Core20PLUS5 approach</h1>
 <p>The ‘Core20PLUS5’ initiative is to drive targeted health inequalities improvements in the following areas:</p>
 <ul>
@@ -119,8 +119,8 @@
 <p>We have used the January 2022 snapshot which contains the full range of data to get a picture of the overall age/sex structure of each PCN (by aggregating individual organisation data) and later in the section on deprivation we use the LSOA data to summarise the core20 population.</p>
 <p>Use the drop down menu here to choose a PCN to find out more information about its age and sex population structure.</p>
 
-<select id="select_pcn_pyramid_button"></select>
 <h4 id = 'selected_pcn_pyramid_title'></h4>
+<select id="select_pcn_pyramid_button"></select>
 <div id = 'pyramid_container'>
 <div id = 'pyramid_pcn_datavis'></div>
 <div>
@@ -232,8 +232,9 @@
 <p>Unemployment is measured as the proportion of working age population claiming an out of work benefit. More details about this indicator can be found at the <a href = 'https://fingertips.phe.org.uk/profile/local-health/data#page/6/gid/1938133180/pat/402/par/E06000001/ati/3/are/E02002483/iid/93097/age/204/sex/4/cat/-1/ctp/-1/yrr/1/cid/4/tbm/1'>OHID definition page for unemployment</a>.</p>
 </section>
 
-<h1>Inequalities in disease prevalence and burden</h1>
 <section id = 'qof'>
+<h1>Inequalities in recorded disease prevalence and burden</h1>
+ 
 <p>The Quality and Outcomes Framework (QOF) is a voluntary reward and incentive programme for all GP practices in England, detailing achievement in four domains. The four domains are: Clinical; Public Health and Public Health – Additional Services and Quality Improvement. Each domain consists of a set of achievement measures, known as indicators, against which practices score points according to their level of achievement. As part of this, practices are asked to maintain patient registers for certain conditions. This is one of the best tools we have available to us to understand differences in prevalence of disease across areas/providers.</p>
 <p class = 'good_to_know'>Note that QOF prevalence is based on disease registers and not all patients with the same conditions present in the same way, and using QOF assumes that all those with the condition are engaged with their GP practice. We know that some groups (such as, but not limited to, those in deprived areas, those from Black and Minority Ethnicity (BAME) groups, and those with no fixed abode) are less likely to present to their GP with health problems. As such, disease registers can often under represent the true prevalence of conditions.</p>
 
@@ -242,26 +243,37 @@
 <p>As data are provided at the GP practice level, we are able to aggregate these to PCN level to compare across areas and with West Sussex overall and against national prevalence too. To do this we present the prevalence values along with confidence intervals (see the box below for an explanation on why confidence intervals are useful).</p>
 <p>The first figure below shows all providers/areas for each condition. By default the figure shows asthma prevalence but this can be changed using the drop down menu below. From this you can see how recorded prevalence for each condition varies across West Sussex.</p>
 
-<select id="select_qof_1_condition"></select>
 <h4 id = 'qof_1_title'></h4>
+
+<select id="select_qof_1_condition"></select>
 <div id = qof_1_datavis></div>
 
 <p>The second figure allows you to compare individual providers against other areas or nationally against all conditions at once. Choose area one (Angmering Coppice Fitzalan (ACF) PCN by default) and a comparator area (England by default). Hover over a bar to find out more.</p>
 
+<h4 id = 'qof_2_title'></h4>
+
 <select id = "select_qof_2_area_1">First area: </select>
 <select id = "select_qof_2_area_2">Compaerator: </select>
-<h4 id = 'qof_2_title'></h4>
 <div id = qof_2_datavis></div>
 <p class = 'caption'>* Unless an age is given in brackets, the prevalence is for all ages. CKD = Chronic Kidney Disease, COPD = Chronic Obstructive Pulmonary Disease, NDH = Non-diabetic Hyperglycaemia, PAD = Perhipheral Aterial Disease, CHD = Coronary Heart Disease, and TIA = Transient Iscaemic Attack.</p>
 
 <p class = 'good_to_know'>It should be noted that at small area level such as neighbourhoods (and even at county level for some conditions), the number of deaths or people with conditions can be relatively small and as such, any variation can have a big impact. We often group or pool the number of deaths over a longer time period (such as five years for MSOA based life expectancy estimates) and also look at confidence intervals of estimates when deciding if one areas is bigger/smaller or better/worse than another.</p>
 <p>Data in this section were extracted from the Fingertips service (Office for Health Improvement & Disparities, 2022)</p>
 
-</section>
+</>
 <section id = 'life_expectancy'>
+  <h3>Life expectancy at birth</h3>
+ <p>Life expectancy is an estimate of the average number of years a new-born baby would survive if he or she experienced the age-specific mortality rates for that area and time period throughout his or her life. Life expectancy at birth is a useful summary measure of all-cause mortality as it quantifies the differences between areas in units (years of life) that are fairly readily understood and meaningful. Differences in health expectancies reflect health inequalities between different population groups such as between males and females, social classes and ethnic groups. Life expectancy at birth is calculated separately for males and females.</p>
+<p>Males born in West Sussex can expect to live, on average, <b>80.7 years</b>. This is <b>3.4 years</b> lower than the life expectancy at birth for females in the county (<b>84.2 years</b>). Compared to England overall, life expectancy at birth is around one year higher in West Sussex, and this is for both males and females. However, there is a lot of variation in life expectancy across smaller areas in the county.</p>
+<p>Indeed, the gap in male life expectancy between the highest neighbourhood (West Chiltington Common in Horsham, 86.7 years) and the lowest (Littlehampton West and River in Arun, 72.5 years) is 14.2 years. Females born in the highest life expectancy neighbourhood (Maidenbower East and Worth in Crawley, 91.5 years) can expect to live, on average, 14.5 years longer than females born in the lowest life expectancy neighbourhood (Bognor Regis Central in Arun, 77 years).</p>
 <h4>Neighbourhood level (MSOA) life expectancy and mortality variation across the county</h4>
 <div id="map_4_id"></div>
 
+<p>Further analyses of life expectancy in small areas is available on a separate page (<a href = 'https://sussex-local-mortality.netlify.app/'>https://sussex-local-mortality.netlify.app/</a>).</p>
+
+</section>
+
+<section id = 'hospital'>
 <p>The next map shows hospital admissions for all causes as well as for selected acute and chronic conditions. The values presented are indrectly standardised ratios of admissions per 100 registered patients (estimated). More details about this indicator can be found at the <a href="https://fingertips.phe.org.uk/profile/local-health/data#page/6/gid/1938133184/pat/402/par/E06000001/ati/3/are/E02002483/iid/93227/age/1/sex/4/cat/-1/ctp/-1/yrr/5/cid/4/tbm/1">OHID definition page for emergency hospital admissions</a>.</p>
 <div class = 'good_to_know'>
   <p>Emergency admissions can be due to a variety of causes such as high levels of injury within a population as well as poor management of chronic conditions within primary care. As such, the all cause indicator of emergency admissions should be viewed as an indication of the levels of unplanned secondary care use within a population and care should be taken when interpreting these results.</p>
@@ -271,23 +283,102 @@
 <div id="map_5_id"></div>
 </section>
 
- 
+<section id = 'atrial_fibrilation'>
+
+ <h1>CVDPREVENT</h1>
+ <p>CVDPREVENT is a national primary care audit extracting routinely held primary care data from almost 80% of GP practices in England on the diagnosis and management of six high risk conditions and is part of an NHS Long Term Plan ambition to prevent 150,000 strokes and heart attacks over the next ten years by improving the treatment of hypertension (high blood pressure), Hypercholesterolaemia (high cholesterol) and atrial fibrillation (AF).</p>
+ <p>The audit attempts to identify whether people with high risk conditions are being identified, diagnosed, and managed to NICE guidance. Over time, more indicators will become available and each iteration of an annual CVDPREVENT report will contain a different focus. In 2021, the first CVDPREVENT report detailed a pre-pandemic baseline of prevalence and clinical indicators. Further analyses of identifying those at risk and with conditions (different to recorded diagnoses) will be available some time later in 2022.</p>
+ <div class="good_to_know">
+ <p>In contrast to the QOF recorded prevalence of diseases outlined in the <a href = '#qof'>QOF section</a> above, the CVDPREVENT audit enables the consideration of age, sex, ethnicity, and deprivation inequalities in these conditions. However, ethnicity is not always well recorded, with around 20% of records missing ethnicity information.</p>
+ <p>The CVDPREVENT audit is a sample study, and currently represents 80% of GP practices in England, with variation in uptake across the country. It is expected that over time, more practices will contribute data to this programme.</p>
+ <p><b>Recorded prevalence is currently only available for Clinical Commissioning Group</b> geographies, however it useful to explore how the local prevealence of diagnosed conditions is impacted by these demographic factors. As soon as more granular level data becomes available, such as at PCN level, we will add it to this analyses.</p>
+ <p>There are also differences in time periods of data extraction between the QOF and the CVDPREVENT audit.</p>
+ </div>
+
+<h3>A closer look at Atrial fibrilation (AF)</h3>
+<p>Atrial fibrillation is a rhythm disorder which can increase risk of stroke.</p>
+<p>The 2021 audit report recognised that females, particularly aed 40-59 years and those in Black, Asian and ethinc minority groups were clear targets for improving the management of AF.</p>
+
+<h4>Table 3 - number of patients aged 18+ diagnosed with AF; NHS West Sussex CCG patients included in the CVDPREVENT audit; to September 2021</h4>
+   <table id = 'table_3' class = 'cvd_prevent_tables', style="margin-bottom: 20px">
+    <thead>
+      <tr>
+        <th style = 'text-align: left;'>Sex</th>
+        <th style = 'text-align: right;'>Age 18-39</th>
+        <th style = 'text-align: right;'>Age 40-59</th>
+        <th style = 'text-align: right;'>Age 60-79</th>
+        <th style = 'text-align: right;'>Age 80+</th>
+      </tr>
+    </thead>
+  <tbody id="cvd_prevent_af_table"></tbody>
+  </table>
+  <p class = 'caption'>The prevalence among each age group is given in the brackets alongside 95% confidence intervals of estimates. Numbers of patients are rounded to the nearest five, and small counts (1-7 patients) are supressed.</p>
+</section>
+
 <section id = 'hypertension'>
-  <h1>A closer look at hypertension</h1>
-  <p>Hypertension, persistently raised blood pressure, is a major risk factor for cardioascular diseases such as heart failure, stroke, heart attack (myocardial infarction) as well as chronic kidney disease, and dementia, and is widely linked to premature mortality. Hypertension is also one of the most treatable conditions</p>
-  <p>The cardioascular disease (CVD) prevention programme sets a 10 year ambition for hypertension that 80% of the total number of people receiving a diagnosis are treated to target.</p>
+
+ <h3>A closer look at hypertension</h1>
+ <p>Hypertension, persistently raised blood pressure, is a major risk factor for cardioascular diseases such as heart failure, stroke, heart attack (myocardial infarction) as well as chronic kidney disease, and dementia, and is widely linked to premature mortality. Hypertension is also one of the most treatable conditions</p>
+ <p>The cardioascular disease (CVD) prevention programme sets a 10 year ambition for hypertension that 80% of the total number of people receiving a diagnosis are treated to target.</p>
+ <p>Nationally, two in five people with recorded hypertension also had a record of obesity and with obesity also linked to deprivation there is a marked opportunity to reduce CVD risk.</p>
+
+ <h4>Table 4 - number of patients aged 18+ diagnosed with hypertension; NHS West Sussex CCG patients included in the CVDPREVENT audit; to September 2021</h4>
+   <table id = 'table_4' class = 'cvd_prevent_tables', style="margin-bottom: 20px">
+    <thead>
+      <tr>
+        <th style = 'text-align: left;'>Sex</th>
+        <th style = 'text-align: right;'>Age 18-39</th>
+        <th style = 'text-align: right;'>Age 40-59</th>
+        <th style = 'text-align: right;'>Age 60-79</th>
+        <th style = 'text-align: right;'>Age 80+</th>
+      </tr>
+    </thead>
+  <tbody id="cvd_prevent_hyp_table"></tbody>
+  </table>
+  <p class = 'caption'>The prevalence among each age group is given in the brackets alongside 95% confidence intervals of estimates. Numbers of patients are rounded to the nearest five, and small counts (1-7 patients) are supressed.</p>
 </section>
 
-<section id = 'cholesterol'></section>
+<section id = 'ckd'>
+<h3>Chronic Kidney Disease</h3>
+<h4>Table 5 - number of patients aged 18+ diagnosed with chronic kidney disease classification G3a to G5 (previously stage 3-5); NHS West Sussex CCG patients included in the CVDPREVENT audit; to September 2021</h4>
+<table id = 'table_5' class = 'cvd_prevent_tables', style="margin-bottom: 20px">
+ <thead>
+   <tr>
+     <th style = 'text-align: left;'>Sex</th>
+     <th style = 'text-align: right;'>Age 18-39</th>
+     <th style = 'text-align: right;'>Age 40-59</th>
+     <th style = 'text-align: right;'>Age 60-79</th>
+     <th style = 'text-align: right;'>Age 80+</th>
+   </tr>
+ </thead>
+<tbody id="cvd_prevent_ckd_table"></tbody>
+</table>
+<p class = 'caption'>The prevalence among each age group is given in the brackets alongside 95% confidence intervals of estimates. Numbers of patients are rounded to the nearest five, and small counts (1-7 patients) are supressed.</p>
+</section>
+<!-- 
+<section id = 'cholesterol'>
+ <h3>Cholesterol</h3>
+</section>
 
-<section id = 'atrial_fibrilation'></section>
 
-<h1>A closer look at cancer</h1>
-<p>A look at cancer screening and outcomes at PCN level</p>
+
 <section id = 'cancer_incidence'>
+<h1>Cancer services</h1>
 <p>The incidence rate of diagnosed cancer in West Sussex, although below the national average, has increased in recent years. Overall uptake of screening programmes is higher than or similar to England uptake although there is more variability in the county for outcomes and late stage diagnoses.</p>
-<b>Look at HI slides</b>
+
 </section>
+
+<section id = 'cancer_screening'>
+<h3>Screening</h3>
+</section>
+
+<section id = 'cancer_outcomes'>
+<h3>Cancer outcomes</h3>
+
+</section>
+
+<b>Look at HI slides</b>
+</section> -->
 
 <section id = 'references'>
   <h1>References</h1>

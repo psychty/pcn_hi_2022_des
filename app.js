@@ -115,6 +115,19 @@ d3.csv('./outputs/qof_prevalence_wide_test.csv', function(error, data) {
     }
 });
 
+// Load cvd_prevent_table data
+$.ajax({
+  url: "./outputs/cvd_prevent_prevalence_agesex.json",
+  dataType: "json",
+  async: false,
+  success: function(data) {
+    cvd_prevent_data = data;
+   console.log('cvdprevent data successfully loaded.')},
+  error: function (xhr) {
+    alert('cvdprevent data not loaded - ' + xhr.statusText);
+  },
+});
+
 // Load MSOA inequalities geojson
 var msoa_geojson = $.ajax({
   url: "./outputs/msoa_inequalities.geojson",
@@ -128,6 +141,9 @@ var msoa_geojson = $.ajax({
 window.onload = () => {
   loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data);
   loadTable_gp_numbers_in_quintiles(chosen_PCN_gp_quintile);
+  loadTable_ccg_af_prevalence(af_cvd_prevent_data);
+  loadTable_ccg_hyp_prevalence(hyp_cvd_prevent_data);
+  loadTable_ccg_ckd_prevalence(ckd_cvd_prevent_data);
 };
 
 wsx_areas = ['Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing']
@@ -761,6 +777,48 @@ function loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data) {
 
   for (let item of PCN_deprivation_data) {
     dataHTML += `<tr><td>${item.Area_Name}</td><td>${d3.format(",.0f")(item["20% most deprived"])}</td><td>${d3.format('.1%')(item["Proportion_most"])}</td><td>${d3.format(",.0f")(item["Total"])}</td></tr>`;
+  }
+  tableBody.innerHTML = dataHTML;
+}
+
+af_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+  return d.Indicator === 'Prevalence of GP recorded Atrial Fibrillation in patients aged 18 and over' &
+          d.Area_Name === 'NHS West Sussex CCG'})
+
+function loadTable_ccg_af_prevalence(af_cvd_prevent_data) {
+  const tableBody = document.getElementById("cvd_prevent_af_table");
+  var dataHTML = "";
+
+  for (let item of af_cvd_prevent_data) {
+    dataHTML += `<tr><td>${item.Sex}</td><td>${item["18-39"]}</td><td>${item["40-59"]}</td><td>${item["60-79"]}</td><td>${item["80+"]}</td></tr>`;
+  }
+  tableBody.innerHTML = dataHTML;
+}
+
+hyp_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+  return d.Indicator === 'Prevalence of GP recorded Hypertension in patients aged 18 and over' &
+          d.Area_Name === 'NHS West Sussex CCG'})
+
+function loadTable_ccg_hyp_prevalence(hyp_cvd_prevent_data) {
+  const tableBody = document.getElementById("cvd_prevent_hyp_table");
+  var dataHTML = "";
+
+  for (let item of  hyp_cvd_prevent_data) {
+    dataHTML += `<tr><td>${item.Sex}</td><td>${item["18-39"]}</td><td>${item["40-59"]}</td><td>${item["60-79"]}</td><td>${item["80+"]}</td></tr>`;
+  }
+  tableBody.innerHTML = dataHTML;
+}
+
+ckd_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+  return d.Indicator === 'Prevalence of GP recorded Chronic Kidney Disease with classification of categories G3a to G5 (previously stage 3 to 5) in patients aged 18 and over' &
+          d.Area_Name === 'NHS West Sussex CCG'})
+
+function loadTable_ccg_ckd_prevalence(ckd_cvd_prevent_data) {
+  const tableBody = document.getElementById("cvd_prevent_ckd_table");
+  var dataHTML = "";
+
+  for (let item of  ckd_cvd_prevent_data) {
+    dataHTML += `<tr><td>${item.Sex}</td><td>${item["18-39"]}</td><td>${item["40-59"]}</td><td>${item["60-79"]}</td><td>${item["80+"]}</td></tr>`;
   }
   tableBody.innerHTML = dataHTML;
 }
