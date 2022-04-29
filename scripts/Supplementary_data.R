@@ -253,27 +253,49 @@ age_sex_table %>%
   write_lines(paste0(output_directory, '/cvd_prevent_prevalence_agesex.json'))
 
 
-unique(age_sex_table$Indicator)
+# What is the latest period?
+
+latest_period <- af_prevalence %>% select(Period) %>% unique() %>% arrange(desc(Period)) %>% top_n(1) 
+
+af_prevalence %>% 
+  filter(MetricCategoryTypeName == 'Sex') %>% 
+  # filter(Area_Name == 'NHS West Sussex CCG') %>%
+  filter(Sex == 'Persons') %>% 
+  filter(Period == latest_period$Period) %>% 
+  select(Area_Name, Numerator, Denominator, Value, LowerConfidenceLimit, UpperConfidenceLimit)
+
+af_prevalence %>% 
+  filter(MetricCategoryTypeName == 'Deprivation quintile') %>% 
+  filter(Period == latest_period$Period) %>% 
+  mutate(Quintile = factor(MetricCategoryName, levels = c('1 - most deprived', '2', '3', '4','5 - least deprived'))) %>% 
+  select(Area_Name, Numerator, Denominator, Quintile, Value, LowerConfidenceLimit, UpperConfidenceLimit) %>% 
+  ggplot(aes(x = Area_Name,
+             y = Value,
+             fill = Quintile)) +
+  geom_bar(position = 'dodge',
+           stat = 'identity')
+
+  
+
+af_prevalence %>% 
+  filter(MetricCategoryTypeName == 'Deprivation quintile') %>% 
+  mutate(Value = Value / 100) %>% 
+  filter(Period == latest_period$Period) %>% 
+  mutate(Quintile = factor(ifelse(MetricCategoryName == '1 - most deprived', 'Proportion_most', ifelse(MetricCategoryName == '2', 'Proportion_q2', ifelse(MetricCategoryName == '3', 'Proportion_q3', ifelse(MetricCategoryName == '4', 'Proportion_q4', ifelse(MetricCategoryName == '5 - least deprived', 'Proportion_least', NA))))), levels = c("Proportion_most", 'Proportion_q2', 'Proportion_q3', 'Proportion_q4', 'Proportion_least'))) %>% 
+  select(Area_Name, Quintile, Value) %>%
+  pivot_wider(names_from = 'Quintile',
+              values_from = 'Value') %>% 
+  mutate(Area_Name = factor(Area_Name, levels = c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England'))) %>% 
+  arrange(Area_Name) %>% 
+  write.csv(., paste0(output_directory,'/cvd_prevent_prevalence_wide.csv'), row.names = FALSE)
+
+
+# unique(af_prevalence$MetricCategoryName)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-af_prevalence_sex <- af_prevalence %>% 
-  filter(MetricCategoryTypeName == 'Sex')
 
 af_prevalence_age <- af_prevalence %>% 
   filter(MetricCategoryTypeName == 'Age group',

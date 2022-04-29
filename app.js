@@ -141,9 +141,9 @@ var msoa_geojson = $.ajax({
 window.onload = () => {
   loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data);
   loadTable_gp_numbers_in_quintiles(chosen_PCN_gp_quintile);
-  loadTable_ccg_af_prevalence(af_cvd_prevent_data);
-  loadTable_ccg_hyp_prevalence(hyp_cvd_prevent_data);
-  loadTable_ccg_ckd_prevalence(ckd_cvd_prevent_data);
+  loadTable_ccg_af_prevalence(chosen_af_cvd_prevent_data);
+  loadTable_ccg_hyp_prevalence(chosen_hyp_cvd_prevent_data);
+  loadTable_ccg_ckd_prevalence(chosen_ckd_cvd_prevent_data);
 };
 
 wsx_areas = ['Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing']
@@ -781,47 +781,193 @@ function loadTable_pcn_numbers_in_quintiles(PCN_deprivation_data) {
   tableBody.innerHTML = dataHTML;
 }
 
-af_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
-  return d.Indicator === 'Prevalence of GP recorded Atrial Fibrillation in patients aged 18 and over' &
-          d.Area_Name === 'NHS West Sussex CCG'})
+cvd_prevent_areas = ['NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England']
 
-function loadTable_ccg_af_prevalence(af_cvd_prevent_data) {
+// We need to create a dropdown button for the user to choose which area to be displayed on the figure.
+d3.select("#select_table_3_area_button")
+  .selectAll("myOptions")
+  .data(cvd_prevent_areas)
+  .enter()
+  .append("option")
+  .text(function (d) {
+    return d;
+  })
+  .attr("value", function (d) {
+    return d;
+  });
+  
+// Retrieve the selected area name
+var chosen_af_cvd_prevent_area = d3
+.select("#select_table_3_area_button")
+.property("value");
+
+d3.select("#select_table_3_title").html(function (d) {
+  return (
+    "Table 3 - number of patients aged 18+ diagnosed with atrial fibrilation;  " +
+    chosen_af_cvd_prevent_area +
+    "; patients included in the CVDPREVENT audit; september 2021"   
+   );
+ });
+
+chosen_af_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+  return d.Indicator === 'Prevalence of GP recorded Atrial Fibrillation in patients aged 18 and over' &
+          d.Area_Name === chosen_af_cvd_prevent_area})
+
+function loadTable_ccg_af_prevalence(chosen_af_cvd_prevent_data) {
   const tableBody = document.getElementById("cvd_prevent_af_table");
   var dataHTML = "";
 
-  for (let item of af_cvd_prevent_data) {
+  for (let item of chosen_af_cvd_prevent_data) {
     dataHTML += `<tr><td>${item.Sex}</td><td>${item["18-39"]}</td><td>${item["40-59"]}</td><td>${item["60-79"]}</td><td>${item["80+"]}</td></tr>`;
   }
   tableBody.innerHTML = dataHTML;
 }
 
-hyp_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
-  return d.Indicator === 'Prevalence of GP recorded Hypertension in patients aged 18 and over' &
-          d.Area_Name === 'NHS West Sussex CCG'})
+d3.select("#select_table_3_area_button").on("change", function (d) {
 
-function loadTable_ccg_hyp_prevalence(hyp_cvd_prevent_data) {
+var chosen_af_cvd_prevent_area = d3
+.select("#select_table_3_area_button")
+.property("value");
+
+d3.select("#select_table_3_title").html(function (d) {
+  return (
+    "Table 3 - number of patients aged 18+ diagnosed with atrial fibrilation;  " +
+    chosen_af_cvd_prevent_area +
+    "; patients included in the CVDPREVENT audit; september 2021"   
+   );
+ });
+
+chosen_af_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+  return d.Indicator === 'Prevalence of GP recorded Atrial Fibrillation in patients aged 18 and over' &
+          d.Area_Name === chosen_af_cvd_prevent_area})
+
+loadTable_ccg_af_prevalence(chosen_af_cvd_prevent_data)
+
+});
+
+// We need to create a dropdown button for the user to choose which area to be displayed on the figure.
+d3.select("#select_table_4_area_button")
+  .selectAll("myOptions")
+  .data(cvd_prevent_areas)
+  .enter()
+  .append("option")
+  .text(function (d) {
+    return d;
+  })
+  .attr("value", function (d) {
+    return d;
+  });
+  
+// Retrieve the selected area name
+var chosen_hyp_cvd_prevent_area = d3
+.select("#select_table_4_area_button")
+.property("value");
+
+d3.select("#select_table_4_title").html(function (d) {
+  return (
+    "Table 4 - number of patients aged 18+ diagnosed with hypertension;  " +
+    chosen_hyp_cvd_prevent_area +
+    "; patients included in the CVDPREVENT audit; september 2021"   
+   );
+ });
+
+chosen_hyp_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+  return d.Indicator === 'Prevalence of GP recorded Hypertension in patients aged 18 and over' &
+          d.Area_Name === chosen_hyp_cvd_prevent_area})
+
+function loadTable_ccg_hyp_prevalence(chosen_hyp_cvd_prevent_data) {
   const tableBody = document.getElementById("cvd_prevent_hyp_table");
   var dataHTML = "";
 
-  for (let item of  hyp_cvd_prevent_data) {
+  for (let item of  chosen_hyp_cvd_prevent_data) {
     dataHTML += `<tr><td>${item.Sex}</td><td>${item["18-39"]}</td><td>${item["40-59"]}</td><td>${item["60-79"]}</td><td>${item["80+"]}</td></tr>`;
   }
   tableBody.innerHTML = dataHTML;
 }
 
-ckd_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
-  return d.Indicator === 'Prevalence of GP recorded Chronic Kidney Disease with classification of categories G3a to G5 (previously stage 3 to 5) in patients aged 18 and over' &
-          d.Area_Name === 'NHS West Sussex CCG'})
+d3.select("#select_table_4_area_button").on("change", function (d) {
 
-function loadTable_ccg_ckd_prevalence(ckd_cvd_prevent_data) {
+  var chosen_hyp_cvd_prevent_area = d3
+  .select("#select_table_4_area_button")
+  .property("value");
+  
+  d3.select("#select_table_4_title").html(function (d) {
+    return (
+      "Table 4 - number of patients aged 18+ diagnosed with hypertension;  " +
+      chosen_hyp_cvd_prevent_area +
+      "; patients included in the CVDPREVENT audit; september 2021"   
+     );
+   });
+  
+   chosen_hyp_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+    return d.Indicator === 'Prevalence of GP recorded Hypertension in patients aged 18 and over' &
+            d.Area_Name === chosen_hyp_cvd_prevent_area})
+
+  loadTable_ccg_hyp_prevalence(chosen_hyp_cvd_prevent_data)
+  });
+
+// We need to create a dropdown button for the user to choose which area to be displayed on the figure.
+d3.select("#select_table_5_area_button")
+  .selectAll("myOptions")
+  .data(cvd_prevent_areas)
+  .enter()
+  .append("option")
+  .text(function (d) {
+    return d;
+  })
+  .attr("value", function (d) {
+    return d;
+  });
+  
+// Retrieve the selected area name
+var chosen_ckd_cvd_prevent_area = d3
+.select("#select_table_5_area_button")
+.property("value");
+
+d3.select("#select_table_5_title").html(function (d) {
+  return (
+    "Table 5 - number of patients aged 18+ diagnosed with chronic kidney disease classification G3a to G5 (previously stage 3-5);  " +
+    chosen_ckd_cvd_prevent_area +
+    "; patients included in the CVDPREVENT audit; september 2021"   
+   );
+ });
+
+chosen_ckd_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+  return d.Indicator === 'Prevalence of GP recorded Chronic Kidney Disease with classification of categories G3a to G5 (previously stage 3 to 5) in patients aged 18 and over' &
+          d.Area_Name === chosen_ckd_cvd_prevent_area})
+
+function loadTable_ccg_ckd_prevalence(chosen_ckd_cvd_prevent_data) {
   const tableBody = document.getElementById("cvd_prevent_ckd_table");
   var dataHTML = "";
 
-  for (let item of  ckd_cvd_prevent_data) {
+  for (let item of  chosen_ckd_cvd_prevent_data) {
     dataHTML += `<tr><td>${item.Sex}</td><td>${item["18-39"]}</td><td>${item["40-59"]}</td><td>${item["60-79"]}</td><td>${item["80+"]}</td></tr>`;
   }
   tableBody.innerHTML = dataHTML;
 }
+
+d3.select("#select_table_5_area_button").on("change", function (d) {
+  
+  var chosen_ckd_cvd_prevent_area = d3
+  .select("#select_table_5_area_button")
+  .property("value");
+  
+  d3.select("#select_table_5_title").html(function (d) {
+    return (
+      "Table 5 - number of patients aged 18+ diagnosed with chronic kidney disease classification G3a to G5 (previously stage 3-5);  " +
+      chosen_ckd_cvd_prevent_area +
+      "; patients included in the CVDPREVENT audit; september 2021"   
+     );
+   });
+  
+   chosen_ckd_cvd_prevent_data = cvd_prevent_data.filter(function(d,i){
+    return d.Indicator === 'Prevalence of GP recorded Chronic Kidney Disease with classification of categories G3a to G5 (previously stage 3 to 5) in patients aged 18 and over' &
+            d.Area_Name === chosen_ckd_cvd_prevent_area})
+  
+  loadTable_ccg_ckd_prevalence(chosen_ckd_cvd_prevent_data)
+  
+  });
+
 
 // PCN figure
 var svg_stacked_pcn_quintiles = d3.select("#stacked_pcn_quintiles_figure")
@@ -981,7 +1127,6 @@ d3.select("#select_pcn_table_2_button").on("change", function (d) {
 
     })
 
-    
 // ! MSOA map
 
 function getUnemploymentColor(d) {
@@ -1727,3 +1872,86 @@ d3.select("#select_qof_2_area_2").on("change", function (d) {
 
 
 })
+
+// ! grouped bars deprivation
+
+var svg_cvd_prevent_af = d3.select("#af_cvd_prevent_deprivation_vis")
+ .append("svg")
+ .attr("width", width)
+ .attr("height", height)
+ .append("g")
+
+ var qof_2_prevalence_tooltip = d3
+ .select("#af_cvd_prevent_deprivation_vis")
+ .append("div")
+ .style("opacity", 0)
+ .attr("class", "tooltip_class")
+ .style("position", "absolute")
+ .style("z-index", "10");
+
+// ! Upon reading csv 
+d3.csv("./outputs/cvd_prevent_prevalence_wide.csv", function(cvd_prevent_af_data) {
+  // console.log(qof_2_data, PCN_qof_wide_data)
+var cvd_prevent_groups = d3.map(cvd_prevent_af_data, function(d){return(d.Area_Name)}).keys()
+  
+// Add x axis 
+var x_cvd_prevent_af = d3.scaleBand()
+.domain(d3.map(cvd_prevent_groups, function (d) {
+    return d;
+   })
+.keys())
+.range([50, width - 50])
+.padding(0.2);
+    
+cvd_prevent_af_prevalence_x_axis = svg_cvd_prevent_af
+  .append("g")
+  .attr("transform", "translate(0," + (height - 50) + ")")
+  .call(d3.axisBottom(x_cvd_prevent_af).tickSize(0));
+  
+cvd_prevent_af_prevalence_x_axis
+  .selectAll("text")
+  .style("text-anchor", "middle")
+  .attr("dx", "-.8em")
+  .attr("dy", "1em")
+  .attr("transform", function (d) { return "rotate(0)"; })
+  
+var cvd_prevent_af_subgroup = d3.scaleBand()
+ .domain(quintile_fields)
+ .range([0, x_cvd_prevent_af.bandwidth()])
+ .padding([0.1])
+     
+// Add y axis 
+var y_cvd_prevent_af = d3.scaleLinear()
+ .domain([0, .05]) 
+ .range([height - 50, 10])
+ .nice()
+       
+var cvd_prevent_af_prevalence_y_axis = svg_cvd_prevent_af.append("g")
+   .attr("transform", "translate(50, 0)")
+   .call(d3.axisLeft(y_cvd_prevent_af).tickFormat(formatPercent));
+
+var cvd_prevent_af_bars = svg_cvd_prevent_af.append("g")
+  .selectAll("g")
+  .data(cvd_prevent_af_data)
+  .enter()
+  .append("g")
+  .attr("transform", function(d) { return "translate(" + x_cvd_prevent_af(d.Area_Name) + ", 0)"; })
+  .selectAll("rect")
+  .data(function(d) { return quintile_fields.map(function(key) { return {key: key, value: d[key]}; }); })
+  .enter()
+  .append("rect")
+  .attr("x", function(d) { return cvd_prevent_af_subgroup(d.key); })
+  .attr("y", function(d) { return y_cvd_prevent_af(d.value); })
+  .attr("width", cvd_prevent_af_subgroup.bandwidth())
+  .attr("height", function(d) { return (height - 50) - y_cvd_prevent_af(d.value); })
+  .attr("fill", function(d) { return colour_quintile_label(d.key); })
+  .attr('class', 'grouped_bars_af_cvd_prevent')
+   
+
+})
+
+
+
+
+
+
