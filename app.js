@@ -1898,7 +1898,7 @@ var y0_af_cvdprevent = d3.scaleLinear()
       return d.upper_CI;
   });
  })])
- .range([height - 50, 0])
+ .range([height - 50, 50])
  .nice();
 
 var y1_af_cvdprevent = d3.scaleLinear()
@@ -1907,7 +1907,7 @@ var y1_af_cvdprevent = d3.scaleLinear()
       return d.upper_CI;
   });
  })])
- .range([height - 50, 0])
+ .range([height - 50, 50])
  .nice();
 
 var xAxis_af_cvdprevent = svg_cvd_prevent_af
