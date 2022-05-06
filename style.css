@@ -303,13 +303,6 @@ header{
 section {
  padding-top: 5vh;
 }
-/* 
-.nav_population button:hover + ul{
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0px);
-} */
-
 
 .cvd_prevent_tables td {
   padding-right: 10px;
@@ -321,5 +314,6 @@ section {
   text-align: left;
 }
 
-
-
+.svg_legend {
+  font-size: .8rem;
+}

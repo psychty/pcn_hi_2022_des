@@ -23,7 +23,7 @@ var PCN_geojson = $.ajax({
   },
 });
 
-// Load PCN pyramid data
+// ! Load PCN pyramid data
 $.ajax({
   url: "./outputs/PCN_pyramid_data.json",
   dataType: "json",
@@ -36,7 +36,7 @@ $.ajax({
   },
 });
 
-// Load GP and PCN deprivation data
+// ! Load GP and PCN deprivation data
 $.ajax({
   url: "./outputs/PCN_deprivation_data.json",
   dataType: "json",
@@ -88,7 +88,7 @@ var Deprivation_geojson = $.ajax({
   },
 });
 
-// Load PCN QOF data
+// ! Load PCN QOF data
 $.ajax({
   url: "./outputs/QOF_prevalence.json",
   dataType: "json",
@@ -115,7 +115,7 @@ d3.csv('./outputs/qof_prevalence_wide_test.csv', function(error, data) {
     }
 });
 
-// Load cvd_prevent_table data
+// ! Load cvd_prevent_table data
 $.ajax({
   url: "./outputs/cvd_prevent_prevalence_agesex.json",
   dataType: "json",
@@ -128,7 +128,20 @@ $.ajax({
   },
 });
 
-// Load MSOA inequalities geojson
+// ! Load cvd_prevent quintile data
+$.ajax({
+  url: "./outputs/cvdprevent_af_prevalence.json",
+  dataType: "json",
+  async: false,
+  success: function(data) {
+    cvdprevent_af_data = data;
+   console.log('cvdprevent af data successfully loaded.')},
+  error: function (xhr) {
+    alert('cvdprevent af data not loaded - ' + xhr.statusText);
+  },
+});
+
+// ! Load MSOA inequalities geojson
 var msoa_geojson = $.ajax({
   url: "./outputs/msoa_inequalities.geojson",
   dataType: "json",
@@ -1677,7 +1690,6 @@ var Short_label_conditions = d3
 // The tooltip function
 show_qof_2_prevalence_tooltip = function (d) {
 
-  // console.log(d3.select(this)._groups[0][0].__data__)
   qof_2_prevalence_tooltip.transition().duration(200).style("opacity", 1);
 
   qof_2_prevalence_tooltip
@@ -1738,13 +1750,6 @@ var y_qof_2 = d3.scaleLinear()
 var qof_2_prevalence_y_axis = svg_pcn_qof_2.append("g")
  .attr("transform", "translate(50, 0)")
  .call(d3.axisLeft(y_qof_2).tickFormat(formatPercent_1));
-
-// color palette = one color per subgroup
-var qof_2_area_color = d3.scaleOrdinal()
-  .domain(subgroups)
-  .range(['#377eb8',
-          '#dbdbdb'
-          ])
 
 // Show the bars
 var pcn_qof_2_bars = svg_pcn_qof_2.append("g")
@@ -1823,14 +1828,7 @@ var y_qof_2 = d3.scaleLinear()
  .range([qof_height - 150, 10])
  .nice()
      
-   
-// color palette = one color per subgroup
-var qof_2_area_color = d3.scaleOrdinal()
-  .domain(subgroups)
-  .range(['#377eb8',
-          '#dbdbdb'
-          ])
-    
+     
   qof_2_df_long = PCN_qof_data.filter(function(d,i){
    return d.Area_Name === chosen_qof_2_area_1 | d.Area_Name === chosen_qof_2_area_2 })
           
@@ -1857,11 +1855,9 @@ var qof_2_area_color = d3.scaleOrdinal()
   .on("mousemove", show_qof_2_prevalence_tooltip)
   .on("mouseout", function () {
     return qof_2_prevalence_tooltip.style("visibility", "hidden");
-  });
-      
+  });    
   }
     
-
 d3.select("#select_qof_2_area_1").on("change", function (d) {
   update_qof_2_prevalence()
   })
@@ -1870,18 +1866,16 @@ d3.select("#select_qof_2_area_2").on("change", function (d) {
   update_qof_2_prevalence()
   })
 
-
 })
 
 // ! grouped bars deprivation
-
 var svg_cvd_prevent_af = d3.select("#af_cvd_prevent_deprivation_vis")
  .append("svg")
  .attr("width", width)
  .attr("height", height)
  .append("g")
 
- var qof_2_prevalence_tooltip = d3
+ var cvdprevent_prevalence_tooltip = d3
  .select("#af_cvd_prevent_deprivation_vis")
  .append("div")
  .style("opacity", 0)
@@ -1889,69 +1883,111 @@ var svg_cvd_prevent_af = d3.select("#af_cvd_prevent_deprivation_vis")
  .style("position", "absolute")
  .style("z-index", "10");
 
-// ! Upon reading csv 
-d3.csv("./outputs/cvd_prevent_prevalence_wide.csv", function(cvd_prevent_af_data) {
-  // console.log(qof_2_data, PCN_qof_wide_data)
-var cvd_prevent_groups = d3.map(cvd_prevent_af_data, function(d){return(d.Area_Name)}).keys()
-  
-// Add x axis 
-var x_cvd_prevent_af = d3.scaleBand()
-.domain(d3.map(cvd_prevent_groups, function (d) {
-    return d;
-   })
-.keys())
-.range([50, width - 50])
-.padding(0.2);
-    
-cvd_prevent_af_prevalence_x_axis = svg_cvd_prevent_af
+ var x0_af_cvdprevent = d3.scaleBand()
+  .domain(cvd_prevent_areas)
+  .range([50, width - 50])
+  .padding(0.2);
+
+var x1_af_cvdprevent = d3.scaleBand()
+  .domain(quintile_fields)
+  .range([0, x0_af_cvdprevent.bandwidth()])
+
+var y0_af_cvdprevent = d3.scaleLinear()
+  .domain([0, d3.max(cvdprevent_af_data, function (d) {
+  return d3.max(d.data, function (d) {
+      return d.upper_CI;
+  });
+ })])
+ .range([height - 50, 0])
+ .nice();
+
+var y1_af_cvdprevent = d3.scaleLinear()
+  .domain([0, d3.max(cvdprevent_af_data, function (d) {
+  return d3.max(d.data, function (d) {
+      return d.upper_CI;
+  });
+ })])
+ .range([height - 50, 0])
+ .nice();
+
+var xAxis_af_cvdprevent = svg_cvd_prevent_af
   .append("g")
   .attr("transform", "translate(0," + (height - 50) + ")")
-  .call(d3.axisBottom(x_cvd_prevent_af).tickSize(0));
-  
-cvd_prevent_af_prevalence_x_axis
-  .selectAll("text")
-  .style("text-anchor", "middle")
-  .attr("dx", "-.8em")
-  .attr("dy", "1em")
-  .attr("transform", function (d) { return "rotate(0)"; })
-  
-var cvd_prevent_af_subgroup = d3.scaleBand()
- .domain(quintile_fields)
- .range([0, x_cvd_prevent_af.bandwidth()])
- .padding([0.1])
-     
-// Add y axis 
-var y_cvd_prevent_af = d3.scaleLinear()
- .domain([0, .05]) 
- .range([height - 50, 10])
- .nice()
-       
-var cvd_prevent_af_prevalence_y_axis = svg_cvd_prevent_af.append("g")
-   .attr("transform", "translate(50, 0)")
-   .call(d3.axisLeft(y_cvd_prevent_af).tickFormat(formatPercent));
+  .call(d3.axisBottom(x0_af_cvdprevent).tickSize(0));
 
-var cvd_prevent_af_bars = svg_cvd_prevent_af.append("g")
-  .selectAll("g")
-  .data(cvd_prevent_af_data)
-  .enter()
-  .append("g")
-  .attr("transform", function(d) { return "translate(" + x_cvd_prevent_af(d.Area_Name) + ", 0)"; })
-  .selectAll("rect")
-  .data(function(d) { return quintile_fields.map(function(key) { return {key: key, value: d[key]}; }); })
-  .enter()
-  .append("rect")
-  .attr("x", function(d) { return cvd_prevent_af_subgroup(d.key); })
-  .attr("y", function(d) { return y_cvd_prevent_af(d.value); })
-  .attr("width", cvd_prevent_af_subgroup.bandwidth())
-  .attr("height", function(d) { return (height - 50) - y_cvd_prevent_af(d.value); })
-  .attr("fill", function(d) { return colour_quintile_label(d.key); })
-  .attr('class', 'grouped_bars_af_cvd_prevent')
-   
+var yAxis_af_cvdprevent =  svg_cvd_prevent_af.append("g")
+ .attr("transform", "translate(50, 0)")
+ .call(d3.axisLeft(y0_af_cvdprevent).tickFormat(formatPercent));
 
+var af_quintile_bars = svg_cvd_prevent_af.selectAll(".rect")
+ .data(cvdprevent_af_data)
+ .enter().append("g")
+ .attr("class", "g")
+ .attr("transform", function (d) {
+ return "translate(" + x0_af_cvdprevent(d.Area_Name) + ", 0)";
+});
+
+af_quintile_bars.selectAll("rect")
+ .data(function (d) {
+ return d.data;
 })
+ .enter().append("rect")
+ .attr("width", x1_af_cvdprevent.bandwidth())
+ .attr("x", function (d) {
+     return x1_af_cvdprevent(d.Quintile);
+ })
+ .attr("y", function (d) {
+     return y0_af_cvdprevent(d.Prevalence);
+ })
+ .attr("height", function (d) {
+     return (height -50) - y0_af_cvdprevent(d.Prevalence);
+ })
+ .style("fill", function (d) {
+     return colour_quintile_label(d.Quintile);
+ });
 
+// Add one dot in the legend for each name.
+svg_cvd_prevent_af.selectAll("myquintiledots")
+ .data(quintile_fields)
+ .enter()
+ .append("circle")
+ .attr("cx", width * .8)
+ .attr("cy", function(d,i){ return 20 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+ .attr("r", 5)
+ .style("fill", function(d){ return colour_quintile_label(d)})
 
+// Add one dot in the legend for each name.
+svg_cvd_prevent_af.selectAll("myquintilelabels")
+  .data(quintile_fields)
+  .enter()
+  .append("text")
+  .attr("x", width * .8 + 15)
+  .attr("y", function(d,i){ return 25 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+  // .style("fill", function(d){ return colour_quintile_label(d)})
+  .attr('class', 'svg_legend')
+  .text(function(d){ return quintile_label(d)})
+  .attr("text-anchor", "left")
+  // .style("alignment-baseline", "middle")
 
+var errorBarArea_af = d3.area()
+ .x(function (d) {
+     return x1_af_cvdprevent(d.Quintile) + x1_af_cvdprevent.bandwidth()/2;
+ })
+ .y0(function (d) {
+     return y1_af_cvdprevent(+d.lower_CI);
+ })
+ .y1(function (d) {
+     return y1_af_cvdprevent(+d.upper_CI);
+ })
 
-
-
+var errorBars_af = af_quintile_bars.selectAll("path.errorBar")
+ .data(function (d) {
+     return d.data; //one error line for each data bar
+ })
+ .enter()
+ .append("path")
+ .attr("class", "errorBar")
+ .attr("d", function (d) {
+     return errorBarArea_af([d]);})
+ .attr("stroke", "red")
+ .attr("stroke-width", 1.5);

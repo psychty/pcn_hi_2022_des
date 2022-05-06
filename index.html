@@ -289,16 +289,17 @@
  <p>CVDPREVENT is a national primary care audit extracting routinely held primary care data from almost 80% of GP practices in England on the diagnosis and management of six high risk conditions and is part of an NHS Long Term Plan ambition to prevent 150,000 strokes and heart attacks over the next ten years by improving the treatment of hypertension (high blood pressure), Hypercholesterolaemia (high cholesterol) and atrial fibrillation (AF).</p>
  <p>The audit attempts to identify whether people with high risk conditions are being identified, diagnosed, and managed to NICE guidance. Over time, more indicators will become available and each iteration of an annual CVDPREVENT report will contain a different focus. In 2021, the first CVDPREVENT report detailed a pre-pandemic baseline of prevalence and clinical indicators. Further analyses of identifying those at risk and with conditions (different to recorded diagnoses) will be available some time later in 2022.</p>
  <div class="good_to_know">
- <p>In contrast to the QOF recorded prevalence of diseases outlined in the <a href = '#qof'>QOF section</a> above, the CVDPREVENT audit enables the consideration of age, sex, ethnicity, and deprivation inequalities in these conditions. However, ethnicity is not always well recorded, with around 20% of records missing ethnicity information.</p>
+ <p>In contrast to the QOF recorded prevalence of diseases outlined in the <a href = '#qof'>QOF section</a> above, the CVDPREVENT audit enables the consideration of age, sex, ethnicity, and deprivation inequalities in these conditions. However, ethnicity is not always well recorded, with around 20% of records missing ethnicity information. Moreover, prevalence of these conditions by ethnicity are not available in the current release from CVDPREVENT although we expect more detail to become available in future releases.</p>
  <p>The CVDPREVENT audit is a sample study, and currently represents 80% of GP practices in England, with variation in uptake across the country. It is expected that over time, more practices will contribute data to this programme.</p>
- <p><b>Recorded prevalence is currently only available for Clinical Commissioning Group</b> geographies, however it useful to explore how the local prevealence of diagnosed conditions is impacted by these demographic factors. As soon as more granular level data becomes available, such as at PCN level, we will add it to this analyses.</p>
- <p>There are also differences in time periods of data extraction between the QOF and the CVDPREVENT audit.</p>
+ <p><b>Recorded prevalence is currently only available for Clinical Commissioning Group</b> geographies, however it useful to explore how the local prevealence of diagnosed conditions is impacted by these demographic factors. We are currently able to explore prevalence of atrial fibrilation, hypertension, and chronic kidney disease by age, sex, and separately by deprivation quintiles. As soon as more granular level data becomes available, such as at PCN level, we will add it to these analyses.</p>
+ <!-- <p>There are also differences in time periods of data extraction between the QOF and the CVDPREVENT audit.</p> -->
  </div>
 
 <h3>A closer look at Atrial fibrilation (AF)</h3>
 <p>Atrial fibrilation is a rhythm disorder which can increase risk of stroke. In England, as at September 2021, 2.3% of over 18's included in the audit had a recorded diagnosis of atrial_fibrilation. In West Sussex, prevalence is significantly higher than the national prevalence at 2.9% (around 21,000 adults). These are slightly higher than in the QOF prevalence for 2020/21 although as noted there are difference is time period as well as the population covered as QOF is for all ages and the audit is for those aged 18 and over.</p>
 
 <p>The table below shows that as at September 2021, there were almost 21,000 adults across West Sussex primary care with a recorded diagnosis of atrial fibrilation. Prevalence amongst 18-39 year olds is around 0.1% or 1 per 1,000 people. Among 40-59 year olds, the prevalence of atrial fibrilation is around 0.6% (about 1 in 200 people). In West Sussex, more than twice as many males aged 40-59 (1,110 compared to 425) had a diagnosis of atrial fibrilation than females; moreover, the prevalence among males in West Sussex (0.9%) is significantly higher than for males in England (0.8%).</p>
+
 <p>You can change the area in the drop down menu to see the prevalence for the other Sussex CCGs and for England.</p>
 
 <h4 id = 'select_table_3_title'></h4>
@@ -317,13 +318,15 @@
   </table>
 <p class = 'caption'>The prevalence among each age group is given in the brackets alongside 95% confidence intervals of estimates. Numbers of patients are rounded to the nearest five, and small counts (1-7 patients) are supressed.</p>
 
-<p> The 2021 audit report shows locally and nationally that the incidence of atrial fibrillation is greater in males than females, with the gap closing with age. The report also recognised that females, particularly aged 40-59 years and those in Black, Asian and ethinc minority groups were clear targets for improving the management of AF.</p>
+<p>The CVDPREVENT report currently shows prevalence by age and sex, and separately for deprivation quintile (shown in the figure below). At present, prevalence estimates are not available by ethnicity although the 2021 audit report highlighted nationally that those in Black, Asian and ethinc minority groups were clear targets for improving the management of AF.</p>
+
+<p>The figure below shows the prevalence of recorded atrial fibrilation among those aged 18 and over by deprivation quintile. This shows that there is variation in prevalence depending on where someone lives. At first glance, the pattern is clear on the right hand side for England overall that recorded prevalence tends to be higher among those living in less deprived areas. The pattern is less clear at more local areas such as at the CCG level (and there are wider confidence intervals at smaller areas, denoted by the red lines at the top of each bar). That prevalence is higher amongst those living in less deprived areas is surprising given other population studies in academic research such as <a href = 'https://www.sciencedirect.com/science/article/pii/S2666776221001344?via%3Dihub'>Chung et al. 2021</a> which suggest the risk of developing atrial fibrilation and having poorer outcomes (such as death) are highest in more deprived areas.</p>
+
+<p>The CVDPREVENT authors explain that given areas of higher deprivation usually have a younger age profile, it is possible that the higher prevalence in less deprived areas is because there are more older people in these areas. The authors used age-adjusted synthetic modelling to account for this and indicate that there are almost no differences across the deprivation quintiles when age is controlled. These synthetic estimates are not currently available in the public domain but we hope that future iterations of the CVDPREVENT audit will publish these.</p>
 
 <div id = 'af_cvd_prevent_deprivation_vis'></div>
 
-
-<p>We can measure treatment by the prescripttion records for anticoagulants, but note that this is not the same as measuring treatment compliance (whether someone actually takes the medications prescribed to them.</p>
-
+<!-- <p>We can measure treatment by the prescripttion records for anticoagulants, but note that this is not the same as measuring treatment compliance (whether someone actually takes the medications prescribed to them.</p> -->
 
 </section>
 
@@ -399,6 +402,7 @@
 <section id = 'references'>
   <h1>References</h1>
   <p>Asaria M, Doran T, Cookson R. The costs of inequality: whole-population modelling study of lifetime inpatient hospital costs in the English National Health Service by level of neighbourhood deprivation. Journal of Epidemiology and Community Health. 2016;70(10):990</p>
+ <p>Chung S.-C., Sofat R., Acosta D.M., et al. Atrial fibrillation epidemiology, disparity and healthcare contacts: a population-wide study of 5.6 million individuals. Lancet Reg Health – Eur https://doi.org/10.1016/j.lanepe.2021.100157</p>
   <p>Fisher R, Thorlby R, Alderwick H, 'Understanding primary care networks: context, benefits and risks. Health Foundation; 2019 (https://www.health.org.uk/publications/reports/understanding-primary-care-networks)</p>
   <p>GBD online results tool; Institute for Health Metrics and Evaluation (IHME). Findings from the Global Burden of Disease Study 2017. Seattle, WA: IHME, 2018'.</p>
   <p>House of Commons Library, 2019. MSOA Names published list. https://houseofcommonslibrary.github.io/msoanames/</p>
