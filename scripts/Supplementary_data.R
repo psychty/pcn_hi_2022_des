@@ -4,6 +4,7 @@ libraries(c("readxl", "readr", "plyr", "dplyr", "ggplot2", "png", "tidyverse", "
 
 options(scipen = 999)
 
+getwd()
 github_repo_dir <- "~/GitHub/pcn_hi_2022_des"
 
 source_directory <- paste0(github_repo_dir, '/data')
@@ -238,11 +239,16 @@ famililal_hypercholesterolaemia_prevalence <- read_csv(paste0('https://api.cvdpr
 age_sex_table <- af_prevalence %>% 
   bind_rows(ckd_prevalence) %>% 
   bind_rows(hyp_prevalence) %>% 
-  # bind_rows(famililal_hypercholesterolaemia_prevalence) %>% 
+  # mutate(Prevalence = Numerator / Denominator) %>% 
+  # mutate(lower_CI = binom.wilson(Numerator, Denominator, conf.level = .95)$lower,
+  #        upper_CI = binom.wilson(Numerator, Denominator, conf.level = .95)$upper) %>%
+  rename(Prevalence = Value,
+         lower_CI = LowerConfidenceLimit,
+         upper_CI = UpperConfidenceLimit) %>% 
   filter(MetricCategoryTypeName == 'Age group') %>% 
   rename(Age_group = MetricCategoryName) %>%
   filter(Period == 'To September 2021') %>% 
-  mutate(Label = ifelse(IndicatorCode == 'CVDP002FH', paste0(trimws(format(Numerator, big.mark = ','), 'both'), ' (', Value, ' per 1,000, ', LowerConfidenceLimit, '-', UpperConfidenceLimit,' per 1,000)'), paste0(trimws(format(Numerator, big.mark = ','), 'both'), ' (', Value, '%, ', LowerConfidenceLimit, '-', UpperConfidenceLimit,'%)'))) %>%  
+  mutate(Label = paste0(trimws(format(Numerator, big.mark = ','), 'both'), ' (', round(Prevalence, 1), '%, ', round(lower_CI, 1), '-', round(upper_CI,1),'%)')) %>%  
   # mutate(Label = paste0(Value, '% (', LowerConfidenceLimit, '-', UpperConfidenceLimit,'% , ', trimws(format(Numerator, big.mark = ','), 'both'), ')')) %>%  
   select(Indicator, Area_Name, Sex, Age_group, Label) %>% 
   pivot_wider(names_from = 'Age_group', 
@@ -252,72 +258,83 @@ age_sex_table %>%
   toJSON() %>% 
   write_lines(paste0(output_directory, '/cvd_prevent_prevalence_agesex.json'))
 
-
 # What is the latest period?
 
 latest_period <- af_prevalence %>% select(Period) %>% unique() %>% arrange(desc(Period)) %>% top_n(1) 
 
-af_prevalence %>% 
-  filter(MetricCategoryTypeName == 'Sex') %>% 
-  # filter(Area_Name == 'NHS West Sussex CCG') %>%
-  filter(Sex == 'Persons') %>% 
-  filter(Period == latest_period$Period) %>% 
-  select(Area_Name, Numerator, Denominator, Value, LowerConfidenceLimit, UpperConfidenceLimit)
-
-af_prevalence %>% 
+quintile_df <- af_prevalence %>% 
+  bind_rows(hyp_prevalence) %>% 
+  bind_rows(ckd_prevalence) %>% 
+  # mutate(Prevalence = Numerator / Denominator) %>% 
+  # mutate(lower_CI = binom.wilson(Numerator, Denominator, conf.level = .95)$lower,
+  #        upper_CI = binom.wilson(Numerator, Denominator, conf.level = .95)$upper) %>%
+  rename(Prevalence = Value,
+         lower_CI = LowerConfidenceLimit,
+         upper_CI = UpperConfidenceLimit) %>% 
   filter(MetricCategoryTypeName == 'Deprivation quintile') %>% 
   filter(Period == latest_period$Period) %>% 
-  mutate(Quintile = factor(MetricCategoryName, levels = c('1 - most deprived', '2', '3', '4','5 - least deprived'))) %>% 
-  select(Area_Name, Numerator, Denominator, Quintile, Value, LowerConfidenceLimit, UpperConfidenceLimit) %>% 
-  ggplot(aes(x = Area_Name,
-             y = Value,
-             fill = Quintile)) +
-  geom_bar(position = 'dodge',
-           stat = 'identity')
+  mutate(Quintile = factor(ifelse(MetricCategoryName == '1 - most deprived', 'Proportion_most', ifelse(MetricCategoryName == '2', 'Proportion_q2', ifelse(MetricCategoryName == '3', 'Proportion_q3', ifelse(MetricCategoryName == '4', 'Proportion_q4', ifelse(MetricCategoryName == '5 - least deprived', 'Proportion_least', NA))))), levels = c("Proportion_most", 'Proportion_q2', 'Proportion_q3', 'Proportion_q4', 'Proportion_least'))) %>%
+  mutate(Condition = ifelse(IndicatorCode == 'CVDP001AF', 'AF', ifelse(IndicatorCode == 'CVDP001HYP', 'HYP', ifelse(IndicatorCode == 'CVDP001CKD', 'CKD', NA))))
+ 
+af_quintile_df <- quintile_df %>% 
+  filter(Condition == 'AF') %>% 
+  mutate(Prevalence = Prevalence / 100,
+         lower_CI = lower_CI / 100,
+         upper_CI = upper_CI / 100) %>% 
+  select(Condition, Area_Name, Quintile, Numerator, Denominator, Prevalence, lower_CI, upper_CI) %>% 
+  group_by(Area_Name) %>% 
+  nest()
 
-  
+af_quintile_df %>% 
+  toJSON() %>% 
+  write_lines(paste0(output_directory, '/cvdprevent_af_prevalence.json'))
 
-af_prevalence %>% 
-  filter(MetricCategoryTypeName == 'Deprivation quintile') %>% 
-  mutate(Value = Value / 100) %>% 
-  filter(Period == latest_period$Period) %>% 
-  mutate(Quintile = factor(ifelse(MetricCategoryName == '1 - most deprived', 'Proportion_most', ifelse(MetricCategoryName == '2', 'Proportion_q2', ifelse(MetricCategoryName == '3', 'Proportion_q3', ifelse(MetricCategoryName == '4', 'Proportion_q4', ifelse(MetricCategoryName == '5 - least deprived', 'Proportion_least', NA))))), levels = c("Proportion_most", 'Proportion_q2', 'Proportion_q3', 'Proportion_q4', 'Proportion_least'))) %>% 
-  select(Area_Name, Quintile, Value) %>%
-  pivot_wider(names_from = 'Quintile',
-              values_from = 'Value') %>% 
-  mutate(Area_Name = factor(Area_Name, levels = c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England'))) %>% 
-  arrange(Area_Name) %>% 
-  write.csv(., paste0(output_directory,'/cvd_prevent_prevalence_wide.csv'), row.names = FALSE)
+# anticoagulant treatment ####
+
+indicator_x = 7
+
+af_high_risk_anticoagulant <- read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=1')) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=5'))) %>% 
+  rename(Indicator = IndicatorName,
+         Sex = CategoryAttribute,
+         Note = ValueNote,
+         Area_Code = AreaCode,
+         Area_Name = AreaName,
+         Period = TimePeriodName) %>% 
+  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England', gp_lookup$PCN_Name)) %>% 
+  mutate(Period = factor(Period, levels = time_periods))
+
+latest_af_treatment_period <- af_high_risk_anticoagulant %>% select(Period) %>% unique() %>% arrange(desc(Period)) %>% top_n(1) 
+
+af_high_risk_anticoagulant_latest_pcn_view <- af_high_risk_anticoagulant %>% 
+  filter(Period == latest_af_treatment_period$Period) %>% 
+  filter(MetricCategoryTypeName == 'Sex')
+
+# lets do variation by pcn and sex stacked bars ####
+
+# investigate age/sex/ethnicity/deprivation inequalities at ccg level due to small counts and supression.
 
 
-# unique(af_prevalence$MetricCategoryName)
 
 
 
+# numerator = patients with af and latest cha2ds2-vasc score 2+ who have a recorded prescription of anticoagulation therapy in the previous six months
 
+# denominator = Total number of patients on the atrial fibrillation register who are deemed at a high risk of stroke (CHA2DS2-VASc score is greater than or equal to 2)
 
-
-af_prevalence_age <- af_prevalence %>% 
-  filter(MetricCategoryTypeName == 'Age group',
-         Sex == 'Persons')
-
-
-unique(af_prevalence$MetricCategoryTypeName)
-
-
-
-af_prevalence_sex %>% 
-  
-  
-
-
-# directly age-standardised prevalence estimates for each deprivation group
-
-# hypertension case finding
-
-cvd_prevent_hyp <- read_csv('https://api.cvdprevent.nhs.uk/indicator/4/rawDataCSV?timePeriodID=2&systemLevelID=4')
-
-unique(cvd_prevent$IndicatorName)
 
 
 # Cancer services ####
