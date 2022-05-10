@@ -325,7 +325,7 @@
 
 <p>The CVDPREVENT authors explain that given areas of higher deprivation usually have a younger age profile, it is possible that the higher prevalence in less deprived areas is because there are more older people in these areas. The authors used age-adjusted synthetic modelling to account for this and indicate that there are almost no differences across the deprivation quintiles when age is controlled. These synthetic estimates are not currently available in the public domain but we hope that future iterations of the CVDPREVENT audit will publish these.</p>
 
-<h4>Recorded prevalence of atrial fibrilation by neighbourhood deprivation quintile; patients aged 18+; Sussex CCGs, STP, and England</h4>
+<h4>Recorded prevalence of atrial fibrilation by neighbourhood deprivation quintile; patients aged 18+; Sussex CCGs, STP, and England; to September 2021</h4>
 <div id = 'af_cvd_prevent_deprivation_vis'></div>
 
 <div class = 'good_to_know'>
@@ -337,11 +337,20 @@
 <h4>Treatment for high risk patients</h4>
 <p>Antigoaculation therapy treatments (using drugs) are given to people at high risk of getting blood clots to reduce the chance of cardioascular events such as strokes. The CHA2DS2-VASc is a screening tool that can be used to identify patients with atrial fibrilation who are high risk for having a stroke; with <a href = 'https://www.nice.org.uk/guidance/ng196'>NICE guidance for atrial fibrilation diagnosis and management</a> indicating that those with a CHA2DS2-VASc score of 2 or higher should be offered antigoaculation treatment after considering the benefits and risks of bleeding.</p>
 
-<p>Across NHS West Sussex CCG, 17,105 patients (based on the denominator for the anticoagulant prescription indicator) had a CHA2DS2-VASc score of 2 or more placing them at high risk of stroke. This is more than four out of every five patients (81.4% of the 21,000 patients with a recorded diagnosis of atrial fibrilation).</p>
+<p>Across NHS West Sussex CCG, <b>17,105 patients</b> (based on the denominator for the anticoagulant prescription indicator) had a CHA2DS2-VASc score of 2 or more placing them <b>at high risk of stroke</b>. This is more than four out of every five patients (81.4% of the 21,000 patients with a recorded diagnosis of atrial fibrilation).</p>
 
 <p>Nationally, according to the CVDPRVENT audit covering the period to September 2021, 88.2% of patients with a CHA2DS2-VASc score of 2 or more had a recorded prescription of an anticoagulant drug in the previous six months. In West Sussex, this is 86.3% and this is statistically significantly lower than the national prescription rate.</p>
 
-<p>Whilst prevalence is not currently available at PCN level, the anticoagulant prescription rate is, and so the figure below shows the variation in recent anticoagulant prescription for those atrial fibrilation patients scoring high risk for stroke.</p>
+<p>Whilst prevalence is not currently available at PCN level, the anticoagulant prescription rate is, and so the figure below shows the variation in recent anticoagulant prescription for those atrial fibrilation patients scoring high risk for stroke across West Sussex.</p>
+
+<h4 id = 'select_af_prescription_title'></h4>
+<select id = 'select_af_prescription_sex_button'></select>
+<select id = 'select_af_prescription_coloured_by_button'></select>
+<p>The black horizontal line represents the England prescription rate and the blue line represents NHS West Sussex CCG. You can toggle these lines using the check boxes below.</p>
+<span class = 'give_me_space'><input type="checkbox" class="checkbox" value="show_eng_af_prescription" checked><label> Show national prescription rate</label></span>
+<span class = 'give_me_space'><input type="checkbox" class="checkbox" value="show_wsx_af_prescription" checked><label> Show NHS West Sussex CCG prescription rate</label></span>
+
+<div id="af_prescription_vis"></div>
 
 <p class = 'good_to_know'>Whilst we can measure treatment by the prescription records for anticoagulants, but note that this is not the same as measuring treatment compliance (whether someone actually takes the medications prescribed to them).</p>
 

@@ -141,6 +141,20 @@ $.ajax({
   },
 });
 
+// ! Load cvd_prevent treatment data
+$.ajax({
+  url: "./outputs/af_treatment_nested.json",
+  dataType: "json",
+  async: false,
+  success: function(data) {
+    cvdprevent_af_prescription_df = data;
+   console.log('cvdprevent af treatment data successfully loaded.')},
+  error: function (xhr) {
+    alert('cvdprevent af treatment data not loaded - ' + xhr.statusText);
+  },
+});
+
+
 // ! Load MSOA inequalities geojson
 var msoa_geojson = $.ajax({
   url: "./outputs/msoa_inequalities.geojson",
@@ -200,6 +214,12 @@ var setPCNcolour_by_name = d3
   .scaleOrdinal()
   .domain(pcn_names.concat(['West Sussex', 'England']))
   .range(pcn_colours);
+
+var setcolour_by_sig = d3
+.scaleOrdinal()
+.domain(['higher', 'similar', 'lower'])
+.range(['#5555E6', '#E7AF27', '#BED2FF'])
+
 
 // Create a list with an item for each PCN and display the colour in the border 
 pcn_codes.forEach(function (item, index) {
@@ -394,7 +414,7 @@ d3.select("#selected_pcn_pyramid_title").html(function (d) {
 PCN_pyramid_data.sort(function(a,b) {
   return age_levels.indexOf(a.Age_group) > age_levels.indexOf(b.Age_group)});
 
-2// Filter to get out chosen dataset
+// Filter to get out chosen dataset
 chosen_pcn_pyramid_data = PCN_pyramid_data.filter(function(d,i){
   return d.Area_name === chosen_pcn_pyramid_area })
 
@@ -818,7 +838,7 @@ d3.select("#select_table_3_title").html(function (d) {
   return (
     "Table 3 - number of patients aged 18+ diagnosed with atrial fibrilation;  " +
     chosen_af_cvd_prevent_area +
-    "; patients included in the CVDPREVENT audit; september 2021"   
+    "; patients included in the CVDPREVENT audit; to September 2021"   
    );
  });
 
@@ -846,7 +866,7 @@ d3.select("#select_table_3_title").html(function (d) {
   return (
     "Table 3 - number of patients aged 18+ diagnosed with atrial fibrilation;  " +
     chosen_af_cvd_prevent_area +
-    "; patients included in the CVDPREVENT audit; september 2021"   
+    "; patients included in the CVDPREVENT audit; to September 2021"   
    );
  });
 
@@ -880,7 +900,7 @@ d3.select("#select_table_4_title").html(function (d) {
   return (
     "Table 4 - number of patients aged 18+ diagnosed with hypertension;  " +
     chosen_hyp_cvd_prevent_area +
-    "; patients included in the CVDPREVENT audit; september 2021"   
+    "; patients included in the CVDPREVENT audit; to September 2021"   
    );
  });
 
@@ -908,7 +928,7 @@ d3.select("#select_table_4_area_button").on("change", function (d) {
     return (
       "Table 4 - number of patients aged 18+ diagnosed with hypertension;  " +
       chosen_hyp_cvd_prevent_area +
-      "; patients included in the CVDPREVENT audit; september 2021"   
+      "; patients included in the CVDPREVENT audit; to September 2021"   
      );
    });
   
@@ -941,7 +961,7 @@ d3.select("#select_table_5_title").html(function (d) {
   return (
     "Table 5 - number of patients aged 18+ diagnosed with chronic kidney disease classification G3a to G5 (previously stage 3-5);  " +
     chosen_ckd_cvd_prevent_area +
-    "; patients included in the CVDPREVENT audit; september 2021"   
+    "; patients included in the CVDPREVENT audit; to September 2021"   
    );
  });
 
@@ -969,7 +989,7 @@ d3.select("#select_table_5_area_button").on("change", function (d) {
     return (
       "Table 5 - number of patients aged 18+ diagnosed with chronic kidney disease classification G3a to G5 (previously stage 3-5);  " +
       chosen_ckd_cvd_prevent_area +
-      "; patients included in the CVDPREVENT audit; september 2021"   
+      "; patients included in the CVDPREVENT audit; to September 2021"   
      );
    });
   
@@ -1991,3 +2011,360 @@ var errorBars_af = af_quintile_bars.selectAll("path.errorBar")
      return errorBarArea_af([d]);})
  .attr("stroke", "red")
  .attr("stroke-width", 1.5);
+
+
+ // ! AF anticoagulant prescriptions
+
+ var svg_af_prescription_vis = d3.select("#af_prescription_vis")
+ .append("svg")
+ .attr("width", width)
+ .attr("height", qof_height)
+ .append("g")
+
+var af_prescription_tooltip = d3
+ .select("#qof_2_datavis")
+ .append("div")
+ .style("opacity", 0)
+ .attr("class", "tooltip_class")
+ .style("position", "absolute")
+ .style("z-index", "10");
+
+// We need to create a dropdown button for the user to choose which sex to be displayed on the figure.
+d3.select("#select_af_prescription_sex_button")
+.selectAll("myOptions")
+.data(['Persons', 'Males', 'Females'])
+.enter()
+.append("option")
+.text(function (d) {
+  return d;
+})
+.attr("value", function (d) {
+  return d;
+});
+
+// Retrieve the selected area name
+var chosen_af_prescription_sex = d3
+.select("#select_af_prescription_sex_button")
+.property("value");
+
+d3.select("#select_af_prescription_coloured_by_button")
+.selectAll("myOptions")
+.data(['Comparison to national value', 'Comparison to NHS West Sussex CCG value', 'By PCN colour'])
+.enter()
+.append("option")
+.text(function (d) {
+  return d;
+})
+.attr("value", function (d) {
+  return d;
+});
+
+// Retrieve the selected sex
+var chosen_af_prescription_sex = d3
+.select("#select_af_prescription_sex_button")
+.property("value");
+
+// Retrieve the selected comparison for colours
+var chosen_af_prescription_comparison = d3
+.select("#select_af_prescription_coloured_by_button")
+.property("value");
+
+chosen_af_prescription_data = cvdprevent_af_prescription_df.filter(function(d){
+  return d.Sex === chosen_af_prescription_sex &&
+         pcn_names.indexOf(d.Area_Name) >= 0}).sort(function (a, b) {
+    return +a.Prescription_rate - +b.Prescription_rate;
+  })
+
+chosen_af_prescription_data_england = cvdprevent_af_prescription_df.filter(function(d){
+  return d.Sex === chosen_af_prescription_sex && d.Area_Name === 'England'});
+
+  
+chosen_af_prescription_data_wsx = cvdprevent_af_prescription_df.filter(function(d){
+  return d.Sex === chosen_af_prescription_sex && d.Area_Name === 'NHS West Sussex CCG'});
+  
+
+d3.select("#select_af_prescription_title").html(function (d) {
+ return (
+  "Proportion of atrial fibrilation patients identified as high risk for stroke (CHA2DS2-VASc score 2+) who have a recent (in the past six months) prescription of an anticoagulant drug; patients aged 18+; " +
+   chosen_af_prescription_sex +
+   "; to September 2021"   
+  );
+ });
+
+ var af_prescription_area_order =  d3.map(chosen_af_prescription_data, function (d) {
+  return (d.Area_Name);
+ })
+ .keys()
+
+ var x_af_prescription = d3
+ .scaleBand()
+ .domain(af_prescription_area_order)
+ .range([50, width - 50])
+ .padding(0.2);
+
+ af_prescription_x_axis = svg_af_prescription_vis
+ .append("g")
+ .attr("transform", "translate(0," + (qof_height - 200) + ")")
+ .call(d3.axisBottom(x_af_prescription))
+
+ af_prescription_x_axis
+ .selectAll("text")
+ .style("text-anchor", "end")
+ .attr("dx", "-.8em")
+ .attr("dy", ".15em")
+ .attr("transform", function (d) { return "rotate(-65)"; })
+
+var y_af_prescription = d3
+ .scaleLinear()
+ .domain([
+   0,1]) 
+ .range([qof_height - 200, 10])
+ .nice()
+ 
+ af_prescription_y_axis = svg_af_prescription_vis
+ .append("g")
+ .attr("transform", "translate(50, 0)")
+ .call(d3.axisLeft(y_af_prescription).tickFormat(formatPercent_1));
+
+update_af_prescription = function() {
+
+// Retrieve the selected sex
+var chosen_af_prescription_sex = d3
+.select("#select_af_prescription_sex_button")
+.property("value");
+
+// Retrieve the selected comparison for colours
+var chosen_af_prescription_comparison = d3
+.select("#select_af_prescription_coloured_by_button")
+.property("value");
+
+chosen_af_prescription_data = cvdprevent_af_prescription_df.filter(function(d){
+  return d.Sex === chosen_af_prescription_sex &&
+         pcn_names.indexOf(d.Area_Name) >= 0}).sort(function (a, b) {
+    return +a.Prescription_rate - +b.Prescription_rate;
+  })
+
+chosen_af_prescription_data_england = cvdprevent_af_prescription_df.filter(function(d){
+  return d.Sex === chosen_af_prescription_sex && d.Area_Name === 'England'});
+  
+
+chosen_af_prescription_data_wsx = cvdprevent_af_prescription_df.filter(function(d){
+    return d.Sex === chosen_af_prescription_sex && d.Area_Name === 'NHS West Sussex CCG'});
+    
+
+d3.select("#select_af_prescription_title").html(function (d) {
+ return (
+  "Proportion of atrial fibrilation patients identified as high risk for stroke (CHA2DS2-VASc score 2+) who have a recent (in the past six months) prescription of an anticoagulant drug; patients aged 18+; " +
+   chosen_af_prescription_sex +
+   "; to September 2021"   
+  );
+ });
+
+ var af_prescription_area_order =  d3.map(chosen_af_prescription_data, function (d) {
+  return (d.Area_Name);
+ })
+ .keys()
+
+x_af_prescription.domain(af_prescription_area_order)
+
+af_prescription_x_axis 
+.transition()
+.duration(1000)
+.call(d3.axisBottom(x_af_prescription));
+
+af_prescription_bars = svg_af_prescription_vis.selectAll("rect")
+ .data(chosen_af_prescription_data);
+
+if(chosen_af_prescription_comparison == 'By PCN colour') {
+  af_prescription_bars
+  .enter()
+  .append("rect")
+  .merge(af_prescription_bars)
+  .transition()
+  .duration(1000)
+  .attr("x", function (d) {
+    return x_af_prescription(d.Area_Name);
+  })
+  .attr("width", x_af_prescription.bandwidth())
+  .attr("height", function (d) {
+    return qof_height - 200 - y_af_prescription(d.Prescription_rate);
+  })
+  .attr("y", function (d) {
+    return y_af_prescription(d.Prescription_rate)
+  })
+.style("fill", function (d) { return setPCNcolour_by_name(d.Area_Name); })
+
+svg_af_prescription_vis.selectAll('.comparison_af_key').style("visibility", "hidden");
+
+}
+
+if(chosen_af_prescription_comparison == 'Comparison to national value') {
+  af_prescription_bars
+  .enter()
+  .append("rect")
+  .merge(af_prescription_bars)
+  .transition()
+  .duration(1000)
+  .attr("x", function (d) {
+    return x_af_prescription(d.Area_Name);
+  })
+  .attr("width", x_af_prescription.bandwidth())
+  .attr("height", function (d) {
+    return qof_height - 200 - y_af_prescription(d.Prescription_rate);
+  })
+  .attr("y", function (d) {
+    return y_af_prescription(d.Prescription_rate)
+  })
+.style("fill", function (d) { return setcolour_by_sig(d.Significance_national); })
+
+svg_af_prescription_vis.selectAll('.comparison_af_key').style("visibility", "visible");
+}
+
+if(chosen_af_prescription_comparison == 'Comparison to NHS West Sussex CCG value') {
+  af_prescription_bars
+  .enter()
+  .append("rect")
+  .merge(af_prescription_bars)
+  .transition()
+  .duration(1000)
+  .attr("x", function (d) {
+    return x_af_prescription(d.Area_Name);
+  })
+  .attr("width", x_af_prescription.bandwidth())
+  .attr("height", function (d) {
+    return qof_height - 200 - y_af_prescription(d.Prescription_rate);
+  })
+  .attr("y", function (d) {
+    return y_af_prescription(d.Prescription_rate)
+  })
+.style("fill", function (d) { return setcolour_by_sig(d.Significance_wsx); })
+
+svg_af_prescription_vis.selectAll('.comparison_af_key').style("visibility", "visible");
+}
+
+var af_prescription_error_bars = svg_af_prescription_vis.selectAll('line.error')
+.data(chosen_af_prescription_data)
+
+af_prescription_error_bars.enter()
+.append('line')
+.attr('class', 'error')
+.merge(af_prescription_error_bars)
+.transition()
+.duration(1000)
+.attr('x1', function(d) { return x_af_prescription(d.Area_Name) + x_af_prescription.bandwidth()/2; })
+.attr('x2', function(d) { return x_af_prescription(d.Area_Name) + x_af_prescription.bandwidth()/2; })
+.attr('y1', function(d) { return y_af_prescription(d.lower_CI); })
+.attr('y2', function(d) { return y_af_prescription(d.upper_CI); })
+.attr("stroke", "red")
+.attr("stroke-width", 1.5);
+
+svg_af_prescription_vis.selectAll('.show_eng_af_prescription').remove()
+
+var af_prescription_England = svg_af_prescription_vis.selectAll('show_eng_af_prescription')
+.data(chosen_af_prescription_data_england)
+
+af_prescription_England
+.enter()
+.append('line')
+.attr('class', 'show_eng_af_prescription')
+.merge(af_prescription_England)
+.attr('x1', 50)
+.attr('x2', width - 50)
+.attr('y1', function(d) { return y_af_prescription(d.Prescription_rate);})
+.attr('y2', function(d) { return y_af_prescription(d.Prescription_rate);})
+.attr("stroke", "black")
+
+svg_af_prescription_vis.selectAll('.show_wsx_af_prescription').remove()
+
+var af_prescription_wsx = svg_af_prescription_vis.selectAll('show_wsx_af_prescription')
+.data(chosen_af_prescription_data_wsx)
+
+af_prescription_wsx
+.enter()
+.append('line')
+.attr('class', 'show_wsx_af_prescription')
+.merge(af_prescription_wsx)
+.attr('x1', 50)
+.attr('x2', width - 50)
+.attr('y1', function(d) { return y_af_prescription(d.Prescription_rate);})
+.attr('y2', function(d) { return y_af_prescription(d.Prescription_rate);})
+.attr("stroke", "blue")
+
+//  qof_1_prevalence_bars
+//    .enter()
+//    .append("rect")
+//    .merge(qof_1_prevalence_bars)
+//    .on("mouseover", function () {
+//      return qof_1_prevalence_tooltip.style("visibility", "visible");
+//    })
+//    .on("mousemove", show_qof_1_prevalence_tooltip)
+//    .on("mouseout", function () {
+//      return qof_1_prevalence_tooltip.style("visibility", "hidden");
+//    });
+//   }
+
+}
+
+// Add one dot in the legend for each name.
+svg_af_prescription_vis.selectAll("myquintiledots")
+ .data(['lower', 'similar', 'higher'])
+ .enter()
+ .append("circle")
+ .attr('class', 'comparison_af_key')
+ .attr("cx", 80)
+ .attr("cy", function(d,i){ return 15 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+ .attr("r", 5)
+ .style("fill", function(d){ return setcolour_by_sig(d)})
+
+// Add one dot in the legend for each name.
+svg_af_prescription_vis.selectAll("myquintilelabels")
+  .data(['Significantly lower', 'Similar', 'Significantly higher'])
+  .enter()
+  .append("text")
+  .attr('class', 'comparison_af_key svg_legend')
+  .attr("x", 90)
+  .attr("y", function(d,i){ return 20 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+  .text(function(d){ return d})
+  .attr("text-anchor", "left")
+
+
+d3.select("#select_af_prescription_sex_button").on("change", function (d) {
+  update_af_prescription()
+  update_annotations_af_prescription()
+  })
+  
+d3.select("#select_af_prescription_coloured_by_button").on("change", function (d) {
+  update_af_prescription()
+  update_annotations_af_prescription()
+  })
+  
+  update_af_prescription()
+
+// This function is gonna change the opacity and size of selected and unselected circles
+function update_annotations_af_prescription() {
+  // For each check box:
+  d3.selectAll(".checkbox").each(function (d) {
+    cb = d3.select(this);
+    grp = cb.property("value");
+
+  // If the box is check, show the notes
+    if (cb.property("checked")) {
+      svg_af_prescription_vis
+        .selectAll("." + grp)
+        .transition()
+        .duration(500)
+        .style("opacity", 1);
+    } else {
+      svg_af_prescription_vis
+        .selectAll("." + grp)
+        .transition()
+        .duration(500)
+        .style("opacity", 0);
+    }
+  });
+}
+
+// When a button change, run the update function
+d3.selectAll(".checkbox").on("change", update_annotations_af_prescription);
+
+update_annotations_af_prescription();

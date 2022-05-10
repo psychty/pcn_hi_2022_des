@@ -15,7 +15,7 @@ output_directory <- paste0(github_repo_dir, '/outputs')
 
 areas_to_loop <- c('West Sussex', 'Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing')
 
-gp_lookup <- fromJSON(paste0(github_repo_dir,'outputs/PCN_deprivation_data.json')) %>% 
+gp_lookup <- fromJSON(paste0(output_directory,'/PCN_deprivation_data.json')) %>% 
   filter(Type == 'GP') %>% 
   select(Area_Code, Area_Name, PCN_Code, PCN_Name)
 
@@ -318,7 +318,7 @@ af_high_risk_anticoagulant <- read_csv(paste0('https://api.cvdprevent.nhs.uk/ind
          Area_Code = AreaCode,
          Area_Name = AreaName,
          Period = TimePeriodName) %>% 
-  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England', gp_lookup$PCN_Name)) %>% 
+  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England') | Area_Code %in% gp_lookup$PCN_Code) %>% 
   mutate(Period = factor(Period, levels = time_periods))
 
 latest_af_treatment_period <- af_high_risk_anticoagulant %>% select(Period) %>% unique() %>% arrange(desc(Period)) %>% top_n(1) 
@@ -351,13 +351,24 @@ af_treatment_df <- af_high_risk_anticoagulant_latest_pcn_view %>%
   mutate(Not_meeting_target = Denominator - Numerator) %>% 
   select(Area_Name, Sex, Period, Numerator, Denominator, Not_meeting_target, Prescription_rate, lower_CI, upper_CI, Significance_wsx, Significance_national)
 
+setdiff(gp_lookup$PCN_Name, af_treatment_df$Area_Name)
+
+# The CVDPREVENT data for pcn names is a bit funky
 af_treatment_df %>% 
-  group_by(Area_Name, Sex) %>% 
+  mutate(Area_Name = gsub('Aic', 'AIC', Area_Name)) %>% 
+  mutate(Area_Name = gsub('Acf', 'ACF', Area_Name)) %>% 
+  mutate(Area_Name = gsub(' And ', ' and ', Area_Name)) %>% 
+  mutate(Area_Name = gsub(' Of ', ' of ', Area_Name)) %>% 
+  mutate(Area_Name = gsub('SHOREHAM AND SOUTHWICK PCN','Shoreham and Southwick PCN', Area_Name)) %>% 
+  group_by(Area_Name, Sex, Prescription_rate) %>% 
+  mutate(Prescription_rate = Prescription_rate / 100,
+         lower_CI = lower_CI / 100,
+         upper_CI = upper_CI / 100) %>% 
+  mutate(Sex = ifelse(Sex == 'Male', 'Males', ifelse(Sex == 'Female', 'Females', Sex))) %>% 
   nest() %>% 
   toJSON() %>% 
   write_lines(paste0(output_directory, '/af_treatment_nested.json'))
   
-
 # numerator = patients with af and latest cha2ds2-vasc score 2+ who have a recorded prescription of anticoagulation therapy in the previous six months
 
 # denominator = Total number of patients on the atrial fibrillation register who are deemed at a high risk of stroke (CHA2DS2-VASc score is greater than or equal to 2)
