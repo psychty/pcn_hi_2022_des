@@ -6,12 +6,16 @@ options(scipen = 999)
 
 getwd()
 github_repo_dir <- "~/GitHub/pcn_hi_2022_des"
+#github_repo_dir <- 'https://raw.githubusercontent.com/psychty/pcn_hi_2022_des/main/'
+
 
 source_directory <- paste0(github_repo_dir, '/data')
 output_directory <- paste0(github_repo_dir, '/outputs')
+#output_directory <- paste0('./outputs')
+
 areas_to_loop <- c('West Sussex', 'Adur', 'Arun', 'Chichester', 'Crawley', 'Horsham', 'Mid Sussex', 'Worthing')
 
-gp_lookup <- fromJSON(paste0(output_directory,'/PCN_deprivation_data.json')) %>% 
+gp_lookup <- fromJSON(paste0(github_repo_dir,'outputs/PCN_deprivation_data.json')) %>% 
   filter(Type == 'GP') %>% 
   select(Area_Code, Area_Name, PCN_Code, PCN_Name)
 
@@ -275,7 +279,7 @@ quintile_df <- af_prevalence %>%
   filter(Period == latest_period$Period) %>% 
   mutate(Quintile = factor(ifelse(MetricCategoryName == '1 - most deprived', 'Proportion_most', ifelse(MetricCategoryName == '2', 'Proportion_q2', ifelse(MetricCategoryName == '3', 'Proportion_q3', ifelse(MetricCategoryName == '4', 'Proportion_q4', ifelse(MetricCategoryName == '5 - least deprived', 'Proportion_least', NA))))), levels = c("Proportion_most", 'Proportion_q2', 'Proportion_q3', 'Proportion_q4', 'Proportion_least'))) %>%
   mutate(Condition = ifelse(IndicatorCode == 'CVDP001AF', 'AF', ifelse(IndicatorCode == 'CVDP001HYP', 'HYP', ifelse(IndicatorCode == 'CVDP001CKD', 'CKD', NA))))
- 
+
 af_quintile_df <- quintile_df %>% 
   filter(Condition == 'AF') %>% 
   mutate(Prevalence = Prevalence / 100,
@@ -321,20 +325,122 @@ latest_af_treatment_period <- af_high_risk_anticoagulant %>% select(Period) %>% 
 
 af_high_risk_anticoagulant_latest_pcn_view <- af_high_risk_anticoagulant %>% 
   filter(Period == latest_af_treatment_period$Period) %>% 
-  filter(MetricCategoryTypeName == 'Sex')
+  filter(MetricCategoryTypeName == 'Sex') %>% 
+  rename(Prescription_rate = Value,
+         lower_CI = LowerConfidenceLimit,
+         upper_CI = UpperConfidenceLimit) %>% 
+  select(Sex, Area_Name, Period, Numerator, Denominator, Prescription_rate, lower_CI, upper_CI) 
 
-# lets do variation by pcn and sex stacked bars ####
+wsx_af_high_risk_coag <- af_high_risk_anticoagulant_latest_pcn_view %>% 
+  filter(Area_Name == 'NHS West Sussex CCG') %>% 
+  rename(WSx_lower_CI = lower_CI,
+         WSx_upper_CI = upper_CI) %>% 
+  select(Sex, WSx_lower_CI, WSx_upper_CI)
 
-# investigate age/sex/ethnicity/deprivation inequalities at ccg level due to small counts and supression.
+England_af_high_risk_coag <- af_high_risk_anticoagulant_latest_pcn_view %>% 
+  filter(Area_Name == 'England') %>% 
+  rename(Eng_lower_CI = lower_CI,
+         Eng_upper_CI = upper_CI) %>% 
+  select(Sex, Eng_lower_CI, Eng_upper_CI)
 
+af_treatment_df <- af_high_risk_anticoagulant_latest_pcn_view %>% 
+  left_join(wsx_af_high_risk_coag, by = 'Sex') %>% 
+  left_join(England_af_high_risk_coag, by = 'Sex') %>% 
+  mutate(Significance_national = ifelse(lower_CI > Eng_upper_CI, 'higher', ifelse(upper_CI < Eng_lower_CI, 'lower', 'similar'))) %>% 
+  mutate(Significance_wsx = ifelse(lower_CI > WSx_upper_CI, 'higher', ifelse(upper_CI < WSx_lower_CI, 'lower', 'similar'))) %>% 
+  mutate(Not_meeting_target = Denominator - Numerator) %>% 
+  select(Area_Name, Sex, Period, Numerator, Denominator, Not_meeting_target, Prescription_rate, lower_CI, upper_CI, Significance_wsx, Significance_national)
 
-
-
+af_treatment_df %>% 
+  group_by(Area_Name, Sex) %>% 
+  nest() %>% 
+  toJSON() %>% 
+  write_lines(paste0(output_directory, '/af_treatment_nested.json'))
+  
 
 # numerator = patients with af and latest cha2ds2-vasc score 2+ who have a recorded prescription of anticoagulation therapy in the previous six months
 
 # denominator = Total number of patients on the atrial fibrillation register who are deemed at a high risk of stroke (CHA2DS2-VASc score is greater than or equal to 2)
 
+# lets do variation by pcn and sex stacked bars ####
+
+# show prevalence, statistical significance compared with national
+
+# investigate age/sex/ethnicity/deprivation inequalities at ccg level due to small counts and supression.
+
+# Hypertension
+
+
+indicator_x = 4
+
+hyp_recorded_bp <- read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=1')) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=1&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=2&systemLevelID=5'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=1'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=2'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=3'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=4'))) %>% 
+  bind_rows(read_csv(paste0('https://api.cvdprevent.nhs.uk/indicator/', indicator_x, '/rawDataCSV?timePeriodID=3&systemLevelID=5'))) %>% 
+  rename(Indicator = IndicatorName,
+         Sex = CategoryAttribute,
+         Note = ValueNote,
+         Area_Code = AreaCode,
+         Area_Name = AreaName,
+         Period = TimePeriodName) %>% 
+  filter(Area_Name %in% c('NHS West Sussex CCG', 'NHS East Sussex CCG', 'NHS Brighton and Hove CCG', 'Sussex and East Surrey Health and Care Partnership', 'England', gp_lookup$PCN_Name)) %>% 
+  mutate(Period = factor(Period, levels = time_periods))
+
+latest_hyp_treatment_period <- hyp_recorded_bp %>% select(Period) %>% unique() %>% arrange(desc(Period)) %>% top_n(1) 
+
+
+# For adults with hypertension aged under 80, reduce clinic blood pressure to below 140/90 mmHg and ensure that it is maintained below that level. [2019, amended 2022]
+
+# 1.4.21For adults with hypertension aged 80 and over, reduce clinic blood pressure to below 150/90 mmHg and ensure that it is maintained below that level. Use clinical judgement for people with frailty or multimorbidity (see also NICE's guideline on multimorbidity). [2019, amended 2022]
+
+
+hyp_bp_recorded_latest_pcn_view <- hyp_recorded_bp %>% 
+  filter(Period == latest_hyp_treatment_period$Period) %>% 
+  filter(MetricCategoryTypeName == 'Sex') %>% 
+  rename(BP_recorded_rate = Value,
+         lower_CI = LowerConfidenceLimit,
+         upper_CI = UpperConfidenceLimit) %>% 
+  select(Sex, Period, Area_Name, Numerator, Denominator, BP_recorded_rate, lower_CI, upper_CI) 
+
+wsx_hyp_bp_recorded <- hyp_bp_recorded_latest_pcn_view %>% 
+  filter(Area_Name == 'NHS West Sussex CCG') %>% 
+  rename(WSx_lower_CI = lower_CI,
+         WSx_upper_CI = upper_CI) %>% 
+  select(Sex, WSx_lower_CI, WSx_upper_CI)
+
+England_hyp_bp_recorded <- hyp_bp_recorded_latest_pcn_view %>% 
+  filter(Area_Name == 'England') %>% 
+  rename(Eng_lower_CI = lower_CI,
+         Eng_upper_CI = upper_CI) %>% 
+  select(Sex, Eng_lower_CI, Eng_upper_CI)
+
+hyp_bp_recorded_df <- hyp_bp_recorded_latest_pcn_view %>% 
+  left_join(wsx_hyp_bp_recorded, by = 'Sex') %>% 
+  left_join(England_hyp_bp_recorded, by = 'Sex') %>% 
+  mutate(Significance_national = ifelse(lower_CI > Eng_upper_CI, 'higher', ifelse(upper_CI < Eng_lower_CI, 'lower', 'similar'))) %>% 
+  mutate(Significance_wsx = ifelse(lower_CI > WSx_upper_CI, 'higher', ifelse(upper_CI < WSx_lower_CI, 'lower', 'similar'))) %>% 
+  mutate(Not_recorded = Denominator - Numerator) %>% 
+  select(Area_Name, Sex, Numerator, Denominator, Not_recorded, BP_recorded_rate, lower_CI, upper_CI, Significance_wsx, Significance_national)
+
+hyp_bp_recorded_df %>% 
+  group_by(Area_Name, Sex) %>% 
+  nest() %>% 
+  toJSON() %>% 
+  write_lines(paste0(output_directory, '/hyp_bp_recorded_nested.json'))
+
+
+# treatment to target for hyp - below and above 80 years.
 
 
 # Cancer services ####
