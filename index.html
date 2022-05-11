@@ -213,6 +213,17 @@
 
  <section id = 'other_small_area_differences'>
   <h1>Other community differences</h1>
+
+  <h4>Fuel poverty</h4>
+ 
+  <p>In 2021 (data for 2019) the small area fuel poverty indicators changed from a low income high cost measure (where a household is fuel poor if they have required fuel costs that are above the national median level, and were they to spend that amount, they would be left with a residual income below the official poverty line) to a low income, low energy efficiency measure in which a household is fuel poor if:</p>
+  <ul><li>The household lives in a property with an energy efficiency rating of band D, E, F or G</li><li>AND its disposable income (after housing costs and energy needs) would place them below the poverty line)</li></ul> 
+  <p>Fuel poverty is distinct from general poverty as not all poor households are fuel poor, and some households would not normally be considered poor but could be pushed into fuel poverty if they have high energy costs.</p>
+  <h4>Neighbourhood level (LSOA) fuel poverty varuation across the county; 2020 data</h4>
+  <div id="map_3a_id"></div>
+  <p>Data for this indicator come from the Department for Business, Energy and Industrial Strategy (BEIS). More details about this indicator can be found at the <a href = 'hhttps://www.gov.uk/government/collections/fuel-poverty-statistics'>fuel poverty statistics website</a></p>
+  <p>This indicator shows that whilst some coastal neighbourhoods across West Sussex have a high proportion of households estimated to be in fuel poverty as we might expect given overall neighbourhood deprivation in these areas, there are particular areas in the rural north of Chichester and Horsham which are estimated to have more than one in ten households in fuel poverty.</p>
+
   <p>The remainder of small area data (sub PCN level) in this report are presented at the level of Middle-Layer Super Output Area (MSOA) which covers a larger area than LSOAs. As MSOAs have a larger and consistent population size, it is easier to report on differences across areas in disease prevalence and mortality where the actual numbers of people with conditions or number of people dying will be relatively low which could cause issues of disclosure of identity as well as increase the level of uncertainty in estimates of difference.</p>
 
   <div class="good_to_know">
@@ -220,6 +231,7 @@
   <p>The difficulty of using wards as a basis for small area differences is that ward boundaries change frequently and can cover a population varying from around 1,000 to 30,000 people.  </p>
   <p>The House of Commons Library (2019) derived a set of recognisable names for MSOAs based on the towns, villages and neighbourhoods that they cover. Whilst these are not the official names, we present these names alongside the MSOA code to aid interpretation of local areas.</p>
 </div>
+
 <!-- <p>The next map shows indicators for fuel poverty and unemployment, and you can toggle between these indicators using the buttons on the top right of the map.</p> -->
 <p>The next map shows indicators for unemployment.</p>
 
@@ -228,8 +240,19 @@
 <!-- <h4>Neighbourhood level (MSOA) fuel poverty and unemployment variation across the county</h4> -->
 <h4>Neighbourhood level (MSOA) unemployment variation across the county</h4>
 
-<div id="map_3_id"></div>
+<div id="map_3b_id"></div>
+
 <p>Unemployment is measured as the proportion of working age population claiming an out of work benefit. More details about this indicator can be found at the <a href = 'https://fingertips.phe.org.uk/profile/local-health/data#page/6/gid/1938133180/pat/402/par/E06000001/ati/3/are/E02002483/iid/93097/age/204/sex/4/cat/-1/ctp/-1/yrr/1/cid/4/tbm/1'>OHID definition page for unemployment</a>.</p>
+
+
+
+</div>
+
+
+
+<!-- <p class = 'good_to_know'>The fuel poverty indicators are updated annually with a lag of around three years. As such, the 2018 fuel poverty small area estimates</p> -->
+
+
 </section>
 
 <section id = 'qof'>
@@ -247,6 +270,12 @@
 
 <select id="select_qof_1_condition"></select>
 <div id = qof_1_datavis></div>
+
+<div class = 'good_to_know'>
+  <p>The red lines on the top of each bar are an indication of the confidence interval/limits for the prevalence estimate. This is a measure of the uncertainty of an estimate and it allows us to quantify the range in which we could expect the true value to be if we measured the same thing over and over again in the population. It is useful for considering differences across different areas or over time.</p> 
+  <p>We tend to say that if two areas/cohorts or bars have a non-overlapping confidence interval, then they are statistically significantly different. For many conditions, where patient numbers are relative low, adjascent areas often have overlapping confidence intervals, showing that they may have a similar prevalence.</p>
+  <p>For asthma, the bottom eight PCNs have overlapping confidence intervals and may not be different to the national prevalence (in black bars). For atrial fibrilation however, it is clear that South Crawley PCN has a significantly lower prevalence compared to Crawley Care Collaborative PCN.</p>
+  </div>
 
 <p>The second figure allows you to compare individual providers against other areas or nationally against all conditions at once. Choose area one (Angmering Coppice Fitzalan (ACF) PCN by default) and a comparator area (England by default). Hover over a bar to find out more.</p>
 
@@ -348,7 +377,7 @@
 <select id = 'select_af_prescription_coloured_by_button'></select>
 <p>The black horizontal line represents the England prescription rate and the blue line represents NHS West Sussex CCG. You can toggle these lines using the check boxes below.</p>
 <span class = 'give_me_space'><input type="checkbox" class="checkbox" value="show_eng_af_prescription" checked><label> Show national prescription rate</label></span>
-<span class = 'give_me_space'><input type="checkbox" class="checkbox" value="show_wsx_af_prescription" checked><label> Show NHS West Sussex CCG prescription rate</label></span>
+<span class = 'give_me_space'><input type="checkbox" class="checkbox" value="show_wsx_af_prescription" unchecked><label> Show NHS West Sussex CCG prescription rate</label></span>
 
 <div id="af_prescription_vis"></div>
 

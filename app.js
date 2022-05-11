@@ -79,8 +79,8 @@ PCN_deprivation_data.sort(function(a,b) { return +b.Proportion_most - +a.Proport
 // We could have done this in R and read in a wider table, but this approach keeps the file size load as small as possible as calculations can be done by the browser.
 
 // Load LSOA deprivation geojson
-var Deprivation_geojson = $.ajax({
-  url: "./outputs/lsoa_deprivation_2019_west_sussex.geojson",
+var LSOA_geojson = $.ajax({
+  url: "./outputs/lsoa_pcn_des_west_sussex.geojson",
   dataType: "json",
   success: console.log("LSOA deprivation data successfully loaded."),
   error: function (xhr) {
@@ -649,9 +649,9 @@ svg_pcn_pyramid
 // ! Deprivation map 
 
 // Specify that this code should run once the PCN_geojson data request is complete
-$.when(Deprivation_geojson).done(function () {
+$.when(LSOA_geojson).done(function () {
 
-// lsoa_data = Deprivation_geojson.responseJSON.features
+// lsoa_data = LSOA_geojson.responseJSON.features
 // console.log(lsoa_data)
 
 // Create a leaflet map (L.map) in the element map_1_id
@@ -661,7 +661,7 @@ $.when(Deprivation_geojson).done(function () {
   L.tileLayer(tileUrl, { attribution })
    .addTo(map_2);
     
-  var lsoa_boundary = L.geoJSON(Deprivation_geojson.responseJSON, { style: lsoa_deprivation_colour })
+  var lsoa_boundary = L.geoJSON(LSOA_geojson.responseJSON, { style: lsoa_deprivation_colour })
    .addTo(map_2)
    .bindPopup(function (layer) {
       return (
@@ -682,7 +682,7 @@ $.when(Deprivation_geojson).done(function () {
    var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
   //  .addTo(map_2);
   
-   var Core20_LSOAs = L.geoJson(Deprivation_geojson.responseJSON, {filter: core_20Filter, style: core20_deprivation_colour})
+   var Core20_LSOAs = L.geoJson(LSOA_geojson.responseJSON, {filter: core_20Filter, style: core20_deprivation_colour})
   //  .addTo(map_2)
    .bindPopup(function (layer) {
     return (
@@ -752,8 +752,8 @@ legend_map_2.addTo(map_2);
 //        map_2.setView([chosen_lat, chosen_long], 11);
 
 //   if(wsx_areas.includes(chosen_ltla)){
-//     console.log(Deprivation_geojson.responseJSON.features[0].properties)
-// // var lsoa_summary_data_chosen = Deprivation_geojson.feature.properties.filter(function (d) {
+//     console.log(LSOA_geojson.responseJSON.features[0].properties)
+// // var lsoa_summary_data_chosen = LSOA_geojson.feature.properties.filter(function (d) {
 //   // return d.LSOA11NM == chosen_lsoa;
 //   // });
  
@@ -798,6 +798,88 @@ legend_map_2.addTo(map_2);
 //     },
 //   });
 // }
+
+
+function gethh_fuel_povertyColor(d) {
+  return d > 15 ? '#833ab4' :
+         d > 12.5  ? '#b92d72' :
+         d > 10  ? '#fd1d1d' :
+         d > 7.5  ? '#fc6f33' :
+         d > 5   ? '#fc933d' :
+         '#fcb045' ;
+
+}
+
+// Create a function to add stylings to the polygons in the leaflet map
+function hh_fuel_poverty_colour(feature) {
+  return {
+    fillColor: gethh_fuel_povertyColor(feature.properties.Proportion_fuel_poor_hh),
+    color: gethh_fuel_povertyColor(feature.properties.Proportion_fuel_poor_hh),
+    // color: '#',
+    weight: 1,
+    fillOpacity: 0.85,
+  };
+}
+
+// Create a leaflet map (L.map) in the element map_1_id
+var map_3a = L.map("map_3a_id");
+   
+// add the background and attribution to the map
+L.tileLayer(tileUrl, { attribution })
+ .addTo(map_3a);
+  
+var lsoa_boundary_fp = L.geoJSON(LSOA_geojson.responseJSON, { style: hh_fuel_poverty_colour })
+ .addTo(map_3a)
+ .bindPopup(function (layer) {
+    return (
+      "LSOA: <Strong>" +
+      layer.feature.properties.LSOA11CD +
+      "</Strong>.<br><br>This LSOA is in <Strong>" +
+      layer.feature.properties.PCN_Name +
+      "</Strong> in " + 
+      layer.feature.properties.LTLA +
+       "<br><br>Proportion of households estimated to be fuel poor: <Strong>" +
+       d3.format(',.1f')(layer.feature.properties.Proportion_fuel_poor_hh) + 
+       "% in 2020.</Strong> The modelling estimated that this area has <Strong>" +
+       d3.format(',.0f')(layer.feature.properties.Fuel_poor_hh) +
+       " households in fuel poverty."
+       );
+ });
+ 
+ map_3a.fitBounds(lsoa_boundary_fp.getBounds());
+   
+ var baseMaps_map_3a = {
+   "Proportion of households in fuel poverty" :lsoa_boundary_fp,
+ };
+ 
+ var overlay_maps_pcn = {
+   "Show PCN boundary lines": PCN_boundary_overlay,
+ }; 
+   
+ L.control
+  .layers(baseMaps_map_3a, overlay_maps_pcn, { collapsed: false })
+  .addTo(map_3a);
+ 
+  var legend_map_3a = L.control({position: 'bottomright'});
+  
+  legend_map_3a.onAdd = function (map_3a) {
+  
+      var div = L.DomUtil.create('div', 'info legend'),
+          grades = [0, 5, 7.5, 10, 12.5, 15],
+          labels = ['<b>% households in<br>fuel poverty</b>'];
+  
+      // loop through our density intervals and generate a label with a colored square for each interval
+      for (var i = 0; i < grades.length; i++) {
+          div.innerHTML +=
+          labels.push(
+              '<i style="background:' + gethh_fuel_povertyColor(grades[i] + 1) + '"></i> ' +
+              grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%' : '%+'));
+      }
+      div.innerHTML = labels.join('<br>');
+      return div;
+  };
+  
+  legend_map_3a.addTo(map_3a);
 
   });
 
@@ -1183,6 +1265,27 @@ function msoa_unemployment_colour(feature) {
   };
 }
 
+function getLongUnemploymentColor(d) {
+  return d > 8  ? '#54278f' :
+         d > 6  ? '#756bb1' :
+         d > 4  ? '#9e9ac8' :
+         d > 2   ? '#cbc9e2' :
+         '#f2f0f7' ;
+
+}
+
+// Create a function to add stylings to the polygons in the leaflet map
+function msoa_long_unemployment_colour(feature) {
+  return {
+    fillColor: getLongUnemploymentColor(feature.properties.Long_term_unemployment),
+    // color: getUnemploymentColor(feature.properties.Unemployment),
+    color: '#999999',
+    weight: 1,
+    fillOpacity: 0.85,
+  };
+}
+
+
 function getLEColor(d) {
   return d < 75 ? '#03051A' :
          d < 77.5 ? '#3F1B44' :
@@ -1239,12 +1342,16 @@ function msoa_hospital_admission_colour(feature) {
 // Specify that this code should run once the PCN_geojson data request is complete
 $.when(msoa_geojson).done(function () {
 
+console.log(msoa_geojson)
+
 // Create a leaflet map (L.map) in the element map_3_id for unemployement and fuel poverty
-var map_3 = L.map("map_3_id");
+var map_3 = L.map("map_3b_id");
      
 // add the background and attribution to the map
   L.tileLayer(tileUrl, { attribution })
   .addTo(map_3);
+
+
       
 var msoa_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: msoa_unemployment_colour })
   .addTo(map_3)
@@ -1259,13 +1366,31 @@ var msoa_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: m
       "% in 2019/20 </Strong>"
       );
     });
-  
+
+
+var msoa_long_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: msoa_long_unemployment_colour })
+// .addTo(map_3)
+.bindPopup(function (layer) {
+  return (
+   "MSOA: <Strong>" +
+    layer.feature.properties.Area_Code +
+    " (" +
+    layer.feature.properties.msoa11hclnm +
+    ")</Strong>.<br><br>Rate per 1,000 working age (16-64 year olds) claming Jobseeker's Allowance for more than 12 months: <Strong>" +
+    layer.feature.properties.Long_term_unemployment + 
+    "% in 2019/20 </Strong>"
+    );
+  });
+     
+
 var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
   
 map_3.fitBounds(msoa_unemployment_boundary.getBounds());
   
 var baseMaps_map_3 = {
-  "Proportion unemployed": msoa_unemployment_boundary,
+  // "Proportion of households in fuel poverty" :msoa_HH_in_fuel_poverty_boundary,
+  "Proportion aged 16-64 unemployed": msoa_unemployment_boundary,
+  "Rate per 1,000 16-64 year olds in long term unemployment": msoa_long_unemployment_boundary,
 };
 
 var overlay_maps_pcn = {
@@ -1276,26 +1401,70 @@ L.control
  .layers(baseMaps_map_3, overlay_maps_pcn, { collapsed: false })
  .addTo(map_3);
 
-var legend_map_3 = L.control({position: 'bottomright'});
+//  var legend_map_3c = L.control({position: 'bottomright'});
+ 
+//  legend_map_3c.onAdd = function (map_3) {
+ 
+//      var div = L.DomUtil.create('div', 'info legend'),
+//          grades = [0, 5, 7.5, 10, 12.5, 15],
+//          labels = ['<b>% households in<br>fuel poverty</b>'];
+ 
+//      // loop through our density intervals and generate a label with a colored square for each interval
+//      for (var i = 0; i < grades.length; i++) {
+//          div.innerHTML +=
+//          labels.push(
+//              '<i style="background:' + gethh_fuel_povertyColor(grades[i] + 1) + '"></i> ' +
+//              grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%' : '%+'));
+//      }
+//      div.innerHTML = labels.join('<br>');
+//      return div;
+//  };
+ 
+//  legend_map_3c.addTo(map_3);
 
-legend_map_3.onAdd = function (map_3) {
+ var legend_map_3a = L.control({position: 'bottomright'});
 
-    var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 1, 2, 3, 4, 5],
-        labels = ['% age 16-64<br>unemployed'];
+ legend_map_3a.onAdd = function (map_3) {
+ 
+     var div = L.DomUtil.create('div', 'info legend'),
+         grades = [0, 1, 2, 3, 4, 5],
+         labels = ['<b>% age 16-64<br>unemployed</b>'];
+ 
+     // loop through our density intervals and generate a label with a colored square for each interval
+     for (var i = 0; i < grades.length; i++) {
+         div.innerHTML +=
+         labels.push(
+             '<i style="background:' + getUnemploymentColor(grades[i] + 1) + '"></i> ' +
+             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%' : '%+'));
+     }
+     div.innerHTML = labels.join('<br>');
+     return div;
+ };
+ 
+ legend_map_3a.addTo(map_3);
 
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < grades.length; i++) {
-        div.innerHTML +=
-        labels.push(
-            '<i style="background:' + getUnemploymentColor(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%' : '%+'));
-    }
-    div.innerHTML = labels.join('<br>');
-    return div;
-};
+ var legend_map_3b = L.control({position: 'bottomright'});
+ 
+ legend_map_3b.onAdd = function (map_3) {
+ 
+     var div = L.DomUtil.create('div', 'info legend'),
+         grades = [0, 2, 4, 6, 8],
+         labels = ['<b>rate of 16-64 in<br>long term unemployment</b>'];
+ 
+     // loop through our density intervals and generate a label with a colored square for each interval
+     for (var i = 0; i < grades.length; i++) {
+         div.innerHTML +=
+         labels.push(
+             '<i style="background:' + getLongUnemploymentColor(grades[i] + 1) + '"></i> ' +
+             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + 'per 1,000' : '+ per 1,000'));
+     }
+     div.innerHTML = labels.join('<br>');
+     return div;
+ };
+ 
+ legend_map_3b.addTo(map_3);
 
-legend_map_3.addTo(map_3);
+
 
 // Create a leaflet map (L.map) in the element map_4_id for Life expectancy and mortality
   var map_4 = L.map("map_4_id");
@@ -1421,7 +1590,7 @@ legend_map_5.addTo(map_5);
 });
   
 // ! QOF 
-qof_height = height * 1.4
+qof_height = height //* 1.4
 
 var svg_pcn_qof_1 = d3.select("#qof_1_datavis")
 .append("svg")
@@ -1620,6 +1789,23 @@ qof_1_prevalence_bars
    .on("mouseout", function () {
      return qof_1_prevalence_tooltip.style("visibility", "hidden");
    });
+
+   var qof_1_prevalence_error_bars = svg_pcn_qof_1.selectAll('line.error')
+.data(chosen_qof_1_df)
+
+qof_1_prevalence_error_bars.enter()
+.append('line')
+.attr('class', 'error')
+.merge(qof_1_prevalence_error_bars)
+.transition()
+.duration(1000)
+.attr('x1', function(d) { return x_qof_1(d.Area_Name) + x_qof_1.bandwidth()/2; })
+.attr('x2', function(d) { return x_qof_1(d.Area_Name) + x_qof_1.bandwidth()/2; })
+.attr('y1', function(d) { return y_qof_1(d.lower_CI); })
+.attr('y2', function(d) { return y_qof_1(d.upper_CI); })
+.attr("stroke", "red")
+.attr("stroke-width", 1.5);
+
   }
 
   update_qof_1_prevalence()
@@ -2018,16 +2204,9 @@ var errorBars_af = af_quintile_bars.selectAll("path.errorBar")
  var svg_af_prescription_vis = d3.select("#af_prescription_vis")
  .append("svg")
  .attr("width", width)
- .attr("height", qof_height)
+ .attr("height", height)
  .append("g")
 
-var af_prescription_tooltip = d3
- .select("#qof_2_datavis")
- .append("div")
- .style("opacity", 0)
- .attr("class", "tooltip_class")
- .style("position", "absolute")
- .style("z-index", "10");
 
 // We need to create a dropdown button for the user to choose which sex to be displayed on the figure.
 d3.select("#select_af_prescription_sex_button")
@@ -2082,7 +2261,6 @@ chosen_af_prescription_data_england = cvdprevent_af_prescription_df.filter(funct
 chosen_af_prescription_data_wsx = cvdprevent_af_prescription_df.filter(function(d){
   return d.Sex === chosen_af_prescription_sex && d.Area_Name === 'NHS West Sussex CCG'});
   
-
 d3.select("#select_af_prescription_title").html(function (d) {
  return (
   "Proportion of atrial fibrilation patients identified as high risk for stroke (CHA2DS2-VASc score 2+) who have a recent (in the past six months) prescription of an anticoagulant drug; patients aged 18+; " +
@@ -2104,7 +2282,7 @@ d3.select("#select_af_prescription_title").html(function (d) {
 
  af_prescription_x_axis = svg_af_prescription_vis
  .append("g")
- .attr("transform", "translate(0," + (qof_height - 200) + ")")
+ .attr("transform", "translate(0," + (height - 200) + ")")
  .call(d3.axisBottom(x_af_prescription))
 
  af_prescription_x_axis
@@ -2118,7 +2296,7 @@ var y_af_prescription = d3
  .scaleLinear()
  .domain([
    0,1]) 
- .range([qof_height - 200, 10])
+ .range([height - 200, 10])
  .nice()
  
  af_prescription_y_axis = svg_af_prescription_vis
@@ -2126,7 +2304,46 @@ var y_af_prescription = d3
  .attr("transform", "translate(50, 0)")
  .call(d3.axisLeft(y_af_prescription).tickFormat(formatPercent_1));
 
+
+ var af_prescription_tooltip = d3
+ .select("#af_prescription_vis")
+ .append("div")
+ .style("opacity", 0)
+ .attr("class", "tooltip_class")
+ .style("position", "absolute")
+ .style("z-index", "10");
+
 update_af_prescription = function() {
+
+var af_prescription_tooltip = d3
+ .select("#af_prescription_vis")
+ .append("div")
+ .style("visibility", 'hidden')
+ .attr("class", "tooltip_class")
+ .style("position", "absolute")
+ .style("z-index", "10");
+
+// The tooltip function
+show_af_prescription_tooltip = function (d) {
+
+ af_prescription_tooltip
+ .html(
+   "<h4>" +
+     d.Area_Name +
+     "</h4><p><b>" +
+     d3.format(".1%")(d.Prescription_rate) +
+     "</b> of " +
+     d.Sex.toLowerCase() +
+     " identified as high risk of stroke received a recent anticoagulant prescription.</p>" +
+     "<p>There were a total of <b>" +
+     d3.format(',.0f')(d.Denominator) + 
+     "</b> patients on this disease register for atrial fibrilation identified as high risk for stroke.</p><p>This means that an estimated " + 
+     d3.format(',.0f')(d.Not_meeting_target) + 
+     " at risk patients are yet to receive NICE guidance treatment.</p>"
+ )
+ .style("top", (event.pageY - 10) + "px")
+.style("left", (event.pageX + 10) + "px")
+};
 
 // Retrieve the selected sex
 var chosen_af_prescription_sex = d3
@@ -2147,11 +2364,9 @@ chosen_af_prescription_data = cvdprevent_af_prescription_df.filter(function(d){
 chosen_af_prescription_data_england = cvdprevent_af_prescription_df.filter(function(d){
   return d.Sex === chosen_af_prescription_sex && d.Area_Name === 'England'});
   
-
 chosen_af_prescription_data_wsx = cvdprevent_af_prescription_df.filter(function(d){
     return d.Sex === chosen_af_prescription_sex && d.Area_Name === 'NHS West Sussex CCG'});
     
-
 d3.select("#select_af_prescription_title").html(function (d) {
  return (
   "Proportion of atrial fibrilation patients identified as high risk for stroke (CHA2DS2-VASc score 2+) who have a recent (in the past six months) prescription of an anticoagulant drug; patients aged 18+; " +
@@ -2173,49 +2388,29 @@ af_prescription_x_axis
 .call(d3.axisBottom(x_af_prescription));
 
 af_prescription_bars = svg_af_prescription_vis.selectAll("rect")
- .data(chosen_af_prescription_data);
-
-if(chosen_af_prescription_comparison == 'By PCN colour') {
-  af_prescription_bars
-  .enter()
-  .append("rect")
-  .merge(af_prescription_bars)
-  .transition()
-  .duration(1000)
-  .attr("x", function (d) {
-    return x_af_prescription(d.Area_Name);
-  })
-  .attr("width", x_af_prescription.bandwidth())
-  .attr("height", function (d) {
-    return qof_height - 200 - y_af_prescription(d.Prescription_rate);
-  })
-  .attr("y", function (d) {
-    return y_af_prescription(d.Prescription_rate)
-  })
-.style("fill", function (d) { return setPCNcolour_by_name(d.Area_Name); })
-
-svg_af_prescription_vis.selectAll('.comparison_af_key').style("visibility", "hidden");
-
-}
+ .data(chosen_af_prescription_data)
 
 if(chosen_af_prescription_comparison == 'Comparison to national value') {
   af_prescription_bars
   .enter()
   .append("rect")
   .merge(af_prescription_bars)
-  .transition()
-  .duration(1000)
+  // .transition()
+  // .duration(1000)
   .attr("x", function (d) {
     return x_af_prescription(d.Area_Name);
   })
   .attr("width", x_af_prescription.bandwidth())
   .attr("height", function (d) {
-    return qof_height - 200 - y_af_prescription(d.Prescription_rate);
+    return height - 200 - y_af_prescription(d.Prescription_rate);
   })
   .attr("y", function (d) {
     return y_af_prescription(d.Prescription_rate)
   })
-.style("fill", function (d) { return setcolour_by_sig(d.Significance_national); })
+ .style("fill", function (d) { return setcolour_by_sig(d.Significance_national); })
+ .on("mouseover", function () { return af_prescription_tooltip.style("visibility", "visible"); })
+ .on("mousemove", show_af_prescription_tooltip)
+ .on("mouseout", function () { return af_prescription_tooltip.style("visibility", "hidden"); });
 
 svg_af_prescription_vis.selectAll('.comparison_af_key').style("visibility", "visible");
 }
@@ -2225,21 +2420,50 @@ if(chosen_af_prescription_comparison == 'Comparison to NHS West Sussex CCG value
   .enter()
   .append("rect")
   .merge(af_prescription_bars)
-  .transition()
-  .duration(1000)
+  // .transition()
+  // .duration(1000)
   .attr("x", function (d) {
     return x_af_prescription(d.Area_Name);
   })
   .attr("width", x_af_prescription.bandwidth())
   .attr("height", function (d) {
-    return qof_height - 200 - y_af_prescription(d.Prescription_rate);
+    return height - 200 - y_af_prescription(d.Prescription_rate);
   })
   .attr("y", function (d) {
     return y_af_prescription(d.Prescription_rate)
   })
-.style("fill", function (d) { return setcolour_by_sig(d.Significance_wsx); })
+ .style("fill", function (d) { return setcolour_by_sig(d.Significance_wsx); })
+ .on("mouseover", function () { return af_prescription_tooltip.style("visibility", "visible"); })
+ .on("mousemove", show_af_prescription_tooltip)
+ .on("mouseout", function () { return af_prescription_tooltip.style("visibility", "hidden"); });
 
 svg_af_prescription_vis.selectAll('.comparison_af_key').style("visibility", "visible");
+}
+
+if(chosen_af_prescription_comparison == 'By PCN colour') {
+  af_prescription_bars
+  .enter()
+  .append("rect")
+  .merge(af_prescription_bars)
+  // .transition()
+  // .duration(1000)
+  .attr("x", function (d) {
+    return x_af_prescription(d.Area_Name);
+  })
+  .attr("width", x_af_prescription.bandwidth())
+  .attr("height", function (d) {
+    return height - 200 - y_af_prescription(d.Prescription_rate);
+  })
+  .attr("y", function (d) {
+    return y_af_prescription(d.Prescription_rate)
+  })
+ .style("fill", function (d) { return setPCNcolour_by_name(d.Area_Name); })
+ .on("mouseover", function () { return af_prescription_tooltip.style("visibility", "visible"); })
+ .on("mousemove", show_af_prescription_tooltip)
+ .on("mouseout", function () { return af_prescription_tooltip.style("visibility", "hidden"); });
+ 
+svg_af_prescription_vis.selectAll('.comparison_af_key').style("visibility", "hidden");
+
 }
 
 var af_prescription_error_bars = svg_af_prescription_vis.selectAll('line.error')
@@ -2290,40 +2514,31 @@ af_prescription_wsx
 .attr('y2', function(d) { return y_af_prescription(d.Prescription_rate);})
 .attr("stroke", "blue")
 
-//  qof_1_prevalence_bars
-//    .enter()
-//    .append("rect")
-//    .merge(qof_1_prevalence_bars)
-//    .on("mouseover", function () {
-//      return qof_1_prevalence_tooltip.style("visibility", "visible");
-//    })
-//    .on("mousemove", show_qof_1_prevalence_tooltip)
-//    .on("mouseout", function () {
-//      return qof_1_prevalence_tooltip.style("visibility", "hidden");
-//    });
-//   }
-
 }
 
 // Add one dot in the legend for each name.
-svg_af_prescription_vis.selectAll("myquintiledots")
+svg_af_prescription_vis.selectAll("myafdots")
  .data(['lower', 'similar', 'higher'])
  .enter()
  .append("circle")
  .attr('class', 'comparison_af_key')
- .attr("cx", 80)
- .attr("cy", function(d,i){ return 15 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+//  .attr("cx", 80)
+//  .attr("cy", function(d,i){ return 15 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+.attr("cx", function(d,i){ return 80 + i*150}) // 100 is where the first dot appears. 25 is the distance between dots
+.attr('cy', 15)
  .attr("r", 5)
  .style("fill", function(d){ return setcolour_by_sig(d)})
 
 // Add one dot in the legend for each name.
-svg_af_prescription_vis.selectAll("myquintilelabels")
+svg_af_prescription_vis.selectAll("myaflabels")
   .data(['Significantly lower', 'Similar', 'Significantly higher'])
   .enter()
   .append("text")
   .attr('class', 'comparison_af_key svg_legend')
-  .attr("x", 90)
-  .attr("y", function(d,i){ return 20 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+  // .attr("x", 90)
+  // .attr("y", function(d,i){ return 20 + i*15}) // 100 is where the first dot appears. 25 is the distance between dots
+  .attr("y", 20)
+  .attr("x", function(d,i){ return 90 + i*150}) // 100 is where the first dot appears. 25 is the distance between dots
   .text(function(d){ return d})
   .attr("text-anchor", "left")
 

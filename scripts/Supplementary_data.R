@@ -8,7 +8,6 @@ getwd()
 github_repo_dir <- "~/GitHub/pcn_hi_2022_des"
 #github_repo_dir <- 'https://raw.githubusercontent.com/psychty/pcn_hi_2022_des/main/'
 
-
 source_directory <- paste0(github_repo_dir, '/data')
 output_directory <- paste0(github_repo_dir, '/outputs')
 #output_directory <- paste0('./outputs')
@@ -360,12 +359,13 @@ af_treatment_df %>%
   mutate(Area_Name = gsub(' And ', ' and ', Area_Name)) %>% 
   mutate(Area_Name = gsub(' Of ', ' of ', Area_Name)) %>% 
   mutate(Area_Name = gsub('SHOREHAM AND SOUTHWICK PCN','Shoreham and Southwick PCN', Area_Name)) %>% 
-  group_by(Area_Name, Sex, Prescription_rate) %>% 
+  # mutate(Area_Name_nested = Area_Name) %>% 
+  group_by(Area_Name, Sex, Prescription_rate, Significance_national, Significance_wsx) %>% 
   mutate(Prescription_rate = Prescription_rate / 100,
          lower_CI = lower_CI / 100,
          upper_CI = upper_CI / 100) %>% 
   mutate(Sex = ifelse(Sex == 'Male', 'Males', ifelse(Sex == 'Female', 'Females', Sex))) %>% 
-  nest() %>% 
+  # nest() %>%
   toJSON() %>% 
   write_lines(paste0(output_directory, '/af_treatment_nested.json'))
   

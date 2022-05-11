@@ -229,7 +229,21 @@ IMD_2019 <- IMD_2019_national %>%
   select(LSOA11CD, LTLA, IMD_2019_decile, IMD_2019_rank) %>% 
   left_join(lsoa_pcn_lookup[c('LSOA11CD', 'LSOA11NM', 'PCN_Name')], by = 'LSOA11CD')
   
-if(file.exists(paste0(output_directory, '/lsoa_deprivation_2019_west_sussex.geojson')) == FALSE){
+# Fuel poverty data
+
+download.file('https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1072034/fuel-poverty-sub-regional-2022-tables.xlsx', paste0(source_directory, '/fuel_poverty_2020_data.xlsx'), mode = 'wb')
+
+lsoa_fp <- read_excel("GitHub/pcn_hi_2022_des/data/fuel_poverty_2020_data.xlsx", 
+                      sheet = "Table 3", skip = 2) %>% 
+  rename(Fuel_poor_hh = 'Number of households in fuel poverty',
+         Proportion_fuel_poor_hh = 'Proportion of households fuel poor (%)',
+         LSOA11CD = 'LSOA Code') %>% 
+  select(LSOA11CD, Fuel_poor_hh, Proportion_fuel_poor_hh)
+
+IMD_2019 <- IMD_2019 %>% 
+  left_join(lsoa_fp, by = 'LSOA11CD')
+
+if(file.exists(paste0(output_directory, '/lsoa_pcn_des_west_sussex.geojson')) == FALSE){
   
   # Read in the lsoa geojson boundaries for our lsoas (actually this downloads all 30,000+ and then we filter)
   lsoa_spdf <- geojson_read('https://opendata.arcgis.com/datasets/8bbadffa6ddc493a94078c195a1e293b_0.geojson',  what = "sp") %>%
@@ -247,7 +261,7 @@ if(file.exists(paste0(output_directory, '/lsoa_deprivation_2019_west_sussex.geoj
   # Then use df as the second argument to the spatial dataframe conversion function:
   lsoa_spdf_json <- SpatialPolygonsDataFrame(lsoa_spdf, IMD_2019)  
   
-  geojson_write(geojson_json(lsoa_spdf_json), file = paste0(output_directory, '/lsoa_deprivation_2019_west_sussex.geojson'))
+  geojson_write(geojson_json(lsoa_spdf_json), file = paste0(output_directory, '/lsoa_pcn_des_west_sussex.geojson'))
   
 }
 
@@ -390,7 +404,7 @@ inequalities_data_summary <- inequalities_data %>%
   arrange(Area_Code) %>% 
   left_join(msoa_names, by = 'Area_Code')
 
-summary(inequalities_data_summary$Hosp_all_cause)
+summary(inequalities_data_summary$Long_term_unemployment)
 
 # MSOA geographies ####
 # lsoa_to_msoa <- read_csv('https://opendata.arcgis.com/datasets/a46c859088a94898a7c462eeffa0f31a_0.csv') %>% 
@@ -420,11 +434,3 @@ row.names(inequalities_data_summary) <- df$ID
 msoa_boundaries_json <- SpatialPolygonsDataFrame(msoa_boundaries_json, inequalities_data_summary)  
 
 geojson_write(geojson_json(msoa_boundaries_json), file = paste0(output_directory, '/msoa_inequalities.geojson'))
-
-viridis::turbo(9)
-# Cancer ####
-# Screening at GP level ####
-
-# CVDPREVENT ####
-
-# https://api.cvdprevent.nhs.uk/indicator/7/rawDataCSV?timePeriodID=2&systemLevelID=4

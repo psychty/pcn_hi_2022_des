@@ -54,7 +54,7 @@ h1 {
 .tooltip_class {
   max-width: 200px;
   padding: 10px;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   background: #ffffff;
   color: #000000;
   border-radius: 5px;
@@ -75,7 +75,13 @@ h1 {
     z-index: 1;
   }
   
-#map_3_id {
+#map_3a_id {
+    height: 50vh;
+    background-color: antiquewhite;
+    z-index: 1;
+  }
+
+  #map_3b_id {
     height: 50vh;
     background-color: antiquewhite;
     z-index: 1;
