@@ -25,7 +25,6 @@ PCN_data <- read_excel(paste0(source_directory, "/ePCN.xlsx"),
   mutate(PCN_Name = gsub('\\(Aic\\)', '\\(AIC\\)', gsub('\\(Acf\\)', '\\(ACF\\)', gsub('Pcn', 'PCN', gsub('And', 'and',  gsub(' Of ', ' of ',  str_to_title(PCN_Name))))))) %>% 
   select(PCN_Code, PCN_Name, Postcode, Address_label)
 
-
 # Local Health data from fingertips
 
 # fingertips areatypes = 7 gp, 102 utla, 101 ltla, 204 PCN
@@ -35,7 +34,7 @@ cancer_services_metadata <- read_csv('https://fingertips.phe.org.uk/api/indicato
          Source = 'Data source') %>% 
   select(ID, Indicator, Definition, Rationale, Methodology, Source)
 
-cancer_services_data <- read_csv('https://fingertips.phe.org.uk/api/all_data/csv/by_profile_id?child_area_type_id=7&parent_area_type_id=204&profile_id=92&parent_area_code=E10000032') %>% 
+cancer_services_GP_data <- read_csv('https://fingertips.phe.org.uk/api/all_data/csv/by_profile_id?child_area_type_id=7&parent_area_type_id=204&profile_id=92&parent_area_code=E10000032') %>% 
   filter(is.na(Category)) %>% 
   select(!c('Parent Code', 'Parent Name', 'Category Type', 'Category', 'Lower CI 99.8 limit', 'Upper CI 99.8 limit', 'Recent Trend', 'New data', 'Compared to goal')) %>% 
   rename(ID = 'Indicator ID',
@@ -51,6 +50,8 @@ cancer_services_data <- read_csv('https://fingertips.phe.org.uk/api/all_data/csv
          Compared_to_wsx = 'Compared to Counties & UAs (from Apr 2021) value or percentiles',
          Note = 'Value note') %>% 
    select(ID, Indicator, Area_Code, Area_Name, Value, Lower_CI, Upper_CI, Numerator, Denominator, Note, Compared_to_wsx, Compared_to_eng, Sex)
+
+
 
   
   276 QOF_cancer_prevalence_all_age

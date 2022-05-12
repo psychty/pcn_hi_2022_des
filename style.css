@@ -87,6 +87,13 @@ h1 {
     z-index: 1;
   }
 
+#map_3c_id {
+    height: 50vh;
+    background-color: antiquewhite;
+    z-index: 1;
+  }
+
+
 #map_4_id {
     height: 50vh;
     background-color: antiquewhite;

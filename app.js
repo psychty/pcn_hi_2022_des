@@ -822,14 +822,14 @@ function hh_fuel_poverty_colour(feature) {
 }
 
 // Create a leaflet map (L.map) in the element map_1_id
-var map_3a = L.map("map_3a_id");
+var map_3b = L.map("map_3b_id");
    
 // add the background and attribution to the map
 L.tileLayer(tileUrl, { attribution })
- .addTo(map_3a);
+ .addTo(map_3b);
   
 var lsoa_boundary_fp = L.geoJSON(LSOA_geojson.responseJSON, { style: hh_fuel_poverty_colour })
- .addTo(map_3a)
+ .addTo(map_3b)
  .bindPopup(function (layer) {
     return (
       "LSOA: <Strong>" +
@@ -846,9 +846,9 @@ var lsoa_boundary_fp = L.geoJSON(LSOA_geojson.responseJSON, { style: hh_fuel_pov
        );
  });
  
- map_3a.fitBounds(lsoa_boundary_fp.getBounds());
+ map_3b.fitBounds(lsoa_boundary_fp.getBounds());
    
- var baseMaps_map_3a = {
+ var baseMaps_map_3b = {
    "Proportion of households in fuel poverty" :lsoa_boundary_fp,
  };
  
@@ -857,12 +857,12 @@ var lsoa_boundary_fp = L.geoJSON(LSOA_geojson.responseJSON, { style: hh_fuel_pov
  }; 
    
  L.control
-  .layers(baseMaps_map_3a, overlay_maps_pcn, { collapsed: false })
-  .addTo(map_3a);
+  .layers(baseMaps_map_3b, overlay_maps_pcn, { collapsed: false })
+  .addTo(map_3b);
  
-  var legend_map_3a = L.control({position: 'bottomright'});
+  var legend_map_3b = L.control({position: 'bottomright'});
   
-  legend_map_3a.onAdd = function (map_3a) {
+  legend_map_3b.onAdd = function (map_3a) {
   
       var div = L.DomUtil.create('div', 'info legend'),
           grades = [0, 5, 7.5, 10, 12.5, 15],
@@ -879,7 +879,7 @@ var lsoa_boundary_fp = L.geoJSON(LSOA_geojson.responseJSON, { style: hh_fuel_pov
       return div;
   };
   
-  legend_map_3a.addTo(map_3a);
+  legend_map_3b.addTo(map_3b);
 
   });
 
@@ -1328,7 +1328,7 @@ function getSARColor(d) {
                   '#7A0403';
 }
 
-msoa_hospital_admission_colour
+
 function msoa_hospital_admission_colour(feature) {
   return {
     fillColor: getSARColor(feature.properties.Hosp_all_cause),
@@ -1339,22 +1339,99 @@ function msoa_hospital_admission_colour(feature) {
   };
 }
 
+function getethnicityColor(d) {
+  return d > 35 ? '#2a4858' :
+         d > 30 ? '#1c6373' :
+         d > 25 ? '#007f86' :
+         d > 20 ? '#009c8f' :
+         d > 15 ? '#3fb78d' :
+         d > 10 ? '#77d183' :
+         d > 5  ? '#b5e877' : 
+         d > 2  ?  '#fafa6e':
+                  '#f5f5b6';
+        }
+
+function msoa_ethnicity_colour(feature) {
+  return {
+    fillColor: getethnicityColor(feature.properties.BME_population_census),
+    color: getethnicityColor(feature.properties.BME_population_census),
+    color: '#dbdbdb',
+    weight: 1,
+    fillOpacity: 0.85,
+  };
+}
+
 // Specify that this code should run once the PCN_geojson data request is complete
 $.when(msoa_geojson).done(function () {
 
-console.log(msoa_geojson)
+// Create a leaflet map (L.map) in the element map_3_id for ethnicity
+var map_3a = L.map("map_3a_id");
+     
+// add the background and attribution to the map
+L.tileLayer(tileUrl, { attribution })
+ .addTo(map_3a);
+     
+var msoa_ethnicity_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: msoa_ethnicity_colour })
+ .addTo(map_3a)
+ .bindPopup(function (layer) {
+   return (
+    "MSOA: <Strong>" +
+     layer.feature.properties.Area_Code +
+     " (" +
+     layer.feature.properties.msoa11hclnm +
+     ")</Strong>.<br><br>Proportion of people reporting their ethnicity as non-White: <Strong>" +
+     d3.format(',.1f')(layer.feature.properties.BME_population_census) + 
+     "% in the 2011 census</Strong>"
+    );
+ });
+   
+var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
+  
+map_3a.fitBounds(msoa_ethnicity_boundary.getBounds());
+  
+var baseMaps_map_3a = {
+  "Proportion reporting non-White ethnicity": msoa_ethnicity_boundary,
+};
 
-// Create a leaflet map (L.map) in the element map_3_id for unemployement and fuel poverty
-var map_3 = L.map("map_3b_id");
+var overlay_maps_pcn = {
+  "Show PCN boundary lines": PCN_boundary_overlay,
+}; 
+  
+L.control
+ .layers(baseMaps_map_3a, overlay_maps_pcn, { collapsed: false })
+ .addTo(map_3a);
+
+ var legend_map_3a = L.control({position: 'bottomright'});
+
+ legend_map_3a.onAdd = function (map_3) {
+ 
+     var div = L.DomUtil.create('div', 'info legend'),
+         grades = [0, 2, 5, 10, 15, 20, 25, 30, 35],
+         labels = ['<b>% Black and minority<br>ethnicity</b>'];
+ 
+     // loop through our density intervals and generate a label with a colored square for each interval
+     for (var i = 0; i < grades.length; i++) {
+         div.innerHTML +=
+         labels.push(
+             '<i style="background:' + getethnicityColor(grades[i] + 1) + '"></i> ' +
+             grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%' : '%+'));
+     }
+     div.innerHTML = labels.join('<br>');
+     return div;
+ };
+ 
+ legend_map_3a.addTo(map_3a);
+
+ // ! Unemployment
+
+var map_3c = L.map("map_3c_id");
      
 // add the background and attribution to the map
   L.tileLayer(tileUrl, { attribution })
-  .addTo(map_3);
-
-
-      
+  .addTo(map_3c);
+     
 var msoa_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: msoa_unemployment_colour })
-  .addTo(map_3)
+  .addTo(map_3c)
   .bindPopup(function (layer) {
     return (
      "MSOA: <Strong>" +
@@ -1367,9 +1444,8 @@ var msoa_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: m
       );
     });
 
-
 var msoa_long_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { style: msoa_long_unemployment_colour })
-// .addTo(map_3)
+// .addTo(map_3c)
 .bindPopup(function (layer) {
   return (
    "MSOA: <Strong>" +
@@ -1382,13 +1458,11 @@ var msoa_long_unemployment_boundary = L.geoJSON(msoa_geojson.responseJSON, { sty
     );
   });
      
-
 var PCN_boundary_overlay = L.geoJSON(PCN_geojson.responseJSON, { style: pcn_boundary_overlay_colour })
   
-map_3.fitBounds(msoa_unemployment_boundary.getBounds());
+map_3c.fitBounds(msoa_unemployment_boundary.getBounds());
   
-var baseMaps_map_3 = {
-  // "Proportion of households in fuel poverty" :msoa_HH_in_fuel_poverty_boundary,
+var baseMaps_map_3c = {
   "Proportion aged 16-64 unemployed": msoa_unemployment_boundary,
   "Rate per 1,000 16-64 year olds in long term unemployment": msoa_long_unemployment_boundary,
 };
@@ -1398,33 +1472,12 @@ var overlay_maps_pcn = {
 }; 
   
 L.control
- .layers(baseMaps_map_3, overlay_maps_pcn, { collapsed: false })
- .addTo(map_3);
+ .layers(baseMaps_map_3c, overlay_maps_pcn, { collapsed: false })
+ .addTo(map_3c);
 
-//  var legend_map_3c = L.control({position: 'bottomright'});
- 
-//  legend_map_3c.onAdd = function (map_3) {
- 
-//      var div = L.DomUtil.create('div', 'info legend'),
-//          grades = [0, 5, 7.5, 10, 12.5, 15],
-//          labels = ['<b>% households in<br>fuel poverty</b>'];
- 
-//      // loop through our density intervals and generate a label with a colored square for each interval
-//      for (var i = 0; i < grades.length; i++) {
-//          div.innerHTML +=
-//          labels.push(
-//              '<i style="background:' + gethh_fuel_povertyColor(grades[i] + 1) + '"></i> ' +
-//              grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '%' : '%+'));
-//      }
-//      div.innerHTML = labels.join('<br>');
-//      return div;
-//  };
- 
-//  legend_map_3c.addTo(map_3);
+ var legend_map_3c1 = L.control({position: 'bottomright'});
 
- var legend_map_3a = L.control({position: 'bottomright'});
-
- legend_map_3a.onAdd = function (map_3) {
+ legend_map_3c1.onAdd = function (map_3) {
  
      var div = L.DomUtil.create('div', 'info legend'),
          grades = [0, 1, 2, 3, 4, 5],
@@ -1441,11 +1494,11 @@ L.control
      return div;
  };
  
- legend_map_3a.addTo(map_3);
+ legend_map_3c1.addTo(map_3c);
 
- var legend_map_3b = L.control({position: 'bottomright'});
+ var legend_map_3c2 = L.control({position: 'bottomright'});
  
- legend_map_3b.onAdd = function (map_3) {
+ legend_map_3c2.onAdd = function (map_3c) {
  
      var div = L.DomUtil.create('div', 'info legend'),
          grades = [0, 2, 4, 6, 8],
@@ -1462,7 +1515,7 @@ L.control
      return div;
  };
  
- legend_map_3b.addTo(map_3);
+ legend_map_3c2.addTo(map_3c);
 
 
 

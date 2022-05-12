@@ -384,8 +384,11 @@ indicators_from_local_health <- msoa_local_health_data %>%
   select(ID, Indicator) %>% 
   unique()
 
+indicators_from_local_health %>% 
+  view()
+
 inequalities_data <- msoa_local_health_data %>% 
-  filter(ID %in% c('93283', '93097', '93098', '93280', '93227', '93229', '93231', '93232', '93233', '93250', '93252', '93253', '93254', '93255', '93256', '93257', '93259', '93260'))
+  filter(ID %in% c('93283', '93097', '93098', '93280', '93227', '93229', '93231', '93232', '93233', '93250', '93252', '93253', '93254', '93255', '93256', '93257', '93259', '93260', '93267', '93087'))
 
 msoa_names <- read_csv('https://houseofcommonslibrary.github.io/msoanames/MSOA-Names-Latest.csv') %>%
   select(msoa11cd, msoa11hclnm) %>%
@@ -400,11 +403,16 @@ inequalities_data_summary <- inequalities_data %>%
          HH_in_fuel_poverty = 'Estimated percentage of households that experience fuel poverty, 2018 Not applicable 2018',
          Male_LE_at_birth = 'Male Life expectancy at birth, (upper age band 90+) All ages 2015 - 19',
          Female_LE_at_birth = 'Female Life expectancy at birth, (upper age band 90+) All ages 2015 - 19',
-         Hosp_all_cause = 'Emergency hospital admissions for all causes, all ages, standardised admission ratio All ages 2015/16 - 19/20') %>% 
+         Hosp_all_cause = 'Emergency hospital admissions for all causes, all ages, standardised admission ratio All ages 2015/16 - 19/20',
+         BME_population_census = 'Black and Minority Ethnic (BME) Population All ages 2011',
+         Proportion_non_white_uk_census = "Percentage of population whose ethnicity is not 'White UK' All ages 2011",
+         Deaths_all_cause_smr = 'Deaths from all causes, all ages, standardised mortality ratio All ages 2015 - 19',
+         Deaths_U75_all_cause_smr = 'Deaths from all causes, under 75 years, standardised mortality ratio <75 yrs 2015 - 19') %>% 
   arrange(Area_Code) %>% 
-  left_join(msoa_names, by = 'Area_Code')
+  left_join(msoa_names, by = 'Area_Code') %>% 
+  select(Area_Code, msoa11hclnm, Unemployment, Long_term_unemployment, Male_LE_at_birth, Female_LE_at_birth, Hosp_all_cause, Deaths_all_cause_smr, Deaths_U75_all_cause_smr, BME_population_census, Proportion_non_white_uk_census) 
 
-summary(inequalities_data_summary$Long_term_unemployment)
+summary(inequalities_data_summary$BME_population_census)
 
 # MSOA geographies ####
 # lsoa_to_msoa <- read_csv('https://opendata.arcgis.com/datasets/a46c859088a94898a7c462eeffa0f31a_0.csv') %>% 
