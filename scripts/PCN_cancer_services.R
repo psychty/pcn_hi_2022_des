@@ -1,6 +1,6 @@
 library(easypackages)
 
-libraries(c("readxl", "readr", "plyr", "dplyr", "ggplot2", "png", "tidyverse", "reshape2", "scales", "rgdal", 'rgeos', "tmaptools", 'sp', 'sf', 'maptools', 'leaflet', 'leaflet.extras', 'spdplyr', 'geojsonio', 'rmapshaper', 'jsonlite', 'httr', 'rvest', 'stringr', 'fingertipsR'))
+libraries(c("readxl", "readr", "plyr", "dplyr", "ggplot2", "png", "tidyverse", "reshape2", "scales", "rgdal", 'rgeos', "tmaptools", 'sp', 'sf', 'maptools', 'leaflet', 'leaflet.extras', 'spdplyr', 'geojsonio', 'rmapshaper', 'jsonlite', 'httr', 'rvest', 'stringr'))
 
 options(scipen = 999)
 
@@ -34,7 +34,7 @@ cancer_services_metadata <- read_csv('https://fingertips.phe.org.uk/api/indicato
          Source = 'Data source') %>% 
   select(ID, Indicator, Definition, Rationale, Methodology, Source)
 
-cancer_services_GP_data <- read_csv('https://fingertips.phe.org.uk/api/all_data/csv/by_profile_id?child_area_type_id=7&parent_area_type_id=204&profile_id=92&parent_area_code=E10000032') %>% 
+cancer_services_PCN_data <- read_csv('https://fingertipsws.phe.org.uk/api/all_data/csv/by_profile_id?v=/0-71b9a906/&parent_area_code=E38000248&parent_area_type_id=167&child_area_type_id=204&profile_id=92&category_area_code=null') %>%  
   filter(is.na(Category)) %>% 
   select(!c('Parent Code', 'Parent Name', 'Category Type', 'Category', 'Lower CI 99.8 limit', 'Upper CI 99.8 limit', 'Recent Trend', 'New data', 'Compared to goal')) %>% 
   rename(ID = 'Indicator ID',
@@ -47,33 +47,34 @@ cancer_services_GP_data <- read_csv('https://fingertips.phe.org.uk/api/all_data/
          Upper_CI = 'Upper CI 95.0 limit',
          Numerator = 'Count',
          Compared_to_eng = 'Compared to England value or percentiles',
-         Compared_to_wsx = 'Compared to Counties & UAs (from Apr 2021) value or percentiles',
+         Compared_to_wsx = 'Compared to CCGs (from Apr 2021) value or percentiles',
          Note = 'Value note') %>% 
-   select(ID, Indicator, Area_Code, Area_Name, Value, Lower_CI, Upper_CI, Numerator, Denominator, Note, Compared_to_wsx, Compared_to_eng, Sex)
+   left_join(cancer_services_metadata, by = 'ID') %>% 
+   select(ID, Indicator, Area_Code, Area_Name, Value, Lower_CI, Upper_CI, Numerator, Denominator, Note, Sex)
 
 
-
-  
-  276 QOF_cancer_prevalence_all_age
-  91337 Crude_incidence_rate_per_100000
-  91355 Emergency_admissions_with_cancer
-  91356 Emergency_presentation_route
-  91357 Non_emergency_presentation_route
-  91339 Breast_screen_three_yr_coverage_50_70
-  91340 Breast_screen_within_six_months_of_invite_50_70
-  91341 Cervical_screen_coverage_females
-  93725 Cervical_screen_coverage_three_and_half_yr_25_49
-  93726 Cervical_screen_coverage_five_and_half_yr_50_64
-  92600 Bowel_screen_coverage_thirty_months_60_74
-  92601 Bowel_screen_coverage_within_six_months_of_invite_60_74
-  91845 TWW_conversion_rate
-  91344 TWW_standardised_rate
-  91882 TWW_suspected_referrals_crude_rate
-  91348 TWW_suspected_breast_referrals_crude_rate
-  91349 TWW_suspected_lower_gi_referrals_crude_rate
-  91350 TWW_suspected_lung_referrals_crude_rate
-  91351 TWW_suspected_skin_referrals_crude_rate
-  
+data.frame(ID = c(276, 91337, 91355,91356, 91357, 91339,91340,91341,93725,93726,92600,92601,91845,91344,91882,91348,91349,91350,91351), Label = c()
+           
+           276 QOF_cancer_prevalence_all_age
+           91337 Crude_incidence_rate_per_100000
+           91355 Emergency_admissions_with_cancer
+           91356 Emergency_presentation_route
+           91357 Non_emergency_presentation_route
+           91339 Breast_screen_three_yr_coverage_50_70
+           91340 Breast_screen_within_six_months_of_invite_50_70
+           91341 Cervical_screen_coverage_females
+           93725 Cervical_screen_coverage_three_and_half_yr_25_49
+           93726 Cervical_screen_coverage_five_and_half_yr_50_64
+           92600 Bowel_screen_coverage_thirty_months_60_74
+           92601 Bowel_screen_coverage_within_six_months_of_invite_60_74
+           91845 TWW_conversion_rate
+           91344 TWW_standardised_rate
+           91882 TWW_suspected_referrals_crude_rate
+           91348 TWW_suspected_breast_referrals_crude_rate
+           91349 TWW_suspected_lower_gi_referrals_crude_rate
+           91350 TWW_suspected_lung_referrals_crude_rate
+           91351 TWW_suspected_skin_referrals_crude_rate
+           
   # Staging #####
   
   # Cancers are catergorised into 3 groups:
