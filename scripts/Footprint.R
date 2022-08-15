@@ -200,6 +200,9 @@ pcn_spdf <- SpatialPolygonsDataFrame(PCN_boundary, PCN_data)
 
 geojson_write(geojson_json(pcn_spdf), file = paste0(output_directory, '/pcn_boundary_simple.geojson'))
 
+
+
+
 # Deprivation lsoa ####
 IMD_2019_national <- read_csv('https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/845345/File_7_-_All_IoD2019_Scores__Ranks__Deciles_and_Population_Denominators_3.csv') %>% 
   select("LSOA code (2011)",  "Local Authority District name (2019)", "Index of Multiple Deprivation (IMD) Score", "Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)", "Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOAs)") %>% 
@@ -341,8 +344,6 @@ dep_df %>%
   write_lines(paste0(output_directory, '/PCN_deprivation_data.json'))
 
 # MSOA inequalities ####
-
-
 
 # Local Health data from fingertips
 
